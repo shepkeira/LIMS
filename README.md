@@ -28,8 +28,28 @@ More Info in LIMS.pdf
 
 ## How to set up the Docker image
 
-1. Ensure Docker Desktop has been installed and is actively running.
-2. After pulling the repo, change directory to LIMS_IMAGE in the console.
-3. Execute `docker-compose up --build` in the console.
-4. App will now be running on localhost:8000.
-5. To add yourself as a super user to access the Django admin page, attach a shell to the lims_web container and run `python manage.py migrations` then `python manage.py createsuperuser` and follow the prompts.
+1. Ensure docker and docker-compose are installed, and that this repo is cloned to your machine.
+
+1. `cd` into `LIMS_IMAGE`
+
+1. Run `docker-compose --build`, the sample program should periodically print "The last value inserted is: ..."
+
+### Troubleshooting
+
+1. Delete all docker images (view images with `docker images`, delete with `docker image rm <id>`, delete process dependencies with `docker rm <id>`)
+
+### Running and Accessing Postgres Only
+
+1. Ensure docker is installed and this repo is cloned onto your machine
+
+1. cd into `LIMS_IMAGE/POSTGRES`
+
+1. Build docker image with `docker build .`, and take note of the image ID when it is finished (should say `successfully built <id>`). (I will add an image name to the dockerfile in a future commit)
+
+1. Run the docker image with `docker run --name lims-postgres <id>` (do not close the terminal window at this point)
+
+1. Open a new terminal window, and connect to the running docker image with `docker exec -it lims-postgres bash`
+
+1. Connect to the database with `psql -U lims-user -d lims-postgres`
+
+1. Now we are in! We can query the `test` table, insert values, and create more tables!
