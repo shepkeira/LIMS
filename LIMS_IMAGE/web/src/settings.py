@@ -76,8 +76,8 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'lims_db',
-        'HOST': 'c83e1b14300a',
+        'NAME': 'master',
+        'HOST': 'limsimage_db_1',
         'USER': 'sa',
         'PASSWORD': 'Lab_rats2021',
         'PORT': '',
