@@ -23,3 +23,9 @@ General Objectives:
 - Clients’ portal to access test results and invoices
 
 More Info in LIMS.pdf
+
+## Docker Image Build Instructions
+
+1. Ensure docker and docker-compose are installed, and that this repo is cloned to your machine.
+2. cd into LIMS_IMAGE.
+3. Run docker-compose up --build.
