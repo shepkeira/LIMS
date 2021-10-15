@@ -7,7 +7,7 @@ services:
       - ./db/data:/var/lib/mssql/data
   web:
     build: ./web
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python ./web/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/src
     ports:
