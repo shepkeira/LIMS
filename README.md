@@ -32,7 +32,7 @@ More Info in LIMS.pdf
 
 1. `cd` into `LIMS_IMAGE`
 
-1. Run `docker-compose --build`, the sample program should periodically print "The last value inserted is: ..."
+1. Run `docker-compose up --build`, the sample program should periodically print "The last value inserted is: ..."
 
 ### Troubleshooting
 
