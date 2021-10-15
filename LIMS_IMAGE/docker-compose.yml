@@ -3,6 +3,7 @@ version: "3.3"
 services:
   db:
     build: ./db
+    user: root
     volumes:
       - ./db/data:/var/lib/mssql/data
   web:
