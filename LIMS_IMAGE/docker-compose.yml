@@ -2,4 +2,15 @@ version: "3.9"
 
 services:
   db:
-    build: ./db/
+    build: ./db
+    volumes:
+      - ./db/data:/var/lib/mssql/data
+  web:
+    build: ./web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/src
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
