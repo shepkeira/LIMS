@@ -75,8 +75,11 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mssql',
+        'NAME': 'db_1',# This is probably wrong
+        'PASSWORD': 'Lab_rats2021',
+        'PORT': '1433',
+        'DRIVER': 'ODBC Driver 17 for SQL Server'
     }
 }
 
