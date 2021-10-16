@@ -77,7 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'master',
-        'HOST': 'limsimage_db_1',
+        'HOST': 'lims_db_server',
         'USER': 'sa',
         'PASSWORD': 'Lab_rats2021',
         'PORT': '',
