@@ -25,6 +25,7 @@ General Objectives:
 More Info in LIMS.pdf
 
 ## Instructions
+
 ### Build and Run Docker Image
 
 1. Ensure docker and docker-compose are installed, and that this repo is cloned to your machine.
@@ -32,13 +33,26 @@ More Info in LIMS.pdf
 1. Run `docker-compose up --build`.
 
 ### Database access from within the container
+
 [Useful link](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-bash)
 
 1. Build and run the docker image with the above instructions
-1. In a new terminal, enter the docker image with `docker exec -it limsimage_db_1 bash`
+1. In a new terminal, enter the docker image with `docker exec -it lims_db_server bash`
 1. Connect to the database with `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Lab_rats2021"`
 1. Use the lims_db database `USE lims_db` and the `go` on a new line
 
 ### Exporting a database backup
-1. `sudo docker exec -it limsimage_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
-1. Replace the lims_db_init.bak file in the data directory
+
+1. `sudo docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Lab_rats2021 -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/lib/mssql/data/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
+2. This automatically places the backup in db/data.
+
+### Creating new superusers and accessing the admin site
+
+1. `sudo docker exec -it lims_web_server python manage.py migrate`
+2. `docker exec -it lims_web_server python manage.py createsuperuser` and follow the prompts.
+3. Visit localhost:8000/admin (or ngrok tunnel) and use your new superuser account to login.
+
+### View all tables in the database from sqlcmd
+
+1. `sudo docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Lab_rats2021`
+2. Type `USE lims_db` \n `GO` \n `Sp_tables` \n `GO`
