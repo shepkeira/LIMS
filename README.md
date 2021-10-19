@@ -43,13 +43,13 @@ More Info in LIMS.pdf
 
 ### Exporting a database backup
 
-1. `sudo docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Lab_rats2021 -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/lib/mssql/data/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
+1. `sudo docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Lab_rats2021 -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/lib/mssql/data/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, STATS = 10"`
 2. This automatically places the backup in db/data.
 
 ### Creating new superusers and accessing the admin site
 
 1. `sudo docker exec -it lims_web_server python manage.py migrate`
-2. `docker exec -it lims_web_server python manage.py createsuperuser` and follow the prompts.
+2. `sudo docker exec -it lims_web_server python manage.py createsuperuser` and follow the prompts.
 3. Visit localhost:8000/admin (or ngrok tunnel) and use your new superuser account to login.
 
 ### View all tables in the database from sqlcmd
