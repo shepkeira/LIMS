@@ -38,7 +38,13 @@ More Info in LIMS.pdf
 1. In a new terminal, enter the docker image with `docker exec -it limsimage_db_1 bash`
 1. Connect to the database with `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Lab_rats2021"`
 1. Use the lims_db database `USE lims_db` and the `go` on a new line
+1. If you want to see a list of tables currently in the database, run `SELECT TABLE_NAME FROM information_schema.TABLES`
+1. To exit sqlcmd, run `quit`
+
+Modifications to the database here will not be persisted to the repo. To commit database changes to the repo, proceed to the next section.
 
 ### Exporting a database backup
-1. `sudo docker exec -it limsimage_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
-1. Replace the lims_db_init.bak file in the data directory
+
+1. Ensure the docker container is running.
+1. From a new terminal (in the LIMS_IMAGE directory), run `docker exec -it limsimage_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
+1. Copy the backup file from the container to the host, replacing the existing backup file in `db/data/` with `docker cp limsimage_db_1:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
