@@ -48,7 +48,7 @@ Modifications to the database here will not be persisted to the repo. To commit 
 1. Ensure the docker container is running.
 1. If there is already a backup file in the container, we must delete that first as the backup process will not overwrite any existing files with the same name.
     1. Enter bash in the docker image with `docker exec -it limsimage_db_1 bash`
-    1. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`. There will be response message if it completed successfully.
+    1. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`. There will be no response message if it completed successfully.
         (If you get `no such file` error then the file did not exist, and you are fine to continue)
 1. To create a new backup file, from a new terminal (in the LIMS_IMAGE directory) run `docker exec -it limsimage_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
 1. Copy the backup file from the container to the host (this will replace the existing backup file in `db/data/`) with `docker cp limsimage_db_1:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
