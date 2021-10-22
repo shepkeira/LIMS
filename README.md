@@ -37,22 +37,26 @@ More Info in LIMS.pdf
 [Useful link](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-bash)
 
 1. Build and run the docker image with the above instructions
-1. In a new terminal, enter the docker image with `docker exec -it lims_db_server bash`
-1. Connect to the database with `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Lab_rats2021"`
-1. Use the lims_db database `USE lims_db` and the `go` on a new line
+2. In a new terminal, enter the docker image with `docker exec -it lims_db_server bash`
+3. Connect to the database with `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Lab_rats2021"`
+4. Use the lims_db database `USE lims_db` and the `go` on a new line
+5. If you want to see a list of tables currently in the database, run `SELECT TABLE_NAME FROM information_schema.TABLES`
+6. To exit sqlcmd, run `quit`
+
+Modifications to the database here will not be persisted to the repo. To commit database changes to the repo, proceed to the next section.
 
 ### Exporting a database backup
 
-1. `sudo docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Lab_rats2021 -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/lib/mssql/data/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, STATS = 10"`
-2. This automatically places the backup in db/data.
+1. Ensure the docker container is running.
+2. If there is already a backup file in the container, we must delete that first as the backup process will not overwrite any existing files with the same name.
+    1. Enter bash in the docker image with `docker exec -it limsimage_db_1 bash`
+    2. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`. There will be no response message if it completed successfully.
+        (If you get `no such file` error then the file did not exist, and you are fine to continue)
+3. To create a new backup file, from a new terminal (in the LIMS_IMAGE directory) run `docker exec -it limsimage_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
+4. Copy the backup file from the container to the host (this will replace the existing backup file in `db/data/`) with `docker cp limsimage_db_1:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
 
 ### Creating new superusers and accessing the admin site
 
 1. `sudo docker exec -it lims_web_server python manage.py migrate`
 2. `sudo docker exec -it lims_web_server python manage.py createsuperuser` and follow the prompts.
 3. Visit localhost:8000/admin (or ngrok tunnel) and use your new superuser account to login.
-
-### View all tables in the database from sqlcmd
-
-1. `sudo docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Lab_rats2021`
-2. Type `USE lims_db` \n `GO` \n `Sp_tables` \n `GO`
