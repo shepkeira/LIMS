@@ -6,12 +6,14 @@ services:
     user: root
     volumes:
       - ./db/data:/var/lib/mssql/data
+    container_name: lims_db_server
   web:
     build: ./web
-    command: python ./web/manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/src
+      - ./web:/src
     ports:
       - "8000:8000"
     depends_on:
       - db
+    container_name: lims_web_server
