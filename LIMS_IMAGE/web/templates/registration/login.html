@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
-<!-- Not having this here makes the interpreter mad -->
+<!-- Required for each use of bootstrap in a template -->
+{% load bootstrap5 %}
+<!-- Sets title of the block -->
 {% block title %}Login{% endblock %}
-<!-- Not having this here makes the interpreter mad -->
+<!-- Denotes start of block content -->
 {% block content %}
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
+<body>
+  <div class="container">
+    <h2>Log In</h2>
+    <form method="post" class="form">
+      {% csrf_token %}
+      <!-- Init bootstrap form -->
+      {% bootstrap_form form %}
+      <!-- Init bootstrap buttons -->
+      {% buttons %}
+      <button type="submit" class="btn btn-primary">Log In</button>
+      {% endbuttons %}
+    </form>
+  </div>
+</body>
 {% endblock %}
