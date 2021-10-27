@@ -1,2 +1,5 @@
 # Ignore compiled Python bytecode
 *.pyc
+
+# Ignore environment variables
+LIMS_IMAGE/.env
