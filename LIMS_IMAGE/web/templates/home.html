@@ -2,9 +2,18 @@
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}LIMS Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
-{% block content%} {% if user.is_authenticated %} Hi {{ user.username }}!
-<p><a href="{% url 'logout' %}">Log Out</a></p>
-{% else %}
-<p>You are not logged in</p>
-<a href="{% url 'login' %}">Log In</a>
-{% endif %} {% endblock %}
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>LIMS Home</h1>
+    <p>Welcome to the LIMS home page.</p>
+    {% if user.is_authenticated %} Hi {{ user.username }}!
+    <p><a href="{% url 'logout' %}">Log Out</a></p>
+    {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+    or
+    <a href="{% url 'signup' %}">Sign Up</a>
+    {% endif %} {% endblock %}
+  </div>
+</body>
