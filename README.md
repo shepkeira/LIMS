@@ -26,6 +26,23 @@ More Info in LIMS.pdf
 
 ## Instructions
 
+### Setting Up You .env File
+1. Place your .env file under LIMS_IMAGE
+1. Your .env file should be formatted like so
+```
+DB_NAME=fake_name
+DB_HOST=fake_host
+DB_USER=fake_user
+DB_PASSWORD=fake_password
+SECRET_KEY=fake_key
+```
+1. Replace the fake data with the correct data for the first 4 variables.
+1. For the SECRET_KEY, start up the web server (instructions below) use the bash command to get inside the contianer and run
+```
+python -c "import secrets; print(secrets.token_urlsafe())"
+```
+This will generate your own SECRET_KEY
+
 ### Build and Run Docker Image
 
 1. Ensure docker and docker-compose are installed, and that this repo is cloned to your machine.
