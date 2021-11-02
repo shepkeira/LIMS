@@ -9,8 +9,9 @@ class Package(models.Model):
 
 class Order(models.Model):
     #By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    order_number = models.IntegerField
+    order_number = models.IntegerField #order number = account number - id e.g. 0001-0001
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
+    submission_date = models.DateField
 
 class OrderTest(models.Model):
     #By default, Django gives each model an auto-incrementing primary key with the type specified per app
