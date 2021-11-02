@@ -77,3 +77,11 @@ Modifications to the database here will not be persisted to the repo. To commit 
 1. `sudo docker exec -it lims_web_server python manage.py migrate`
 2. `sudo docker exec -it lims_web_server python manage.py createsuperuser` and follow the prompts.
 3. Visit localhost:8000/admin (or ngrok tunnel) and use your new superuser account to login.
+
+### Making migrationgs
+
+1. `docker-compose build`
+1. `docker-compose up`
+1. `docker exec -t -i [container_id] bash`
+1. `python manage.py makemigrations`
+1. `python manage.py migrate`
