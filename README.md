@@ -69,6 +69,14 @@ Modifications to the database here will not be persisted to the repo. To commit 
 
 ### Exporting a database backup
 
+This is required to persist data from the database in the repository. This will export the data as a backup file that will be used to initialize the database next time the container is built.
+
+#### Method 1: Backup script
+
+While the docker container is running, run the `backup.sh` script in the `db` directory. In the event this does not work, proceed to method 2.
+
+#### Method 2: Commands
+
 1. Ensure the docker container is running.
 2. If there is already a backup file in the container, we must delete that first as the backup process will not overwrite any existing files with the same name.
    1. Enter bash in the docker image with `docker exec -it lims_db_server bash`
