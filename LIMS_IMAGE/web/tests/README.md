@@ -1,6 +1,6 @@
 # Testing guide
 
-See the [Django Docs page of Writing and Running Tests](https://docs.djangoproject.com/en/3.2/topics/testing/overview/)
+See the [Django Docs page for Writing and Running Tests](https://docs.djangoproject.com/en/3.2/topics/testing/overview/)
 
 All test files must be in this directory
 
