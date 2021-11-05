@@ -16,14 +16,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Instrument',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
             name='Inventory',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('status', models.CharField(max_length=50)),
                 ('quantity_unit', models.CharField(max_length=10)),
                 ('usage_rate_unit', models.CharField(max_length=10)),
@@ -32,13 +34,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LabSample',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
             ],
         ),
         migrations.CreateModel(
             name='Location',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('code', models.CharField(max_length=100)),
             ],
@@ -46,7 +50,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Test',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('code', models.CharField(max_length=100)),
             ],
@@ -54,51 +59,64 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TestSample',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('lab_sample_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.labsample')),
-                ('test', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.test')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('lab_sample_id', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='laboratory.labsample')),
+                ('test', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='laboratory.test')),
             ],
         ),
         migrations.CreateModel(
             name='TestInstruments',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('insturment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.instrument')),
-                ('test_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.test')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('insturment', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='laboratory.instrument')),
+                ('test_id', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='laboratory.test')),
             ],
         ),
         migrations.CreateModel(
             name='Sample',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('sample_type', models.CharField(max_length=100)),
                 ('sample_form', models.CharField(max_length=100)),
                 ('sop_number', models.CharField(max_length=100)),
-                ('lab_personel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.labworker')),
+                ('lab_personel', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='accounts.labworker')),
             ],
         ),
         migrations.CreateModel(
             name='Results',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('status', models.CharField(max_length=50)),
                 ('result', models.CharField(max_length=200)),
-                ('test_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.testsample')),
+                ('test_id', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='laboratory.testsample')),
             ],
         ),
         migrations.AddField(
             model_name='labsample',
             name='lab_location',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.location'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='laboratory.location'),
         ),
         migrations.AddField(
             model_name='labsample',
             name='sample',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.sample'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='laboratory.sample'),
         ),
         migrations.AddField(
             model_name='instrument',
             name='location',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='laboratory.location'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='laboratory.location'),
         ),
     ]
