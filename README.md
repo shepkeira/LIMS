@@ -73,7 +73,7 @@ This is required to persist data from the database in the repository. This will 
 
 #### Method 1: Backup script
 
-While the docker container is running, run the `backup.sh` script in the `db` directory. In the event this does not work, proceed to method 2.
+While the docker container is running, run the `backup.sh` script in the `db` directory if you're on Unix (Linux/MacOS) or `backup.bat` if you're in Windows. backup.bat also requires you to enter the database password when prompted. In the event this does not work, proceed to method 2.
 
 #### Method 2: Commands
 
