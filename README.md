@@ -27,8 +27,10 @@ More Info in LIMS.pdf
 ## Instructions
 
 ### Setting Up You .env File
+
 1. Place your .env file under LIMS_IMAGE
 1. Your .env file should be formatted like so
+
 ```
 DB_NAME=fake_name
 DB_HOST=fake_host
@@ -36,11 +38,14 @@ DB_USER=fake_user
 DB_PASSWORD=fake_password
 SECRET_KEY=fake_key
 ```
+
 1. Replace the fake data with the correct data for the first 4 variables.
 1. For the SECRET_KEY, start up the web server (instructions below) use the bash command to get inside the contianer and run
+
 ```
 python -c "import secrets; print(secrets.token_urlsafe())"
 ```
+
 This will generate your own SECRET_KEY
 
 ### Build and Run Docker Image
@@ -64,13 +69,21 @@ Modifications to the database here will not be persisted to the repo. To commit 
 
 ### Exporting a database backup
 
+This is required to persist data from the database in the repository. This will export the data as a backup file that will be used to initialize the database next time the container is built.
+
+#### Method 1: Backup script
+
+While the docker container is running, run the `backup.sh` script in the `db` directory if you're on Unix (Linux/MacOS) or `backup.bat` if you're in Windows. backup.bat also requires you to enter the database password when prompted. In the event this does not work, proceed to method 2.
+
+#### Method 2: Commands
+
 1. Ensure the docker container is running.
 2. If there is already a backup file in the container, we must delete that first as the backup process will not overwrite any existing files with the same name.
-    1. Enter bash in the docker image with `docker exec -it limsimage_db_1 bash`
-    2. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`. There will be no response message if it completed successfully.
-        (If you get `no such file` error then the file did not exist, and you are fine to continue)
-3. To create a new backup file, from a new terminal (in the LIMS_IMAGE directory) run `docker exec -it limsimage_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
-4. Copy the backup file from the container to the host (this will replace the existing backup file in `db/data/`) with `docker cp limsimage_db_1:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
+   1. Enter bash in the docker image with `docker exec -it lims_db_server bash`
+   2. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`. There will be no response message if it completed successfully.
+      (If you get `no such file` error then the file did not exist, and you are fine to continue)
+3. To create a new backup file, from a new terminal (in the LIMS_IMAGE directory) run `docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
+4. Copy the backup file from the container to the host (this will replace the existing backup file in `db/data/`) with `docker cp lims_db_server:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
 
 ### Creating new superusers and accessing the admin site
 
