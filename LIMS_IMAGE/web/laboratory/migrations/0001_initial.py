@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Inventory',
+            name='InventoryItem',
             fields=[
                 ('id', models.BigAutoField(auto_created=True,
                  primary_key=True, serialize=False, verbose_name='ID')),
@@ -68,11 +68,11 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='TestInstruments',
+            name='TestInstrument',
             fields=[
                 ('id', models.BigAutoField(auto_created=True,
                  primary_key=True, serialize=False, verbose_name='ID')),
-                ('insturment', models.ForeignKey(
+                ('instrument', models.ForeignKey(
                     on_delete=django.db.models.deletion.CASCADE, to='laboratory.instrument')),
                 ('test_id', models.ForeignKey(
                     on_delete=django.db.models.deletion.CASCADE, to='laboratory.test')),
@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Results',
+            name='TestResult',
             fields=[
                 ('id', models.BigAutoField(auto_created=True,
                  primary_key=True, serialize=False, verbose_name='ID')),
