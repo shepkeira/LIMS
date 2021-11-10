@@ -15,11 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: print working directory
-      run: pwd
-
     - name: Build the Docker image
-      run: docker-compose -f LIMS_IMAGE/docker_compose.yml up --build
-      
+      run: docker-compose -f LIMS_IMAGE/docker-compose.yml up --build
+
     - name: Running tests
       run: sudo docker exec -it lims_web_server python manage.py test tests/
