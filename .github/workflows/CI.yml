@@ -24,7 +24,7 @@ jobs:
               SECRET_KEY=' > .env
 
     - name: Build the Docker image
-      run: docker-compose -f docker-compose.yml up --build
+      run: docker-compose -f LIMS_IMAGE/docker-compose.yml up --build
 
     - name: generate secret key and save to .env
       run: python -c "import secrets; print(secrets.token_urlsafe())" >> .env
