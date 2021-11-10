@@ -15,8 +15,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Create and populate .env file
+      run: touch .env; echo 
+             'DB_NAME=lims_db
+              DB_HOST=lims_db_server
+              DB_USER=sa
+              DB_PASSWORD=Lab_rats2021
+              SECRET_KEY=' > .env
+
     - name: Build the Docker image
       run: docker-compose -f LIMS_IMAGE/docker-compose.yml up --build
+
+    - name: generate secret key and save to .env
+      run: python -c "import secrets; print(secrets.token_urlsafe())" >> .env
 
     - name: Running tests
       run: sudo docker exec -it lims_web_server python manage.py test tests/
