@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Create and populate .env file
-      run: touch .env; echo 
+      run: cd LIMS_IMAGE; touch .env; echo 
              'DB_NAME=lims_db
               DB_HOST=lims_db_server
               DB_USER=sa
@@ -24,7 +24,7 @@ jobs:
               SECRET_KEY=' > .env
 
     - name: Build the Docker image
-      run: docker-compose -f LIMS_IMAGE/docker-compose.yml up --build
+      run: docker-compose -f docker-compose.yml up --build
 
     - name: generate secret key and save to .env
       run: python -c "import secrets; print(secrets.token_urlsafe())" >> .env
