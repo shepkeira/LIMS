@@ -14,9 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: LIMS_IMAGE
     - name: Build the Docker image
-      run: cd LIMS_IMAGE
-      run: pwd
       run: docker-compose up --build
     - name: Running tests
       run: sudo docker exec -it lims_web_server python manage.py test tests/
