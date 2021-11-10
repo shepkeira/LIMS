@@ -2,9 +2,9 @@ name: LIMS-CI-Container
 
 on:
   push:
-    branches: [ development ]
+    branches: [ CI-action---docker-build ]
   pull_request:
-    branches: [ development ]
+    branches: [ CI-action---docker-build ]
 
 jobs:
 
@@ -14,5 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: cd to LIMS_IMAGE
+      run: cd ../../LIMS_IMAGE
     - name: Build the Docker image
       run: docker-compose up --build
+    - name: Running tests
+      run: sudo docker exec -it lims_web_server python manage.py test tests/
