@@ -14,8 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: cd to LIMS_IMAGE
-      run: cd ../../LIMS_IMAGE
     - name: Build the Docker image
       run: docker-compose up --build
     - name: Running tests
