@@ -16,12 +16,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Create and populate .env file
-      run: cd LIMS_IMAGE; touch .env; echo 
-             'DB_NAME=lims_db
-              DB_HOST=lims_db_server
-              DB_USER=sa
-              DB_PASSWORD=Lab_rats2021
-              SECRET_KEY=' > .env
+      run: cd LIMS_IMAGE; touch .env; echo 'DB_NAME=lims_db' >> .env; 'DB_HOST=lims_db_server'>> .env; 'DB_USER=sa'>> .env; 'DB_PASSWORD=Lab_rats2021'>> .env; 'SECRET_KEY=' >> .env
 
     - name: Build the Docker image
       run: docker-compose -f LIMS_IMAGE/docker-compose.yml up --build
