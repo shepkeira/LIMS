@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.7
 ENV PYTHONBUFFEREED=1
 WORKDIR /src
 RUN apt-get update && apt-get install -y --no-install-recommends \
