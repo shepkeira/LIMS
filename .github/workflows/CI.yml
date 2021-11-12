@@ -22,7 +22,7 @@ jobs:
       run: docker-compose -f LIMS_IMAGE/docker-compose.yml up -d --build
 
     - name: generate secret key and save to .env
-      run: python -c "import secrets; f = open('.env', 'a'); f.write(secrets.token_urlsafe()); f.close()"
+      run: cd LIMS_IMAGE; python -c "import secrets; f = open('.env', 'a'); f.write(secrets.token_urlsafe()); f.close()"
 
     - name: Running tests
       run: docker exec lims_web_server python manage.py test tests/
