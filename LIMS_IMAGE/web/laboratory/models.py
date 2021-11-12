@@ -83,8 +83,9 @@ class TestResult(models.Model):
 
 class InventoryItem(models.Model):
     def __str__(self):
-        return self.status
+        return self.type
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    type = models.CharField(max_length=50)
     expiration_date = models.DateTimeField
     status = models.CharField(max_length=50)
     estimated_quantity = models.IntegerField

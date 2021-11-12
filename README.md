@@ -93,8 +93,7 @@ While the docker container is running, run the `backup.sh` script in the `db` di
 
 ### Making migrations
 
-1. `docker-compose build`
-1. `docker-compose up`
-1. `docker exec -t -i [container_id] bash`
+1. `docker-compose --build`
+1. `docker exec -it [web container_id] bash`
 1. `python manage.py makemigrations`
 1. `python manage.py migrate`
