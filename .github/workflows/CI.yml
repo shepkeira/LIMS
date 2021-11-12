@@ -25,4 +25,4 @@ jobs:
       run: python -c "import secrets; print(secrets.token_urlsafe())" >> .env
 
     - name: Running tests
-      run: sudo docker exec -it lims_web_server python manage.py test tests/
+      run: docker exec lims_web_server python manage.py test tests/
