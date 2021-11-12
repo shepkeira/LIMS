@@ -24,5 +24,8 @@ jobs:
     - name: generate secret key and save to .env
       run: cd LIMS_IMAGE; python -c "import secrets; f = open('.env', 'a'); f.write(secrets.token_urlsafe()); f.close()"
 
+    - name: Print env vars for debugging
+      run: cd LIMS_IMAGE; cat .env
+
     - name: Running tests
       run: docker exec lims_web_server python manage.py test tests/
