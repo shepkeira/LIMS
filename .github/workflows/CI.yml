@@ -1,10 +1,8 @@
 name: LIMS-CI-Container
 
 on:
-  push:
-    branches: [ CI-action---docker-build ]
-  pull_request:
-    branches: [ CI-action---docker-build ]
+  push
+  pull_request
 
 jobs:
 
