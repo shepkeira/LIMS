@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 <!-- Not having this here makes the interpreter mad -->
-{% block title %}LIMS Home{% endblock %}
+{% block title %}Laboratory Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
 <body>
   {% block content%}
   <div class="container">
-    <h1>LIMS Home</h1>
+    <h1>Employee Home</h1>
     <p>Welcome to the LIMS home page.</p>
     {% if user.is_authenticated %} Hi {{ user.username }}!
     <p><a href="{% url 'logout' %}">Log Out</a></p>
