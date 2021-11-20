@@ -1,3 +1,4 @@
 Django>=3.0,<4.0
 pyodbc>=3.0
 mssql-django>=1.0
+django-bootstrap-v5>=1.0.6

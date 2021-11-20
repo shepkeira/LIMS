@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Laboratory Home{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Employee Home</h1>
+    <p>Welcome to the LIMS home page.</p>
+    {% if user.is_authenticated %} Hi {{ user.username }}!
+    <p><a href="{% url 'logout' %}">Log Out</a></p>
+    {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+    or
+    <a href="{% url 'accounts:signup' %}">Sign Up</a>
+    {% endif %} {% endblock %}
+  </div>
+</body>
