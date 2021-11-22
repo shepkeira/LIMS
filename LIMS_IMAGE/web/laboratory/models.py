@@ -28,9 +28,9 @@ class Test(models.Model):
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=100)
-    cost = models.FloatField
-    rush = models.BooleanField
-    time_taken = models.IntegerField
+    cost = models.FloatField()
+    rush = models.BooleanField()
+    time_taken = models.IntegerField()
 
 
 class TestInstrument(models.Model):
@@ -79,6 +79,16 @@ class TestResult(models.Model):
     status = models.CharField(max_length=50)
     result = models.CharField(max_length=200)
     test_id = models.ForeignKey(TestSample, on_delete=models.CASCADE)
+    def get_test_results(tests):
+        test_samples = []
+        test_results = []
+        for test_id in tests:
+            test_samples.append(TestSample.objects.filter(test=test_id))
+        for test_sample_by_test_id in test_samples:
+            for test_sample in test_sample_by_test_id:
+                test_results.append(TestResult.objects.filter(test_id=test_sample))
+        return test_results
+
 
 
 class InventoryItem(models.Model):
@@ -88,8 +98,8 @@ class InventoryItem(models.Model):
     type = models.CharField(max_length=50)
     expiration_date = models.DateTimeField
     status = models.CharField(max_length=50)
-    estimated_quantity = models.IntegerField
+    estimated_quantity = models.IntegerField()
     quantity_unit = models.CharField(max_length=10)
-    usage_rate = models.IntegerField
+    usage_rate = models.IntegerField()
     usage_rate_unit = models.CharField(max_length=10)
-    estimated_need = models.IntegerField
+    estimated_need = models.IntegerField()

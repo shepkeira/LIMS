@@ -8,7 +8,7 @@ class Training(models.Model):
 
 class TrainingSchedule(models.Model):
     #By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    date_time = models.DateTimeField
+    date_time = models.DateTimeField()
     training_type = models.ForeignKey(Training, on_delete=models.CASCADE)
 
 class TrainingAttendence(models.Model):
