@@ -26,7 +26,7 @@ class Order(models.Model):
 
     order_number = models.IntegerField(default=0)
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
-    submission_date = models.DateField(auto_now=True)
+    submission_date = models.DateField(default=datetime.date.today)
     def order_for_user(user):
         client = list(Client.objects.filter(user = user))[0]
         return Order.objects.filter(account_number = client)
