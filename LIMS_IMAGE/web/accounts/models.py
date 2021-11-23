@@ -13,7 +13,7 @@ class Client(models.Model):
     # set to the standard canadian 10 digit phone number length
     phone_number = models.CharField(max_length=10)
     address = models.CharField(max_length=200)
-    account_number = models.IntegerField
+    account_number = models.IntegerField()
     # connect to authenticated user
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

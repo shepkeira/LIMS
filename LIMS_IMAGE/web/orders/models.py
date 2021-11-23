@@ -1,7 +1,6 @@
 import datetime
 from django.db import models
 from accounts.models import *
-from laboratory.models import Test, Sample
 from laboratory.models import Test, Sample, TestResult
 
 import logging
@@ -24,9 +23,9 @@ class Order(models.Model):
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     # order number = account number - id e.g. 0001-0001
 
-    order_number = models.IntegerField(default=0)
+    order_number = models.IntegerField()
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
-    submission_date = models.DateField(default=datetime.date.today)
+    submission_date = models.DateField()
     def order_for_user(user):
         client = list(Client.objects.filter(user = user))[0]
         return Order.objects.filter(account_number = client)
