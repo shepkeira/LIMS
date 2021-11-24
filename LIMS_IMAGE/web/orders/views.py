@@ -9,7 +9,7 @@ def home_page(request):
 def order_history(request):
     context = RequestContext(request)
     orders_list = Order.order_for_user(request.user)
-    context_dict = {'orders': orders_list}
+    context_dict = {'orders': list(orders_list)}
     return render(request, 'orders/order_history.html', context_dict)
 
 def results(request):
