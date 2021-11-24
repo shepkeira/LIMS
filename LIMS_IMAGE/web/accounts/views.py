@@ -11,11 +11,18 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
-def login_success(request):
-    if Client.objects.filter(user=request.user):
-        return redirect("accounts:customer_home_page")
+
+def login_success(request): # TODO this can be renamed
+    """
+    If user is authenticated, redirect to their homepage - client user to client home page, employee user to employee home page
+    """
+    if request.user.is_authenticated:
+        if Client.objects.filter(user=request.user):
+            return redirect("accounts:customer_home_page")
+        else:
+            return redirect("accounts:employee_home_page")
     else:
-        return redirect("accounts:employee_home_page")
+        return redirect("/")
 
 def customer_home_page(request):
     return redirect("orders:home")
