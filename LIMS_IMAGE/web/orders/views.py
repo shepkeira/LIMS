@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.template import RequestContext
 from orders.models import Order
-# from models import Order
 
 # Create your views here.
 def home_page(request):
     return render(request, 'orders/home_page.html')
 
 def order_history(request):
-    return render(request, 'orders/order_history.html')
+    context = RequestContext(request)
+    orders_list = Order.order_for_user(request.user)
+    context_dict = {'orders': list(orders_list)}
+    return render(request, 'orders/order_history.html', context_dict)
 
 def results(request):
     context = RequestContext(request)

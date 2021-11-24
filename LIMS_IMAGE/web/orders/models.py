@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from accounts.models import *
 from laboratory.models import Test, Sample, TestResult
@@ -21,6 +22,7 @@ class Order(models.Model):
         return 'Order: ' + str(self.account_number.company_name) + " " + str(self.order_number)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     # order number = account number - id e.g. 0001-0001
+
     order_number = models.IntegerField()
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
     submission_date = models.DateField()
