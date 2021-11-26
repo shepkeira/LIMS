@@ -1,1 +1,38 @@
-<h1>Results</h1>
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}LIMS Home{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Results</h1>
+    <p>Your results are: </p>
+    
+    {% if results %}
+    <!-- results = {order_num: [TestResult, TestResult]} -->
+        <ul>
+            {% for order_num, test_results in results.items %}
+            <li>Order Number: {{ order_num }}</li>
+                {% for test_result in test_results %}
+                <ul>
+                    <li>Test On {{ test_result.test_id.lab_sample_id }}</li>
+                        <ul>
+                            <li>Status: {{ test_result.status }}</li>
+                            {% if test_result.status == 'Completed' %}
+                            <li>Result: {{test_result.result}}</li>
+                            {% endif %}
+                        </ul>
+                </ul>
+                
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        {% else %}
+         <strong>You have no results</strong>
+        {% endif %}
+
+    <p><a href="{% url 'logout' %}">Log Out</a></p>
+
+    {% endblock %}
+  </div>
+</body>
