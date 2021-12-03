@@ -1,7 +1,4 @@
-{% extends 'base.html' %}
-<!-- Not having this here makes the interpreter mad -->
-{% block title %}LIMS Home{% endblock %}
-<!-- Not having this here makes the interpreter mad -->
+{% extends 'base.html' %} {% block title %}LIMS Home{% endblock %}
 <body>
   {% block content%}
   <div class="container">
@@ -10,10 +7,8 @@
     {% if user.is_authenticated %} Hi {{ user.username }}!
     <p><a href="{% url 'logout' %}">Log Out</a></p>
     {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
-    or
-    <a href="{% url 'accounts:signup' %}">Sign Up</a>
+    <p><i>You are not logged in</i></p>
+
     {% endif %} {% endblock %}
   </div>
 </body>
