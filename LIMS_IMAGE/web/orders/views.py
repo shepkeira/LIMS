@@ -44,4 +44,9 @@ def results(request):
     return render(request, 'orders/results.html', context_dict)
 
 def shopping(request):
-    return render(request, 'orders/shopping.html')
+    
+    context = RequestContext(request)
+    shopping_list = Order.order_for_user(request.user)
+
+    context_dict = {'orders': list(shopping_list)}
+    return render(request, 'orders/shopping.html',context_dict)
