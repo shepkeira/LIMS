@@ -21,7 +21,7 @@
       <!-- TODO: Navbar content could be dynamic and pulled from database -->
       <nav
         class="navbar navbar-expand-lg navbar-light"
-        style="background-color: #e3f2fd"
+        style="background-color: #f3f2f1"
       >
         <div class="container-fluid">
           <a class="navbar-brand" href="/">LIMS</a>
@@ -38,46 +38,27 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              {% if user.is_superuser %}
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'accounts:login_success' %}">Home</a>
-              </li>
-              <!-- <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                <a class="nav-link" href="{% url 'admin:index' %}"
+                  >Administrator Dashboard</a
                 >
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                  </li>
-                </ul>
               </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link disabled"
-                  href="#"
-                  tabindex="-1"
-                  aria-disabled="true"
-                  >Disabled</a
-                >
-              </li> -->
+              {% endif %}
             </ul>
-            <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Sign Up</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-primary"
+            {% if user.is_authenticated %}
+            <div>Hi {{ user.username }}!</div>
+            <a href="{% url 'logout' %}" class="btn btn-outline-primary ms-2">
+              Log Out</a
+            >
+            {% else %}
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary"
+              >Sign Up</a
+            >
+            <a href="{% url 'login' %}" class="btn btn-outline-primary ms-2"
               >Log In</a
             >
+            {% endif %}
           </div>
         </div>
       </nav>

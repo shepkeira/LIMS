@@ -9,22 +9,21 @@
     <p>Your results are: </p>
     
     {% if results %}
-    <!-- results = {order_num: [TestResult, TestResult]} -->
+    <!-- results = {order_num: {test_sample_id: {status: string, result: string}}}} -->
         <ul>
-            {% for order_num, test_results in results.items %}
+            {% for order_num, samples in results.items %}
             <li>Order Number: {{ order_num }}</li>
-                {% for test_result in test_results %}
+            <ul>
+                {% for sample_test_id, test_result in samples.items %}
+                <li>Sample Id: {{ sample_test_id }}</li>
                 <ul>
-                    <li>Test On {{ test_result.test_id.lab_sample_id }}</li>
-                        <ul>
-                            <li>Status: {{ test_result.status }}</li>
-                            {% if test_result.status == 'Completed' %}
-                            <li>Result: {{test_result.result}}</li>
-                            {% endif %}
-                        </ul>
+                    <li>Status: {{ test_result.status }}</li>
+                    {% if test_result.status == 'Completed' %}
+                    <li>Result: {{ test_result.result }}</li>
+                    {% endif %}
                 </ul>
-                
                 {% endfor %}
+            </ul>
             {% endfor %}
         </ul>
         {% else %}
