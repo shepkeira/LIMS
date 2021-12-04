@@ -32,6 +32,7 @@ class modelTestCase(TestCase):
             user=self.test_user
         )
 
+
     def test_client_model(self):
         self.test_client = self.client_recipe.make()
 
@@ -40,6 +41,7 @@ class modelTestCase(TestCase):
         self.assertIsInstance(self.test_client, Client)
         self.assertEqual(self.test_client.company_name, client_result.company_name)
         self.assertEqual(self.test_user, client_result.user)
+
 
     def test_labWorker_model(self):
         self.test_labworker = self.labworker_recipe.make()
@@ -51,6 +53,7 @@ class modelTestCase(TestCase):
         self.assertEqual(self.test_user, labworker_result.user)
 
         self.assertEqual(labworker_result.__str__(), self.test_user.username)
+    
     
     def test_labAdmin_model(self):
         self.test_labAdmin = self.labadmin_recipe.make()
