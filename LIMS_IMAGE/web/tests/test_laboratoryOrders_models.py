@@ -100,7 +100,9 @@ class modelTestCase(TestCase):
         self.assertEqual(self.test_sample.sample_type, sample_result.sample_type) 
         self.assertEqual(str(self.test_sample.sample_type) + ": " + str(self.test_sample.id), sample_result.__str__())
 
-        # TODO test user_side_id
+        # user_side_id function - requires order_sample
+        ordersample_result = OrderSample.objects.all().first()
+        self.assertEqual(str(ordersample_result.order.order_number) + "-" + str(sample_result.id), sample_result.user_side_id())
 
 
     def test_orderSample_model(self):
@@ -114,6 +116,8 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_ordersample.order) + " Sample: " + str(self.test_ordersample.sample), ordersample_result.__str__())
         self.assertEqual(str(self.test_ordersample.order.order_number) + " " + str(self.test_ordersample.sample.id), ordersample_result.user_side_id())
 
+        # user_side_id function
+        self.assertEqual(str(ordersample_result.order.order_number) + " " + str(ordersample_result.sample.id), ordersample_result.user_side_id())
     
     def test_labSample_model(self):
 
@@ -124,9 +128,9 @@ class modelTestCase(TestCase):
         self.assertIsInstance(labsample_result.lab_location, Location)
         self.assertEqual(self.test_labsample.sample, labsample_result.sample) 
         self.assertEqual(str(self.test_labsample.sample) + " in " + str(self.test_labsample.lab_location), labsample_result.__str__())
-        # TODO finish user_side_id() test
-        # self.assertEqual(str(self.test_labsample.sample.order_number) + " " + str(self.test_ordersample.sample.id), labsample_result.user_side_id())
-
+        
+        # user_side_id function
+        self.assertEqual(str(labsample_result.sample.user_side_id()) + "-" + str(labsample_result.lab_location.code), labsample_result.user_side_id())
 
     def test_testSample_model(self):
 
@@ -137,7 +141,10 @@ class modelTestCase(TestCase):
         self.assertIsInstance(testsample_result.test, Test)
         self.assertEqual(self.test_testsample.lab_sample_id, testsample_result.lab_sample_id) 
         self.assertEqual(str(self.test_testsample.test.name) + " on " + str(self.test_testsample.lab_sample_id.sample.sample_type), testsample_result.__str__())
-        # TODO finish user_side_id() test
+        
+        # user_side_id function
+        # Note this depends on LabSample user_side_id()
+        #self.assertEqual(str(testsample_result.user_side_id()) + "-" + str(testsample_result.test.id), testsample_result.user_side_id())
 
     
     def test_testResult_model(self):
@@ -148,7 +155,10 @@ class modelTestCase(TestCase):
         self.assertIsInstance(testresult_result.test_id, TestSample)
         self.assertEqual(self.test_testresult.result, testresult_result.result) 
         self.assertEqual(str(self.test_testresult.test_id.test.name), testresult_result.__str__())
-        # TODO finish get_test_results() test
+        
+        # user_side_id function
+        # Note this depends on LabSample user_side_id()
+        #self.assertEqual(str(testsample_result.user_side_id()) + "-" + str(testsample_result.test.id), testsample_result.user_side_id())
 
 
     def test_orderTest_model(self):
