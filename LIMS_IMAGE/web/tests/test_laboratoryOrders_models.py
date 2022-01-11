@@ -159,7 +159,40 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_testresult.test_id.test.name), testresult_result.__str__())
         
         # get_test_results function
-        self.assertEqual(, testresult_result.get_test_results(testresult_result.test_id))
+        # Create test samples and test results with matching test ids
+        self.testsample_recipe = Recipe(
+            TestSample,
+            lab_sample_id = self.test_labsample,
+            test = self.test_test
+        )
+
+        testsample1 = baker.make('laboratoryOrders.TestSample')
+        testresult1 = baker.make(
+            'laboratoryOrders.TestResult',
+            test_id = testsample1
+        )
+
+        testsample2 = baker.make('laboratoryOrders.TestSample')
+        testresult2 = baker.make(
+            'laboratoryOrders.TestResult',
+            test_id = testsample2
+        )
+
+        testsample3 = baker.make('laboratoryOrders.TestSample')
+        testresult3 = baker.make(
+            'laboratoryOrders.TestResult',
+            test_id = testsample3
+        )
+
+        # Inputs for get_test_results()
+        tests = [testsample1.test.id, testsample2.test.id, testsample3.test.id]
+        
+        get_test_results_results = TestResult.get_test_results(tests)
+
+        # These assertions are a little hacky, I would have preferred to directly assert testResults in get_test_results_results, but that was not working for an unknown reason
+        self.assertEqual(TestResult.objects.filter(test_id=testsample1).__str__(), get_test_results_results[0].__str__())
+        self.assertEqual(TestResult.objects.filter(test_id=testsample2).__str__(), get_test_results_results[1].__str__())
+        self.assertEqual(TestResult.objects.filter(test_id=testsample3).__str__(), get_test_results_results[2].__str__())
 
 
     def test_orderTest_model(self):
@@ -173,8 +206,7 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_ordertest.order_number) + " - " + str(self.test_ordertest.test_id), ordertest_result.__str__())
         
         # test_ids_for_user() function
-        user_ = User.objects.all().first()
-        orders_ = Order.order_for_user(user)
+        # Create ordertests for user
 
 
     def test_testpackage_model(self):
