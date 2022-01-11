@@ -218,8 +218,7 @@ class modelTestCase(TestCase):
             test_id = test_test1
         )
 
-        # Similar to the get_test_results asserts, I am using __str__ to compare the querysets because they will not assert properly in their native types
-        self.assertEqual(Order.objects.filter(account_number = test_client).__str__(), Order.order_for_user(self.test_user).__str__())
+        self.assertQuerysetEqual(Order.objects.filter(account_number = test_client), Order.order_for_user(self.test_user), ordered=False)
 
 
     def test_testpackage_model(self):
