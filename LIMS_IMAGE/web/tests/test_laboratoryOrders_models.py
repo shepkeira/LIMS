@@ -119,6 +119,7 @@ class modelTestCase(TestCase):
         # user_side_id function
         self.assertEqual(str(ordersample_result.order.order_number) + " " + str(ordersample_result.sample.id), ordersample_result.user_side_id())
     
+
     def test_labSample_model(self):
 
         labsample_result = LabSample.objects.all().first()
@@ -132,6 +133,7 @@ class modelTestCase(TestCase):
         # user_side_id function
         self.assertEqual(str(labsample_result.sample.user_side_id()) + "-" + str(labsample_result.lab_location.code), labsample_result.user_side_id())
 
+
     def test_testSample_model(self):
 
         testsample_result = TestSample.objects.all().first()
@@ -144,7 +146,7 @@ class modelTestCase(TestCase):
         
         # user_side_id function
         # Note this depends on LabSample user_side_id()
-        #self.assertEqual(str(testsample_result.user_side_id()) + "-" + str(testsample_result.test.id), testsample_result.user_side_id())
+        self.assertEqual(str(testsample_result.lab_sample_id.user_side_id()) + "-" + str(testsample_result.test.id), testsample_result.user_side_id())
 
     
     def test_testResult_model(self):
@@ -156,9 +158,8 @@ class modelTestCase(TestCase):
         self.assertEqual(self.test_testresult.result, testresult_result.result) 
         self.assertEqual(str(self.test_testresult.test_id.test.name), testresult_result.__str__())
         
-        # user_side_id function
-        # Note this depends on LabSample user_side_id()
-        #self.assertEqual(str(testsample_result.user_side_id()) + "-" + str(testsample_result.test.id), testsample_result.user_side_id())
+        # get_test_results function
+        self.assertEqual(, testresult_result.get_test_results(testresult_result.test_id))
 
 
     def test_orderTest_model(self):
@@ -170,7 +171,10 @@ class modelTestCase(TestCase):
         self.assertIsInstance(ordertest_result.test_id, Test)
         self.assertEqual(self.test_ordertest.order_number, ordertest_result.order_number) 
         self.assertEqual(str(self.test_ordertest.order_number) + " - " + str(self.test_ordertest.test_id), ordertest_result.__str__())
-        # TODO finish test_ids_for_user() test
+        
+        # test_ids_for_user() function
+        user_ = User.objects.all().first()
+        orders_ = Order.order_for_user(user)
 
 
     def test_testpackage_model(self):
@@ -182,4 +186,3 @@ class modelTestCase(TestCase):
         self.assertIsInstance(testpackage_result.test, Test)
         self.assertEqual(self.test_testpackage.package, testpackage_result.package) 
         self.assertEqual(str(self.test_testpackage.package.name) + " - " + str(self.test_testpackage.test.name), testpackage_result.__str__())
-        # TODO finish test_ids_for_user() test
