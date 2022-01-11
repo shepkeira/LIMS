@@ -22,13 +22,13 @@ class modelTestCase(TestCase):
             user=self.test_user
             # Other fields will be filled with random data
         )
-        self.client = self.client_recipe.make()
+        self.test_client = self.client_recipe.make()
 
         self.test_package = baker.make('orders.Package')
 
         self.order_recipe = Recipe(
             Order,
-            account_number = self.client
+            account_number = self.test_client
             # Other fields will be filled with random data
         )
         self.test_order = self.order_recipe.make()
@@ -50,8 +50,9 @@ class modelTestCase(TestCase):
 
         self.assertIsInstance(self.test_order, Order)
         self.assertIsInstance(order_result.account_number, Client)
-        self.assertEqual(order_result.account_number, self.client)
+        self.assertEqual(order_result.account_number, self.test_client)
         self.assertEqual('Order: ' + str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.__str__())
         self.assertEqual(str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.user_side_id())
 
-        # TODO test order_for_user
+        # order_for_user function
+        self.assertQuerysetEqual(Order.objects.filter(account_number = self.test_client), Order.order_for_user(self.test_user))
