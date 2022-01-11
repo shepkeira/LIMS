@@ -206,7 +206,20 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_ordertest.order_number) + " - " + str(self.test_ordertest.test_id), ordertest_result.__str__())
         
         # test_ids_for_user() function
+        test_client = Client.objects.get(user = self.test_user)
         # Create ordertests for user
+        test_test1 = baker.make('laboratory.Test')
+        test_ordertest1 = baker.make(
+            'laboratoryOrders.OrderTest',
+            order_number = baker.make(
+                'orders.Order',
+                account_number = test_client
+            ),
+            test_id = test_test1
+        )
+
+        # Similar to the get_test_results asserts, I am using __str__ to compare the querysets because they will not assert properly in their native types
+        self.assertEqual(Order.objects.filter(account_number = test_client).__str__(), Order.order_for_user(self.test_user).__str__())
 
 
     def test_testpackage_model(self):
