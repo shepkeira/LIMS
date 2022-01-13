@@ -22,21 +22,42 @@ class modelTestCase(TestCase):
         self.test_user_emp = User.objects.create_user(username='testuser_e', password='asdf')
         self.test_user_admin = User.objects.create_user(username='testuser_a', password='asdf')
 
-        self.client_recipe = Recipe(
+        self.test_client = baker.make(
             Client,
             user=self.test_user_client
-            # Other fields will be filled with random data
         )
-        self.test_client = self.client_recipe.make()
-
         self.test_package = baker.make('orders.Package')
-
-        self.order_recipe = Recipe(
+        self.test_order = baker.make(
             Order,
             account_number = self.test_client
-            # Other fields will be filled with random data
         )
-        self.test_order = self.order_recipe.make()
+
+        # OrderTest and TestResult from user
+        self.test_test = baker.make_recipe('laboratory.test_recipe')
+        self.test_sample = baker.make_recipe('laboratoryOrders.sample_recipe')
+        self.test_ordertest = baker.make(
+            'laboratoryOrders.orderTest',
+            order_number = self.test_order,
+            test_id = self.test_test
+        )
+        self.test_labsample = baker.make_recipe(
+            'laboratoryOrders.labsample_recipe',
+            sample = self.test_sample,
+        )
+        self.test_testsample = baker.make_recipe(
+            'laboratoryOrders.testsample_recipe',
+            lab_sample_id = self.test_labsample,
+            test = self.test_test
+        )
+        self.test_testresult = baker.make_recipe(
+            'laboratoryOrders.testresult_recipe',
+            test_id = self.test_testsample
+        )
+        self.test_ordersample = baker.make_recipe(
+            'laboratoryOrders.ordersample_recipe',
+            order = self.test_order,
+            sample = self.test_sample
+        )
 
 
     def test_home_page(self):
@@ -50,16 +71,14 @@ class modelTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['orders'], list(Order.order_for_user(self.test_user_client)))
     
-    #def test_results(self):
-     #   # Create a testResult associated with the test order
-      #  self.testResult = baker.make(
-       #     'laboratoryOrders.testResult',
-        #    test_id = baker.make(
-         #       'laboratoryOrders.testSample',
-          #      lab_sample_id = baker.make
-           # )
-        #)
-        #self.client.login(username='testuser_c', password='asdf')
-        #response = self.client.get('/orders/results/')
-        #self.assertEqual(response.status_code, 200)
-        #self.assertEqual(response.context['orders'], list(Order.order_for_user(self.test_user_client)))
+    def test_results(self):
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/orders/results/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('results', response.context)
+
+    def shopping(self):
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/orders/shopping/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['orders'], list(Order.order_for_user(self.test_user_client)))
