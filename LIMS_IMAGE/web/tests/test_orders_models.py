@@ -15,23 +15,9 @@ from orders.models import *
 
 class modelTestCase(TestCase):
     def setUp(self):
-        self.test_user = User.objects.create_user(username='testuser', password='asdf')
-
-        self.client_recipe = Recipe(
-            Client,
-            user=self.test_user
-            # Other fields will be filled with random data
-        )
-        self.test_client = self.client_recipe.make()
-
+        self.test_client = baker.make_recipe('accounts.client_recipe')
         self.test_package = baker.make('orders.Package')
-
-        self.order_recipe = Recipe(
-            Order,
-            account_number = self.test_client
-            # Other fields will be filled with random data
-        )
-        self.test_order = self.order_recipe.make()
+        self.test_order = baker.make_recipe('orders.order_recipe')
 
 
     def test_package_model(self):
@@ -50,9 +36,8 @@ class modelTestCase(TestCase):
 
         self.assertIsInstance(self.test_order, Order)
         self.assertIsInstance(order_result.account_number, Client)
-        self.assertEqual(order_result.account_number, self.test_client)
         self.assertEqual('Order: ' + str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.__str__())
         self.assertEqual(str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.user_side_id())
 
         # order_for_user function
-        self.assertQuerysetEqual(Order.objects.filter(account_number = self.test_client), Order.order_for_user(self.test_user))
+        self.assertQuerysetEqual(Order.objects.filter(account_number = self.test_client), Order.order_for_user(self.test_client.user))
