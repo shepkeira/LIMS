@@ -16,26 +16,11 @@ from orders.models import *
 class modelTestCase(TestCase):
     def setUp(self):
 
-        self.test_location = baker.make('laboratory.Location')
-        self.test_test = baker.make('laboratory.Test')
-
-        self.instrument_recipe = Recipe(
-            Instrument,
-            location = self.test_location
-            # Other fields will be filled with random data
-        )
-
-        self.test_instrument = self.instrument_recipe.make()
-
-        self.testinstrument_recipe = Recipe(
-            TestInstrument,
-            test_id = self.test_test,
-            instrument = self.test_instrument
-            # Other fields will be filled with random data
-        )
-
-        self.test_testInstrument = self.testinstrument_recipe.make()
-        self.test_inventoryItem = baker.make('laboratory.InventoryItem')
+        self.test_location = baker.make_recipe('laboratory.location_recipe')
+        self.test_test = baker.make_recipe('laboratory.test_recipe')
+        self.test_instrument = baker.make_recipe('laboratory.instrument_recipe')
+        self.test_testInstrument = baker.make_recipe('laboratory.testinstrument_recipe')
+        self.test_inventoryItem = baker.make_recipe('laboratory.inventoryitem_recipe')
 
     def test_location_model(self):
 
