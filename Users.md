@@ -1,4 +1,4 @@
-## Test Users
+# Test Users
 
 Victor Frankenstein - lab worker
 username: vfrank
@@ -9,5 +9,9 @@ username: drjekyll
 password: mr3dhyd3
 
 The Brain - client
-username: thebrain 
+username: thebrain
 password: p1nky&thebra1n
+
+Root - Django superuser
+username: root
+password: Lab_rats2021
