@@ -2,30 +2,85 @@
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Client Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
-
-<body>
+<body>  
     
-    {% block content%}
-    <h1>Shopping</h1> 
-    <h2>Your shopping cart</h2>
+    {% block content %}
 
-    {% if orders %}
-        <table>
-            <tr>
-                <th>Test/Package &nbsp; </th>
-                <th> Total Price </th> 
-            </tr>
+    <h1>Shopping Cart (Order Submission)</h1> 
+        <br>
+      <p><b> Hello, {{user}} {{account_number}}<br>
+            <br>
+            &emsp; Please complete the order form by selecting your sample type, test type and the quantity for each order. <br>
+            &emsp; If you are not sure which test or package to order please see Appendix B for our recommendation. 
+      </b> </p>   
+        {% if user %} <!--this should be account_number-->
+            <form>
+            <h3> &emsp; Sample submission form</h3>
+            
+                <div class = "container mt-3"> 
+                    <form action = "/action_page.php">
+                        <label for="sample-type" class="form-label">Choose your sample from the list:</label>
+                        <input class="form-control" list="sample-types" name="sample-type" id="sample-type">
+                        <datalist id="sample-types">
+                            <option value="Dairy">
+                            <option value="Cosmetics">
+                            <option value="Environment">
+                        </datalist>   
+                    </form>
+                </div>
+
+                <div class = "container mt-3">
+                    <form action = "/action_page.php">
+                        <label for="sample-num" class="form-label"> How many samples of your selected type above you can submit for the testing? </label>
+                        <input class="sample-num" list="sample-nums" name="sample-num" id="sample-num">
+                        <datalist id="sample-nums">
+                            <option>1</option> 
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4+</option>
+                        </datalist>   
+                    </form>
+                </div>
+    
+                <div class = "container mt-3">
+                    <form action = "/action_page.php">
+                        <label for="Packaged-individual" class="form-label">Choose your package or individual test</label>
+                        <p>&emsp; * Please see the appendix B for the recommendation. &emsp; 
+                            <a href = 'appendix-b.html'> Appendix B </a>></p> <!-- empty appendix for now. It will up update in another issue-->
+                        <input class="form-control" list="Packaged/individual" name="Packaged-individual" id="Packaged-individual">
+                        <datalist id="Packaged/individual">
+                            <option value="Lab Package A">
+                            <option value="Lab Package B">
+                            <option value="Health Canada package">
+                            <option value="Individual test- General lab">
+                            <option value="Individual test- Analytical lab">
+                            <option value="Individual test- Microbiology lab">
+                            <option value="Individual test- Molecular lab">
+                        </datalist>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <div class = "container mt-3">
+                    <button type = "btn btn-primary mt-3 mb-3">Add to Cart</button>
+
+                    {% if accounts %}
+
+                    <div class = "container mt-3">
+                        <button type = "btn btn-primary mt-3 mb-3">Add another item </button>
+                        <button type = "btn btn-primary mt-3 mb-3">Remove item </button>
+                        <button type = "btn btn-primary mt-3 mb-3"> Update cart </button>
+                    
+                    </div>
+                    {% else %} 
+                        <p> <br> <b>&emsp;Thank you for signing up and you are successful login in. <br>
+                        &emsp;Please complete the registration by creating your profile before placing order. <br>
+                        &emsp;We need your account number before you can add an item to the cart.</b>
+                        </p>
+                        <!-- To do put the link to registration page here -->
+                   {% endif %} 
         
-                {% for order in orders %}
-                <tr>
-                    <td>{{order.order_number}}</td>
-                    <td>$  TBD  </td>
-                
-                </tr>
-                {% endfor %}
-        </table>
-    {% else %}
-        <strong>Your shopping cart is empty.</strong>
-    {% endif %}
-    {% endblock %}
+                </div>
+            </form>
+    {% endblock %}   
 </body>
