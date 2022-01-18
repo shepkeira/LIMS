@@ -1,20 +1,27 @@
 # Testing guide
 
-See the [Django Docs page for Writing and Running Tests](https://docs.djangoproject.com/en/3.2/topics/testing/overview/)
+## Useful Resources
 
-All test files must be in this directory
+[Django Docs - Writing and Running Tests](https://docs.djangoproject.com/en/3.2/topics/testing/overview/)
 
-For test discovery, all tests must be named following `test_*.py` (eg. `test_orders.py`)
+[Model Bakery Docs](https://model-bakery.readthedocs.io/en/latest/)
 
-Tests should import TestCase from django.test
+## Tes File Structure
 
-Every test file has a class that takes TestCase as an input
+ - All test files must be in this directory
 
-The test case class should have a useful docstring
+ - All tests must be named `test_*.py` (eg. `test_orders.py`)
+    - For our repo, we will use the following naming scheme for test files: `test_<app name>_<models/views/other>`. See the existing files in this folder for examples.
 
-In the test case class, there may be a setUp function that creates the required objects to be used by all tests in this file
+ - Tests should import TestCase from django.test (not Python unittest; django.test extends Python unit test)
 
-Tests are further divided into functions. Each function will typically test a different feature. There should be at least 1 assert per test function.
+ - Each test file contains a class that takes TestCase as an argument. All test code is contained in this class.
+
+## Fixture Setup
+
+ - In the test case class, there may be a setUp function that creates the required objects to be used by all tests in this file. (More on the differences betweem Djangos setUp methods [here](https://stackoverflow.com/a/43594694/4780821))
+
+ - Tests are divided into functions. Each function will typically test a different feature. There should be at least 1 assert per test function.
 
 Tests can be executed with `sudo docker exec -it lims_web_server python manage.py test tests/`
 
