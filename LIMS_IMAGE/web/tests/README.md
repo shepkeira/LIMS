@@ -36,9 +36,9 @@
 
 ## Running Tests
 
-Tests can be executed with `docker exec -it lims_web_server python manage.py test tests/`.
+Tests are automatically run on our repository on pull requests with `development` or `main`. All tests must pass before a pull request can be accepted. For this reason, it is important to make sure tests run on your own machine first.
 
-Tests are automatically run on our repository on pull requests with `development` or `main`. All tests must pass before a pull request can be accepted.
+Tests can be manually executed with `docker exec -it lims_web_server python manage.py test tests/` (LIMS docker image must be running first).
 
 ## Coverage
 
