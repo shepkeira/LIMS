@@ -14,81 +14,32 @@ from laboratoryOrders.models import *
 from orders.models import *
 
 class modelTestCase(TestCase):
-    def setUp(self):
-        self.test_user = User.objects.create_user(username='testuser', password='asdf')
+    def setUp(self):   
+        self.test_sample = baker.make_recipe('laboratoryOrders.sample_recipe')
+        self.test_order = baker.make_recipe('laboratoryOrders.order_recipe')
+        self.test_ordersample = baker.make_recipe('laboratoryOrders.ordersample_recipe')
+        self.test_labsample = baker.make_recipe('laboratoryOrders.labsample_recipe')
+        self.test_testsample = baker.make_recipe('laboratoryOrders.testsample_recipe')
+        self.test_testresult = baker.make_recipe('laboratoryOrders.testresult_recipe')
+        self.test_ordertest = baker.make_recipe('laboratoryOrders.ordertest_recipe')
+        self.test_testpackage = baker.make_recipe('laboratoryOrders.testpackage_recipe')
 
-        self.client_recipe = Recipe(
-            Client,
-            user=self.test_user
-            # Other fields will be filled with random data
+        # Make a correlated test sample, ordersample, labsample, and testsample
+        self.corr_labsample = baker.make(
+            'laboratoryOrders.LabSample',
+            sample = self.test_sample,
+            lab_location = baker.make_recipe('laboratory.location_recipe')
         )
-        self.test_client = self.client_recipe.make()
-
-        self.labworker_recipe = Recipe(
-            LabWorker,
-            user=self.test_user
-        )
-        self.test_labworker = self.labworker_recipe.make()
-
-        self.sample_recipe = Recipe(
-            Sample,
-            lab_personel = self.test_labworker
-        )
-        self.test_sample = self.sample_recipe.make()
-
-        self.order_recipe = Recipe(
-            Order,
-            account_number = self.test_client
-            # Other fields will be filled with random data
-        )
-        self.test_order = self.order_recipe.make()
-
-        self.ordersample_recipe = Recipe(
-            OrderSample,
+        self.corr_ordersample = baker.make(
+            'laboratoryOrders.OrderSample',
             order = self.test_order,
             sample = self.test_sample
         )
-        self.test_ordersample = self.ordersample_recipe.make()
-
-        self.test_location = baker.make('laboratory.Location')
-        
-        self.labsample_recipe = Recipe(
-            LabSample,
-            sample = self.test_sample,
-            lab_location = self.test_location
+        self.corr_testsample = baker.make(
+            'laboratoryOrders.TestSample',
+            lab_sample_id = self.corr_labsample,
+            test = baker.make_recipe('laboratory.test_recipe')
         )
-        self.test_labsample = self.labsample_recipe.make()
-
-        self.test_test = baker.make('laboratory.Test')
-
-        self.testsample_recipe = Recipe(
-            TestSample,
-            lab_sample_id = self.test_labsample,
-            test = self.test_test
-        )
-        self.test_testsample = self.testsample_recipe.make()
-
-        self.testresult_recipe = Recipe(
-            TestResult,
-            test_id = self.test_testsample
-        )
-        self.test_testresult = self.testresult_recipe.make()
-
-        self.ordertest_recipe = Recipe(
-            OrderTest,
-            order_number = self.test_order,
-            test_id = self.test_test
-        )
-        self.test_ordertest = self.ordertest_recipe.make()
-
-        self.test_package = baker.make('orders.Package')
-
-        self.testpackage_recipe = Recipe(
-            TestPackage,
-            package = self.test_package,
-            test = self.test_test
-        )
-        self.test_testpackage = self.testpackage_recipe.make()
 
 
     def test_sample_model(self):
@@ -101,8 +52,7 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_sample.sample_type) + ": " + str(self.test_sample.id), sample_result.__str__())
 
         # user_side_id function - requires order_sample
-        ordersample_result = OrderSample.objects.all().first()
-        self.assertEqual(str(ordersample_result.order.order_number) + "-" + str(sample_result.id), sample_result.user_side_id())
+        self.assertEqual(str(self.corr_ordersample.order.order_number) + "-" + str(sample_result.id), sample_result.user_side_id())
 
 
     def test_orderSample_model(self):
@@ -131,7 +81,7 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_labsample.sample) + " in " + str(self.test_labsample.lab_location), labsample_result.__str__())
         
         # user_side_id function
-        self.assertEqual(str(labsample_result.sample.user_side_id()) + "-" + str(labsample_result.lab_location.code), labsample_result.user_side_id())
+        self.assertEqual(str(self.corr_labsample.sample.user_side_id()) + "-" + str(self.corr_labsample.lab_location.code), self.corr_labsample.user_side_id())
 
 
     def test_testSample_model(self):
@@ -146,7 +96,7 @@ class modelTestCase(TestCase):
         
         # user_side_id function
         # Note this depends on LabSample user_side_id()
-        self.assertEqual(str(testsample_result.lab_sample_id.user_side_id()) + "-" + str(testsample_result.test.id), testsample_result.user_side_id())
+        self.assertEqual(str(self.corr_testsample.lab_sample_id.user_side_id()) + "-" + str(self.corr_testsample.test.id), self.corr_testsample.user_side_id())
 
     
     def test_testResult_model(self):
@@ -160,11 +110,6 @@ class modelTestCase(TestCase):
         
         # get_test_results function
         # Create test samples and test results with matching test ids
-        self.testsample_recipe = Recipe(
-            TestSample,
-            lab_sample_id = self.test_labsample,
-            test = self.test_test
-        )
 
         testsample1 = baker.make('laboratoryOrders.TestSample')
         testresult1 = baker.make(
@@ -206,7 +151,7 @@ class modelTestCase(TestCase):
         self.assertEqual(str(self.test_ordertest.order_number) + " - " + str(self.test_ordertest.test_id), ordertest_result.__str__())
         
         # test_ids_for_user() function
-        test_client = Client.objects.get(user = self.test_user)
+        test_client = baker.make_recipe('accounts.client_recipe')
         # Create ordertests for user
         test_test1 = baker.make('laboratory.Test')
         test_ordertest1 = baker.make(
@@ -218,7 +163,7 @@ class modelTestCase(TestCase):
             test_id = test_test1
         )
 
-        self.assertQuerysetEqual(Order.objects.filter(account_number = test_client), Order.order_for_user(self.test_user), ordered=False)
+        self.assertQuerysetEqual(Order.objects.filter(account_number = test_client), Order.order_for_user(test_client.user), ordered=False)
 
 
     def test_testpackage_model(self):
