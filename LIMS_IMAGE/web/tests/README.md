@@ -26,7 +26,7 @@
 
  ### Model Bakery
   
-  - When runnning tests, Django creates a test database that is separate from the development database. That means we need to populate it with test data before we can run most our tests. The Model Bakery library makes this easy for us. To familiarize yourself with the basics of this library, it is highly encouraged to read through the [basic usage section of the docs](https://model-bakery.readthedocs.io/en/latest/basic_usage.html).
+  - When runnning tests, Django creates a test database that is separate from the main project database. That means we need to populate it with test data before we can run most of our tests. The Model Bakery library makes this easy for us. To familiarize yourself with the basics of this library, it is highly encouraged to read through the [basic usage section of the docs](https://model-bakery.readthedocs.io/en/latest/basic_usage.html).
 
   - [Recipes](https://model-bakery.readthedocs.io/en/latest/recipes.html) are an extremely useful feature of this library that allow us to predefine how to intialize a model instance. In our project, these are extremely useful for models that have complex foreign-key relationships.
       
