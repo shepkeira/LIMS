@@ -1,5 +1,5 @@
 # Django
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.contrib.auth.models import User
 
 # Third-party libraries
@@ -16,30 +16,26 @@ from laboratoryOrders.views import *
 from orders.models import *
 from orders.views import *
 
-class viewTestCase(TestCase):
+class accountsViewsTestCase(TestCase):
     def setUp(self):
         self.test_user_client = User.objects.create_user(username='testuser_c', password='asdf')
         self.test_user_emp = User.objects.create_user(username='testuser_e', password='asdf')
         self.test_user_admin = User.objects.create_user(username='testuser_a', password='asdf')
         
-        self.client_recipe = Recipe(
-            Client,
+        self.test_client = baker.make_recipe(
+            'accounts.client_recipe',
             user=self.test_user_client
-            # Other fields will be filled with random data
         )
-        self.test_client = self.client_recipe.make()
 
-        self.labworker_recipe = Recipe(
-            LabWorker,
+        self.test_labworker = baker.make_recipe(
+            'accounts.labworker_recipe',
             user=self.test_user_emp
         )
-        self.test_labworker = self.labworker_recipe.make()
 
-        self.labadmin_recipe = Recipe(
-            LabAdmin,
+        self.test_labadmin = baker.make_recipe(
+            'accounts.labadmin_recipe',
             user=self.test_user_admin
         )
-        self.test_labadmin = self.labadmin_recipe.make()
 
 
     def test_login_success(self):

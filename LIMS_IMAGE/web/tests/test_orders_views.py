@@ -1,5 +1,5 @@
 # Django
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.contrib.auth.models import User
 
 # Third-party libraries
@@ -22,21 +22,21 @@ class modelTestCase(TestCase):
         self.test_user_emp = User.objects.create_user(username='testuser_e', password='asdf')
         self.test_user_admin = User.objects.create_user(username='testuser_a', password='asdf')
 
-        self.test_client = baker.make(
-            Client,
+        self.test_client = baker.make_recipe(
+            'accounts.client_recipe',
             user=self.test_user_client
         )
         self.test_package = baker.make('orders.Package')
-        self.test_order = baker.make(
-            Order,
+        self.test_order = baker.make_recipe(
+            'orders.order_recipe',
             account_number = self.test_client
         )
 
         # OrderTest and TestResult from user
         self.test_test = baker.make_recipe('laboratory.test_recipe')
         self.test_sample = baker.make_recipe('laboratoryOrders.sample_recipe')
-        self.test_ordertest = baker.make(
-            'laboratoryOrders.orderTest',
+        self.test_ordertest = baker.make_recipe(
+            'laboratoryOrders.ordertest_recipe',
             order_number = self.test_order,
             test_id = self.test_test
         )

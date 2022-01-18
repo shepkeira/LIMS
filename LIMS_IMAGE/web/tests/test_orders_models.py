@@ -1,5 +1,4 @@
 # Django
-from django.db.models.fields import DateTimeField
 from django.test import TestCase
 from django.contrib.auth.models import User
 
@@ -9,11 +8,15 @@ from model_bakery.recipe import Recipe
 
 # Our apps
 from accounts.models import *
+from accounts.views import *
 from laboratory.models import *
+from laboratory.views import *
 from laboratoryOrders.models import *
+from laboratoryOrders.views import *
 from orders.models import *
+from orders.views import *
 
-class modelTestCase(TestCase):
+class ordersModelsTestCase(TestCase):
     def setUp(self):
         self.test_client = baker.make_recipe('accounts.client_recipe')
         self.test_package = baker.make('orders.Package')
