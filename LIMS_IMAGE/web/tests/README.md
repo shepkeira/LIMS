@@ -44,7 +44,4 @@ Tests can be manually executed with `docker exec -it lims_web_server python mana
 
  Coverage is extremely useful for showing where more tests are needed.
  
-  1. To use the coverage library, access a bash terminal in the container and run `coverage run manage.py test tests/`.
-  2. Export the results to an html document by running `coverage html`.
-  3. Copy the report output out to the host machine by running `docker cp lims_web_server:/src/htmlcov .`. This command needs to be run on the host machine.
-  4. Navigate to `index.html` in `html_cov/` and open it in a browser.
+ To use the coverage library, access a bash terminal in the container and run `coverage run manage.py test tests/`. Export the results by running `coverage html`. By default, the results are gitignored.
