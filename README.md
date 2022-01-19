@@ -1,17 +1,17 @@
 # LIMS
 Repository for UBC Capstone project 2021/2022, group LIMS 0
 
-- [Introduction](instructions)
-- [Developer Instructions](https://github.com/shepkeira/LIMS#developer-instructions)
-  - [Set Up Env File](https://github.com/shepkeira/LIMS#setting-up-you-env-file)
-  - [Creating Super Users](https://github.com/shepkeira/LIMS#creating-new-superusers)
-  - [Accessing Admin Site](https://github.com/shepkeira/LIMS#accessing-the-admin-site)
-  - [Making Migrations](https://github.com/shepkeira/LIMS#making-migrations)
-  - [Testing](https://github.com/shepkeira/LIMS#testing)
-- [Database Instructions](https://github.com/shepkeira/LIMS#database-instructions)
-  - [Using Docker Image to Run Web Server](https://github.com/shepkeira/LIMS#using-docker-image-to-run-web-server)
-  - [Enter the Docker Image](https://github.com/shepkeira/LIMS#enter-the-docker-image)
-  - [Exporting a Database Backup](https://github.com/shepkeira/LIMS#exporting-a-database-backup)
+- [Introduction](#introduction)
+- [Developer Instructions](#developer-instructions)
+  - [Set Up Env File](#setting-up-you-env-file)
+  - [Creating Super Users](#creating-new-superusers)
+  - [Accessing Admin Site](#accessing-the-admin-site)
+  - [Making Migrations](#making-migrations)
+  - [Testing](#testing)
+- [Database Instructions](#database-instructions)
+  - [Using Docker Image to Run Web Server](#using-docker-image-to-run-web-server)
+  - [Enter the Docker Image](#enter-the-docker-image)
+  - [Exporting a Database Backup](#exporting-a-database-backup)
 
 ## Introduction
 ### Organization Background
