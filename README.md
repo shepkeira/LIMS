@@ -66,7 +66,7 @@ This will generate your own SECRET_KEY
 
 ### Accessing the admin site
 
-1. Get superuser login from [User.md](https://github.com/shepkeira/LIMS/Users.md)
+1. Get superuser login from [User.md](Users.md)
 1. Visit localhost:8000/admin and use the superuser account to login.
 
 Alternatively
