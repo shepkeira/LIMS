@@ -1,7 +1,7 @@
 # LIMS
 Repository for UBC Capstone project 2021/2022, group LIMS 0
 
-- [Introduction](https://github.com/shepkeira/LIMS#instructions)
+- [Introduction](instructions)
 - [Developer Instructions](https://github.com/shepkeira/LIMS#developer-instructions)
   - [Set Up Env File](https://github.com/shepkeira/LIMS#setting-up-you-env-file)
   - [Creating Super Users](https://github.com/shepkeira/LIMS#creating-new-superusers)
