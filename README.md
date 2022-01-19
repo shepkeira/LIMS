@@ -12,6 +12,8 @@ Repository for UBC Capstone project 2021/2022, group LIMS 0
   - [Using Docker Image to Run Web Server](#using-docker-image-to-run-web-server)
   - [Enter the Docker Image](#enter-the-docker-image)
   - [Exporting a Database Backup](#exporting-a-database-backup)
+- [Style Guide](LIMS Style Guide.pdf)
+- [Meeting Notes](Notes/)
 
 ## Introduction
 ### Organization Background
