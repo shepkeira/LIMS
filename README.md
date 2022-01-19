@@ -34,7 +34,7 @@ Goals of the LIMS is to develop and deploy a server/cloud-based system that prov
 - Easy to operate module system for any laboratory persons.
 - Clients’ portal to access test results and invoices
 
-More Info in [LIMS.pdf](https://github.com/shepkeira/LIMS/blob/development/LIMS.pdf)
+More Info in [LIMS.pdf](LIMS.pdf)
 
 ## Developer Instructions
 ### Setting Up You .env File
@@ -71,7 +71,7 @@ This will generate your own SECRET_KEY
 
 Alternatively
 
-1. Get superuser login from [User.md](https://github.com/shepkeira/LIMS/blob/development/Users.md)
+1. Get superuser login from [User.md](Users.md)
 1. Visit localhost:8000 and login use the superuser account to login
 1. In the navigation bar select "Administrator Dashboard" to be redirected to the admin site
 
@@ -86,7 +86,7 @@ When you change something about the database structure in the application we nee
 
 ### Testing
 
-The [testing README](https://github.com/shepkeira/LIMS/blob/development/LIMS_IMAGE/web/tests/README.md) is found in the testing folder, along with all the tests
+The [testing README](LIMS_IMAGE/web/tests/README.md) is found in the testing folder, along with all the tests
 
 ## Docker Instructions
 
