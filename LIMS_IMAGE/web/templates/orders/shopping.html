@@ -1,1 +1,31 @@
-<h1>Shopping</h1>
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Client Home{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+
+<body>
+    
+    {% block content%}
+    <h1>Shopping</h1> 
+    <h2>Your shopping cart</h2>
+
+    {% if orders %}
+        <table>
+            <tr>
+                <th>Test/Package &nbsp; </th>
+                <th> Total Price </th> 
+            </tr>
+        
+                {% for order in orders %}
+                <tr>
+                    <td>{{order.order_number}}</td>
+                    <td>$  TBD  </td>
+                
+                </tr>
+                {% endfor %}
+        </table>
+    {% else %}
+        <strong>Your shopping cart is empty.</strong>
+    {% endif %}
+    {% endblock %}
+</body>

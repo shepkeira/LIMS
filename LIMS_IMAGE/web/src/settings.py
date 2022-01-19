@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'laboratory',
     'orders',
     'training',
+    'laboratoryOrders',
 ]
 
 MIDDLEWARE = [
