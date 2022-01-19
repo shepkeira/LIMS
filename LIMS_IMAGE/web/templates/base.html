@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- I'm forced to comment everywhere because the HTML linter sucks -->
     <title>{% block title %}LIMS Base Template{% endblock %}</title>
     {% load bootstrap5 %}
     <!-- load bootstrap css -->
@@ -38,16 +37,32 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {% if user.is_superuser %}
-              <li class="nav-item">
+              {% if user.is_superuser or user.is_staff %}
+              <li class="nav-link">
                 <a class="nav-link" href="{% url 'admin:index' %}"
                   >Administrator Dashboard</a
+                >
+              </li>
+              {% endif %} {% if not user.is_staff and not user.is_anonymous %}
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'orders:order_history' %}"
+                  >Your Order History</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'orders:results' %}"
+                  >Your Results</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'orders:shopping' %}"
+                  >Order Tests</a
                 >
               </li>
               {% endif %}
             </ul>
             {% if user.is_authenticated %}
-            <div>Hi {{ user.username }}!</div>
+            <div>Hi {{ user.first_name }}!</div>
             <a href="{% url 'logout' %}" class="btn btn-outline-primary ms-2">
               Log Out</a
             >
