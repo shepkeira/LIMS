@@ -37,7 +37,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {% if user.is_superuser %}
+              {% if user.is_superuser or user.is_staff %}
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'admin:index' %}"
                   >Administrator Dashboard</a
@@ -62,7 +62,7 @@
               {% endif %}
             </ul>
             {% if user.is_authenticated %}
-            <div>Hi {{ user.username }}!</div>
+            <div>Hi {{ user.first_name }}!</div>
             <a href="{% url 'logout' %}" class="btn btn-outline-primary ms-2">
               Log Out</a
             >

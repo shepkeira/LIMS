@@ -4,7 +4,7 @@
   <div class="container">
     <h1>LIMS Home</h1>
     <p>Welcome to the LIMS home page.</p>
-    {% if user.is_authenticated %} Hi {{ user.username }}!
+    {% if user.is_authenticated %} Hi {{ user.first_name }}!
     <p><a href="{% url 'logout' %}">Log Out</a></p>
     {% else %}
     <p><i>You are not logged in</i></p>
