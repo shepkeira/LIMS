@@ -1,4 +1,5 @@
 # LIMS
+
 Repository for UBC Capstone project 2021/2022, group LIMS 0
 
 - [Introduction](#introduction)
@@ -16,14 +17,19 @@ Repository for UBC Capstone project 2021/2022, group LIMS 0
 - [Meeting Notes](Notes/)
 
 ## Introduction
+
 ### Organization Background
+
 A Laboratory Information Management System (LIMS) is an internal software program with multiple modules that manages laboratory work flows and information including but not limited to samples and test orders and results. The implementation of the LIMS will simplify data consolidation, improve data quality and security, facilitate receiving samples and track work orders.
+
 ### Description
+
 The client’s target is to prepare a user-friendly LIMS which will have all the options a lab could imagine with different module systems. It should be a plug and play software based integrated LIMS to minimize a requirement of software engineer in a lab facility.
 
 Goals of the LIMS is to develop and deploy a server/cloud-based system that provides effective and efficient management of laboratory work flow and information within the organization. The LIMS will be a proponent part of all the regulatory requirement as it will track personnel activates, monitor equipment, record methods validation, record instrument calibration, record and produce technical documents, integrate measurements of uncertainty, ensure validity of results, general reporting, control data and information management.
 
 ### General Objectives:
+
 - To implement a server/cloud-based LIMS to manage various lab work flow and information pertaining to tracking sample from receipt to completion.
 - To provide Inventory Management for consumables.
 - Maintain track-record of reagents, samples and current location.
@@ -39,6 +45,7 @@ Goals of the LIMS is to develop and deploy a server/cloud-based system that prov
 More Info in [LIMS.pdf](LIMS.pdf)
 
 ## Developer Instructions
+
 ### Setting Up You .env File
 
 1. Place your .env file under LIMS_IMAGE
@@ -124,7 +131,7 @@ Note: Modifications to the database here will not be persisted to the repo. To c
 
 ### Exporting a database backup
 
-This is required to persist data from the database in the repository. This will export the data as a backup file that will be used to initialize the database next time the container is built.
+This is required to persist data from the database in the repository. This will export the data as a backup file that will be used to initialize the database next time the container is built. **When pulling updates with a new database backup, you must rebuild the container.**
 
 #### Method 1: Backup script
 
@@ -136,8 +143,7 @@ While the docker container is running, run the `backup.sh` script in the `db` di
 1. Remove any exisitng backup files
    1. Enter bash in the docker image with `docker exec -it lims_db_server bash`
    1. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`.
-         >There will be no response message if it completed successfully.
-         >If you get `no such file` error then the file did not exist, and you are fine to continue
+      > There will be no response message if it completed successfully.
+      > If you get `no such file` error then the file did not exist, and you are fine to continue
 1. Create new backup file, run `docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
 1. Copy the backup file from the container to the host (replacing the existing backup file in `db/data/`) with `docker cp lims_db_server:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
-
