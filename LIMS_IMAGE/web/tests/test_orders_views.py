@@ -21,6 +21,7 @@ class modelTestCase(TestCase):
         self.test_user_client = User.objects.create_user(username='testuser_c', password='asdf')
         self.test_user_emp = User.objects.create_user(username='testuser_e', password='asdf')
         self.test_user_admin = User.objects.create_user(username='testuser_a', password='asdf')
+        Client(user = self.test_user_client)
 
         self.test_client = baker.make_recipe(
             'accounts.client_recipe',
@@ -61,6 +62,7 @@ class modelTestCase(TestCase):
 
 
     def test_home_page(self):
+        self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/home_page/')
         self.assertEqual(response.status_code, 200)
 
