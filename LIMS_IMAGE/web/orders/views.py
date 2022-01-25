@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from orders.models import Order
 from laboratoryOrders.models import TestResult, OrderTest
+from accounts.models import Client
 
 # Create your views here.
 def home_page(request):
-    return render(request, 'orders/home_page.html')
+    if Client.objects.filter(user=request.user):
+        return render(request, 'orders/home_page.html')
+    return redirect("accounts:employee_home_page")
 
 def order_history(request):
     context = RequestContext(request)
