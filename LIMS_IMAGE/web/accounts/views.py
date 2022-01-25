@@ -29,3 +29,11 @@ def customer_home_page(request):
 
 def employee_home_page(request):
     return redirect("laboratory:lab_home")
+
+def home_page(request):
+    if request.user.is_authenticated:
+        if Client.objects.filter(user=request.user):
+            return redirect("accounts:customer_home_page")
+        else:
+            return redirect("accounts:employee_home_page")
+    return redirect("/")
