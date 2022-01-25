@@ -1,19 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from orders.models import Order
 from laboratoryOrders.models import TestResult, OrderTest
+from accounts.models import Client
 
 # Create your views here.
 def home_page(request):
-    return render(request, 'orders/home_page.html')
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return render(request, 'orders/home_page.html')
+    return redirect("accounts:employee_home_page")
 
 def order_history(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
     context = RequestContext(request)
     orders_list = Order.order_for_user(request.user)
     context_dict = {'orders': list(orders_list)}
     return render(request, 'orders/order_history.html', context_dict)
 
 def results(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
     context = RequestContext(request)
     test_ids = OrderTest.test_ids_for_user(request.user)
     results_list = {}
@@ -44,7 +57,10 @@ def results(request):
     return render(request, 'orders/results.html', context_dict)
 
 def shopping(request):
-    
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
     context = RequestContext(request)
     shopping_list = Order.order_for_user(request.user)
 
