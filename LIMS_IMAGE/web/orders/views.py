@@ -49,7 +49,7 @@ def results(request):
                 result_dict['order_number'] = order_number
                 print("id: " + result_dict['test'])
                 sample_dict[result_dict['test']] = result_dict
-        render_results[order_number] = sample_dict
+            render_results[order_number] = sample_dict
         print(render_results)
             # render_results[order_number] = render_results[order_number] + list(query_set)
 
