@@ -26,7 +26,10 @@ class Order(models.Model):
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
     submission_date = models.DateField()
     def order_for_user(user):
-        client = list(Client.objects.filter(user = user))[0]
+        try:
+            client = list(Client.objects.filter(user = user))[0]
+        except IndexError: # User not a client
+            return Order.objects.none()
         return Order.objects.filter(account_number = client)
 
 

@@ -19,6 +19,7 @@ from orders.views import *
 class modelTestCase(TestCase):
     def setUp(self):
         self.test_user_client = User.objects.create_user(username='testuser_c', password='asdf')
+        self.test_user_client2 = User.objects.create_user(username='testuser_c2', password='asdf')
         self.test_user_emp = User.objects.create_user(username='testuser_e', password='asdf')
         self.test_user_admin = User.objects.create_user(username='testuser_a', password='asdf')
 
@@ -26,6 +27,11 @@ class modelTestCase(TestCase):
             'accounts.client_recipe',
             user=self.test_user_client
         )
+        self.test_client2 = baker.make_recipe(
+            'accounts.client_recipe',
+            user=self.test_user_client2
+        )
+
         self.test_package = baker.make('orders.Package')
         self.test_order = baker.make_recipe(
             'orders.order_recipe',
@@ -75,9 +81,15 @@ class modelTestCase(TestCase):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/results/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('results', response.context)
+        self.assertEquals(response.context['results'][self.test_order.order_number][self.test_testresult.test_id.user_side_id()]['result'], self.test_testresult.result)
 
-    def shopping(self):
+        # Test on client with no orders or results
+        self.client.login(username='testuser_c2', password='asdf')
+        response = self.client.get('/orders/results/')
+        self.assertEqual(response.status_code, 200)
+        print(response.context)
+
+    def test_shopping(self):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/shopping/')
         self.assertEqual(response.status_code, 200)

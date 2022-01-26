@@ -1,7 +1,8 @@
 # Django
+from tokenize import group
 from django.db.models.fields import DateTimeField
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 # Third-party libraries
 from model_bakery import baker
@@ -16,6 +17,10 @@ from orders.models import *
 
 user_recipe = Recipe(
     User
+)
+
+group_recipe = Recipe(
+    Group
 )
 
 client_recipe = Recipe(

@@ -8,14 +8,13 @@
 <body>
   <div class="container">
     <h2>Log In</h2>
-    <form method="post" class="form w-50">
-      {% csrf_token %}
+    <form method="post" class="w-50">
       <!-- Init bootstrap form -->
       {% bootstrap_form form %}
       <!-- Init bootstrap buttons -->
       {% buttons %}
       <button type="submit" class="btn btn-primary">Log In</button>
-      {% endbuttons %}
+      {% endbuttons %} {% csrf_token %} 
     </form>
   </div>
 </body>

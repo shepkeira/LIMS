@@ -153,21 +153,31 @@ class laboratoryOrdersModelsTestCase(TestCase):
         self.assertEqual(self.test_ordertest.order_number, ordertest_result.order_number) 
         self.assertEqual(str(self.test_ordertest.order_number) + " - " + str(self.test_ordertest.test_id), ordertest_result.__str__())
         
-        # test_ids_for_user() function
+        # test_ids_for_user() - user with ordertests
         test_client = baker.make_recipe('accounts.client_recipe')
         # Create ordertests for user
         test_test1 = baker.make('laboratory.Test')
-        test_ordertest1 = baker.make(
-            'laboratoryOrders.OrderTest',
-            order_number = baker.make(
-                'orders.Order',
+        test_ordertest1 = baker.make_recipe(
+            'laboratoryOrders.ordertest_recipe',
+            order_number = baker.make_recipe(
+                'orders.order_recipe',
                 account_number = test_client
             ),
             test_id = test_test1
         )
+        self.assertEqual(test_test1, OrderTest.test_ids_for_user(test_ordertest1.order_number.account_number.user)[test_ordertest1.order_number.order_number][0])
 
-        self.assertQuerysetEqual(Order.objects.filter(account_number = test_client), Order.order_for_user(test_client.user), ordered=False)
+        # test_ids_for_user() - user with no orders at all
+        test_client2 = baker.make_recipe('accounts.client_recipe')
+        self.assertEqual(dict(), OrderTest.test_ids_for_user(test_client2.user))
 
+        # test_ids_for_user() - user with orders but no orderTests
+        test_client3 = baker.make_recipe('accounts.client_recipe')
+        test_order = baker.make_recipe(
+            'orders.order_recipe',
+            account_number = test_client3
+        )
+        self.assertEqual({test_order.order_number: []}, OrderTest.test_ids_for_user(test_client3.user))
 
     def test_testpackage_model(self):
 
