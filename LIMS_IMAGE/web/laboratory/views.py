@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from accounts.models import Client
 
-# Create your views here.
+# home page for laboratory workers
 def home_page(request):
     if not request.user.is_authenticated:
         return redirect("/")

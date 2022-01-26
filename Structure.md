@@ -60,6 +60,7 @@ Inside an app there are a few files:
 - models.py has all the models for your application
 - urls.py is the URL declarations for this Django app
 - views.py where you define the logical method for interacting with models and is used to render different html pages
+- baker_recipes.py is used for testing, more information can be found in the README.md in testing
 
 ##### accounts
 The accounts app is for the user account section of the project. It contains the models for the lab workers, lab admin, and the clients, it also contains the redirect for the correct home page, based on who is logged in.
