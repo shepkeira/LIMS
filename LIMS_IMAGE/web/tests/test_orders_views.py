@@ -67,18 +67,46 @@ class modelTestCase(TestCase):
         )
 
 
-    def test_home_page(self):
+    def test_home_page_unauth(self):
+        # Unauthenticated user
+        response = self.client.get('/orders/home_page/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
+
+
+    def test_home_page_lab_worker(self):
+        # Authenticated lab worker
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/home_page/')
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_home_page_client(self):
+        # Other user type
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/home_page/')
         self.assertEqual(response.status_code, 200)
 
 
-    def test_order_history(self):
+    def test_order_history_unauth(self):
+        response = self.client.get('/orders/order_history/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
+
+
+    def test_order_history_employee(self):
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/order_history/')
+        self.assertEqual(response.status_code, 302)
+    
+    
+    def test_order_history_client(self):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/order_history/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['orders'], list(Order.order_for_user(self.test_user_client)))
     
+
     def test_results(self):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/results/')
@@ -89,10 +117,35 @@ class modelTestCase(TestCase):
         self.client.login(username='testuser_c2', password='asdf')
         response = self.client.get('/orders/results/')
         self.assertEqual(response.status_code, 200)
-        print(response.context)
+        #print(response.context['results'])
 
-    def test_shopping(self):
+
+    def test_results_unauth(self):
+        response = self.client.get('/orders/results/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
+
+
+    def test_results_employee(self):
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/results/')
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_shopping_client(self):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/shopping/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['orders'], list(Order.order_for_user(self.test_user_client)))
+
+    
+    def test_shopping_unauth(self):
+        response = self.client.get('/orders/shopping/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
+
+
+    def test_shopping_employee(self):
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/shopping/')
+        self.assertEqual(response.status_code, 302)

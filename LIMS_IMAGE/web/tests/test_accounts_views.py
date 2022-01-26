@@ -64,3 +64,24 @@ class accountsViewsTestCase(TestCase):
         self.client.login(username='testuser_e', password='asdf')
         response = self.client.get('/accounts/employee_home_page/')
         self.assertRedirects(response, '/laboratory/home_page/')
+
+
+    def test_home_page_unauth(self):
+        # Unauthenticated user
+        response = self.client.get('/accounts/home_page/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
+
+
+    def test_home_page_lab_worker(self):
+        # Authenticated lab worker
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/accounts/home_page/')
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_home_page_client(self):
+        # Other user type
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/accounts/home_page/')
+        self.assertEqual(response.status_code, 302)
