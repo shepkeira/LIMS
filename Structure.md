@@ -1,6 +1,6 @@
 # Structure
 
-This repo has the follow top level structure
+This repo has the following top level structure
 - .github (folder)
 - LIMS_IMAGE (folder)
 - Notes (folder)
@@ -45,7 +45,7 @@ This folder contains our database backup (lims_db_init.bak) which is used to ini
 
 ### web
 This folder has all the files related to our web application container.
-Dockerfile and requirements.txt are used for the creation of our web appication container.
+Dockerfile and requirements.txt are used for the creation of our web application container.
 manage.py is a django file for managing our project, its used in processes such as migrations (instructions for migrations can be found in the README.md).
 
 The project is split into 6 applications (accounts, laboratory, laboratoryorders, orders, and training) each of which is contained in its own folder.
@@ -54,7 +54,7 @@ The project is split into 6 applications (accounts, laboratory, laboratoryorders
 The project is split into 6 applications. Each app is contained within its own folder.
 Inside an app there are a few files:
 - migrations contains all our migration files, accounting for changes to our database
-- __init__.py this file tells our project that this directoyr should be considered a Python package
+- __init__.py this file tells our project that this directory should be considered a Python package
 - admin.py is used to register your app's models
 - apps.py is a configuration file
 - models.py has all the models for your application
@@ -72,10 +72,10 @@ The laboratory app is for things specific to a laboratory (equipment, tests, and
 The orders app is for the client side or ordering tests, viewing order results, and viewing your history.
 
 ##### laboratoryOrders
-The laboratoryOrders app is for thing that are connected throught the laboratory and orders pages (samples).
+The laboratoryOrders app is for things that are connected throught the laboratory and orders pages (samples).
 
 ##### training
-The training app is for thing related to lab employee training, such as scheduling, and attendence.
+The training app is for things related to lab employee training, such as scheduling, and attendence.
 
 #### src
 This is our base project folder, it contains files pertaining to the project as a whole.
@@ -86,7 +86,7 @@ This is our base project folder, it contains files pertaining to the project as 
 - wsgi.py the entry point for Web Server Gateway Interface (WSGI) compatiable web servers to serve the project
 
 #### templates
-The tempaltes folder contains the .html and .css files for our different pages on the site. There are folders for each application, and also a home.html and base.html which are not connected to any one application.
+The templates folder contains the .html and .css files for our different pages on the site. There are folders for each application, and also a home.html and base.html which are not connected to any one application.
 - home.html is our home page for a non-logged in user
 - base.html has our navigation bar and all other html pages should extend it
 
@@ -94,7 +94,7 @@ The tempaltes folder contains the .html and .css files for our different pages o
 This folder contains our testing files, and our testing README
 
 ### .env
-This file contains our enironmental vairables. They must be set using the instructions in the README.md
+This file contains our environmental variables. They must be set using the instructions in the README.md
 
 ### docker-compose.yml
 The docker-compose file is used to build our docker containers
