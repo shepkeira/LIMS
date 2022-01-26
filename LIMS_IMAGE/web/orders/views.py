@@ -53,7 +53,7 @@ def results(request):
                 result_dict['test'] = testresult.test_id.user_side_id()
                 result_dict['order_number'] = order_number
                 sample_dict[result_dict['test']] = result_dict
-        render_results[order_number] = sample_dict
+            render_results[order_number] = sample_dict
 
     context_dict = {'user': request.user, 'results': render_results}
     return render(request, 'orders/results.html', context_dict)
