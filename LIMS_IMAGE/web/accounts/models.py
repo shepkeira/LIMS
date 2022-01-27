@@ -3,20 +3,22 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-
 class Client(models.Model):
     def __str__(self):
         return self.contact_person
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    company_name = models.CharField(max_length=100)
+    company_name   = models.CharField(max_length=100)
     contact_person = models.CharField(max_length=100)
     # set to the standard canadian 10 digit phone number length
-    phone_number = models.CharField(max_length=10)
-    address = models.CharField(max_length=200)
+    phone_number   = models.CharField(max_length=10)
+    address        = models.CharField(max_length=200)
     account_number = models.IntegerField()
     # connect to authenticated user
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
+    user           = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    # def get_abusolute_url(self):
+    #     return self.account_number
+   
 
 class LabWorker(models.Model):
     def __str__(self):
@@ -25,7 +27,6 @@ class LabWorker(models.Model):
     job_title = models.CharField(max_length=100)
     # connect to authenticated user
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
 
 class LabAdmin(models.Model):
     def __str__(self):

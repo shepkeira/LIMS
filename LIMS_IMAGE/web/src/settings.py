@@ -48,8 +48,9 @@ INSTALLED_APPS = [
     'orders',
     'training',
     'laboratoryOrders',
+    'shopping',
 ]
-
+CART_SESSION_ID = 'shopping'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,11 +74,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #'cart.context_processor.cart_total_amount',
             ],
         },
     },
 ]
-
+#CART_SESSION_ID = 'shopping'
 WSGI_APPLICATION = 'src.wsgi.application'
 
 

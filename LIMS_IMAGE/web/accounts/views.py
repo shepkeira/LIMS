@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import redirect, render
 
+
 from accounts.models import Client
 
 class SignUpView(generic.CreateView):
@@ -29,3 +30,9 @@ def customer_home_page(request):
 
 def employee_home_page(request):
     return redirect("laboratory:lab_home")
+
+def account_number(request):
+    return Client.objects.account_number
+
+
+

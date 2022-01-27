@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.template import RequestContext
-from orders.models import Order
+from orders.models import Order, Package
 from laboratoryOrders.models import TestResult, OrderTest
-
+from accounts.models import *
+from laboratory.models import * 
 # Create your views here.
 def home_page(request):
     return render(request, 'orders/home_page.html')
@@ -43,10 +44,19 @@ def results(request):
     context_dict = {'user': request.user, 'results': render_results}
     return render(request, 'orders/results.html', context_dict)
 
-def shopping(request):
-    
+def shopping(request):  
     context = RequestContext(request)
-    shopping_list = Order.order_for_user(request.user)
+    #account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
+    accounts_list = Order.order_for_user(request.user)
+    #accounts_list = Client.objects.account_number
+    context_dict = {'accounts': list(accounts_list)}
+    # package_list = Package.package()
+    # context_dict = {'packages': list(package_list)}
+    ##name = models.CharField(Test, max_length=100)
+    #package_list ={}
+    #for package in name:
+        #return package_list[package]
+    return render(request, 'shopping/shopping.html',context_dict)
 
-    context_dict = {'orders': list(shopping_list)}
-    return render(request, 'orders/shopping.html',context_dict)
+def appendix_b(request):
+    return render(request, 'shopping/appendix_b.html')
