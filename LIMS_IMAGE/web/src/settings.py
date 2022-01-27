@@ -79,7 +79,6 @@ TEMPLATES = [
         },
     },
 ]
-#CART_SESSION_ID = 'shopping'
 WSGI_APPLICATION = 'src.wsgi.application'
 
 

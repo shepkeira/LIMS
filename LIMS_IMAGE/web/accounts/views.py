@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 
 from accounts.models import Client
@@ -31,8 +31,7 @@ def customer_home_page(request):
 def employee_home_page(request):
     return redirect("laboratory:lab_home")
 
-def account_number(request):
-    return Client.objects.account_number
+
 
 
 

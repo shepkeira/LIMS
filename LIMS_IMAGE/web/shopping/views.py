@@ -53,29 +53,3 @@ def cart_clear(request):
 def cart_detail(request):
     return render(request, 'cart/cart_detail.html')
 
-# def shopping(request):
-    
-#     context = RequestContext(request)
-#     accounts_list = Client.account_number(request.user)
-
-#     context_dict = {'accounts': list(accounts_list)}
-#     return render(request, 'shopping/shopping.html',context_dict)
-
-# def shopping(request):  
-#     context = RequestContext(request)
-#     accounts_list = Order.order_for_user(request.user)
-#     #accounts_list = Client.account_number(request.user)
-#     context_dict = {'accounts': list(accounts_list)}
-#     return render(request, 'shopping/shopping.html',context_dict)
-
-def appendix_b(request):
-    return render(request, 'shopping/appendix_b.html')
-
-# def order_history(request):
-#     context = RequestContext(request)
-#     orders_list = Order.order_for_user(request.user)
-#     context_dict = {'orders': list(orders_list)}
-#     return render(request, 'orders/order_history.html', context_dict)
-
-# def cutomer_home_page(request):
-#     return redirect('orders:home')
