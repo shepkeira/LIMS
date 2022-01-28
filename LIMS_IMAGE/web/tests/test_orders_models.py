@@ -42,5 +42,11 @@ class ordersModelsTestCase(TestCase):
         self.assertEqual('Order: ' + str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.__str__())
         self.assertEqual(str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.user_side_id())
 
-        # order_for_user function
+        # order_for_user method - user with orders
         self.assertQuerysetEqual(Order.objects.filter(account_number = self.test_client), Order.order_for_user(self.test_client.user))
+        # order_for_user method - user with no orders
+        test_client2 = baker.make_recipe('accounts.client_recipe')
+        self.assertQuerysetEqual(Order.objects.filter(account_number = test_client2), Order.order_for_user(test_client2.user))
+        # order_for_user method - non-client user
+        test_emp = baker.make_recipe('accounts.labworker_recipe')
+        self.assertQuerysetEqual(Order.objects.none(), Order.order_for_user(test_emp.user))

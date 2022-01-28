@@ -29,7 +29,10 @@ class Order(models.Model):
 
     # this functions takes in a user (client), and returns a list of orders related to that client
     def order_for_user(user):
-        client = list(Client.objects.filter(user = user))[0]
+        try:
+            client = list(Client.objects.filter(user = user))[0]
+        except IndexError: # User not a client
+            return Order.objects.none()
         return Order.objects.filter(account_number = client)
 
 
