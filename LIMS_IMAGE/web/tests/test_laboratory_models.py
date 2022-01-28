@@ -1,5 +1,4 @@
 # Django
-from django.db.models.fields import DateTimeField
 from django.test import TestCase
 from django.contrib.auth.models import User
 
@@ -9,33 +8,22 @@ from model_bakery.recipe import Recipe
 
 # Our apps
 from accounts.models import *
+from accounts.views import *
 from laboratory.models import *
+from laboratory.views import *
 from laboratoryOrders.models import *
+from laboratoryOrders.views import *
 from orders.models import *
+from orders.views import *
 
-class modelTestCase(TestCase):
+class laboratoryModelsTestCase(TestCase):
     def setUp(self):
 
-        self.test_location = baker.make('laboratory.Location')
-        self.test_test = baker.make('laboratory.Test')
-
-        self.instrument_recipe = Recipe(
-            Instrument,
-            location = self.test_location
-            # Other fields will be filled with random data
-        )
-
-        self.test_instrument = self.instrument_recipe.make()
-
-        self.testinstrument_recipe = Recipe(
-            TestInstrument,
-            test_id = self.test_test,
-            instrument = self.test_instrument
-            # Other fields will be filled with random data
-        )
-
-        self.test_testInstrument = self.testinstrument_recipe.make()
-        self.test_inventoryItem = baker.make('laboratory.InventoryItem')
+        self.test_location = baker.make_recipe('laboratory.location_recipe')
+        self.test_test = baker.make_recipe('laboratory.test_recipe')
+        self.test_instrument = baker.make_recipe('laboratory.instrument_recipe')
+        self.test_testInstrument = baker.make_recipe('laboratory.testinstrument_recipe')
+        self.test_inventoryItem = baker.make_recipe('laboratory.inventoryitem_recipe')
 
     def test_location_model(self):
 

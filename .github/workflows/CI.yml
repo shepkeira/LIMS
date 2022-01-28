@@ -1,7 +1,10 @@
 name: LIMS-CI-Container
 
 on:
-  [push, pull_request]
+  pull_request:
+    branches:
+      - development
+      - main
 
 jobs:
 

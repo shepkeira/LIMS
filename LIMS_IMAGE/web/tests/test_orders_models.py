@@ -1,5 +1,4 @@
 # Django
-from django.db.models.fields import DateTimeField
 from django.test import TestCase
 from django.contrib.auth.models import User
 
@@ -9,29 +8,19 @@ from model_bakery.recipe import Recipe
 
 # Our apps
 from accounts.models import *
+from accounts.views import *
 from laboratory.models import *
+from laboratory.views import *
 from laboratoryOrders.models import *
+from laboratoryOrders.views import *
 from orders.models import *
+from orders.views import *
 
-class modelTestCase(TestCase):
+class ordersModelsTestCase(TestCase):
     def setUp(self):
-        self.test_user = User.objects.create_user(username='testuser', password='asdf')
-
-        self.client_recipe = Recipe(
-            Client,
-            user=self.test_user
-            # Other fields will be filled with random data
-        )
-        self.client = self.client_recipe.make()
-
+        self.test_client = baker.make_recipe('accounts.client_recipe')
         self.test_package = baker.make('orders.Package')
-
-        self.order_recipe = Recipe(
-            Order,
-            account_number = self.client
-            # Other fields will be filled with random data
-        )
-        self.test_order = self.order_recipe.make()
+        self.test_order = baker.make_recipe('orders.order_recipe')
 
 
     def test_package_model(self):
@@ -50,8 +39,14 @@ class modelTestCase(TestCase):
 
         self.assertIsInstance(self.test_order, Order)
         self.assertIsInstance(order_result.account_number, Client)
-        self.assertEqual(order_result.account_number, self.client)
         self.assertEqual('Order: ' + str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.__str__())
         self.assertEqual(str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.user_side_id())
 
-        # TODO test order_for_user
+        # order_for_user method - user with orders
+        self.assertQuerysetEqual(Order.objects.filter(account_number = self.test_client), Order.order_for_user(self.test_client.user))
+        # order_for_user method - user with no orders
+        test_client2 = baker.make_recipe('accounts.client_recipe')
+        self.assertQuerysetEqual(Order.objects.filter(account_number = test_client2), Order.order_for_user(test_client2.user))
+        # order_for_user method - non-client user
+        test_emp = baker.make_recipe('accounts.labworker_recipe')
+        self.assertQuerysetEqual(Order.objects.none(), Order.order_for_user(test_emp.user))

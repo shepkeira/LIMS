@@ -3,3 +3,9 @@
 
 # Ignore environment variables
 .env
+
+# Ignore VS Code workspace files
+/.vscode/
+
+#Ignore coverage files
+.coverage
