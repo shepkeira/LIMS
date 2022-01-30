@@ -6,7 +6,7 @@ from django.template import RequestContext
 from orders.models import Order
 from accounts.models import *
 from django.contrib.auth.decorators import login_required
-from shopping.cart import Cart
+#from shopping.cart import Cart
 from laboratoryOrders import  *
 # Create your views here.
 

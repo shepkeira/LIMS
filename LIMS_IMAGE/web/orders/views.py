@@ -1,17 +1,11 @@
 from django.shortcuts import render, redirect
 from django.template import RequestContext
-<<<<<<< HEAD
-#from numpy import size
 from orders.models import Order, Package
 from laboratoryOrders.models import *
 from accounts.models import Client
 from laboratory.models import * 
 from django.shortcuts import get_object_or_404, redirect, render
-=======
-from orders.models import Order
-from laboratoryOrders.models import TestResult, OrderTest
-from accounts.models import Client
->>>>>>> 80f277a4b3e212cce97c0f706d42dd6824c9cb8c
+
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -67,7 +61,6 @@ def results(request):
     context_dict = {'user': request.user, 'results': render_results}
     return render(request, 'orders/results.html', context_dict)
 
-<<<<<<< HEAD
 # def shopping(request):  
 #     context = RequestContext(request)
 #     accounts_list = Order.order_for_user(request.user)
