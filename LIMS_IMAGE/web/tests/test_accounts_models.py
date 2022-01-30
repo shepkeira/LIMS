@@ -28,6 +28,7 @@ class accountsModelsTestCase(TestCase):
 
         self.assertIsInstance(self.test_client, Client)
         self.assertEqual(self.test_client.company_name, client_result.company_name)
+        self.assertEqual(self.test_client.contact_person, client_result.__str__())
 
 
     def test_labWorker_model(self):

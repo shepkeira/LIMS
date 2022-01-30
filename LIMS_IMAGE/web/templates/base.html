@@ -1,3 +1,4 @@
+{% load user_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,7 +24,7 @@
         style="background-color: #f3f2f1"
       >
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">LIMS</a>
+          <a class="navbar-brand" href="{% url 'accounts:home_page' %}">LIMS</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -37,13 +38,19 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {% if user.is_superuser or user.is_staff %}
+              {% if user.is_superuser %}
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'admin:index' %}"
                   >Administrator Dashboard</a
                 >
               </li>
-              {% endif %} {% if not user.is_staff and not user.is_anonymous %}
+              {% elif user.is_staff %}
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'admin:index' %}"
+                  >Employee Dashboard</a
+                >
+              </li>
+              {% endif %} {% if request.user|has_group:"Clients" %}
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'orders:order_history' %}"
                   >Your Order History</a
