@@ -12,13 +12,8 @@ class Package(models.Model):
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     name = models.CharField(max_length=100)
 
-    # def package_for_user(user):
-    #     client = list(Client.objects.filter(user = user))[0]
-    #     return Order.objects.filter(account_number = client)
     def package(self):
         return str(self.name)
-
-
 
 # an order placed by a client of tests they which to purchase
 
@@ -26,7 +21,6 @@ class Order(models.Model):
     def __str__(self):
         return 'Order: ' + str(self.account_number.company_name) + " " + str(self.order_number)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-
     order_number = models.IntegerField()
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
     submission_date = models.DateField()

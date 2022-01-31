@@ -2,103 +2,85 @@
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Client Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
-<body>  
+
+ 
     {% block content %}
+    <br>
     <h1>&emsp;Shopping Cart (Order Submission)</h1> 
-        <br>
-    {#{{client}}#}
 
     <!-- {{clients}} -->
     
+    <div class="container p-5 my-5 bg-light border">
+
+    {% if account %} <!-- this should be account number from the client class-->
+        <p><b> Hello, {{ user.first_name}}  <br>
+            <br>Please complete the sample submission form by selecting your sample type, test type and the quantity for each order. <br>
+            If you are not sure which tests or packages to order please see <a href = "appendix_b"> Appendix B</a> for the test recommendation. 
+        </b></p> 
+    </div> 
     
+    <form>
+        <h3> &emsp; Sample submission form</h3>
 
-    {% if user %} <!-- this should be account number from the client class-->
-        <p><b> &emsp;Hello, {{ user.first_name}}  <br>
-            <br>
-            &emsp; Please complete the sample submission form by selecting your sample type, test type and the quantity for each order. <br>
-            &emsp; If you are not sure which test or package to order please see <a href = "appendix_b"> Appendix B</a> for the test recommendation. 
-        </b></p>   
-            <div>
-        
-            </div>
+        <div class = "container mt-3"> 
+            <form action = "/action_page.php">
+                <label for="sample-type" class="form-label">Choose your sample from the list:</label>
+                <input class="form-control" list="sample-types" name="sample-type" id="sample-type">
+                <datalist id="sample-types">
+                    {# <option {{sample.id}} -- {% sampletype.id %}> {{sample_type}}>#}
+                        <option value="Dairy">
+                        <option value="Cosmetics">
+                        <option value="Environment">
+                    </datalist>   
+            </form>
+        </div>
+
+        <div class = "container mt-3">
             <form>
-            <h3> &emsp; Sample submission form</h3>
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="50">
+            </form>   
+        </div>  
 
-            {% for i in package_list %}
-                {{i.name}}
-            {% endfor %}
-
-            <!-- {% for i in sample_types %} 
-                {{i.sample_type}} 
-
-            {% endfor %} 
-             -->
-                <div class = "container mt-3"> 
-                    <form action = "/action_page.php">
-                        <label for="sample-type" class="form-label">Choose your sample from the list:</label>
-                        <input class="form-control" list="sample-types" name="sample-type" id="sample-type">
-                        <datalist id="sample-types">
-                           {# <option {{sample.id}} -- {% sampletype.id %}> {{sample_type}}>#}
-                            <option value="Dairy">
-                            <option value="Cosmetics">
-                            <option value="Environment">
-                        </datalist>   
-                    </form>
-                </div>
-
-                <div class = "container mt-3">
-                <form>
-                    <label for="quantity">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" min="1" max="50">
-                  </form>   
-                </div>  
-
-                <div class = "container mt-3">
-                    <form action = "/action_page.php">
-                        <label for="Packaged-individual" class="form-label">Choose your package or individual test</label>
+        <div class = "container mt-3">
+            <form action = "/action_page.php">
+                <label for="Packaged-individual" class="form-label">Choose your package or individual test</label>
                 
-                        <input class="form-control" list="Packaged/individual" name="Packaged-individual" id="Packaged-individual">
-                        <datalist id="Packaged/individual">
-                           {% for item in package_list %} 
-                            <option value={{item}}> 
-                            <option value="Lab Package B">
-                            <option value="Individual test- General lab">
-                            <option value="Individual test- Analytical lab">
-                            <option value="Individual test- Microbiology lab">
-                            <option value="Individual test- Molecular lab">
-                         {% endfor %} 
-                        </datalist>
-                    </form>
-        
-                </div>
+                <input class="form-control" list="Packaged/individual" name="Packaged-individual" id="Packaged-individual">
+                <datalist id="Packaged/individual">
+
+                    {% for i in package_list %}
+                        {{i.name}}
+                        <option value={{i.name}}>
+                    {% endfor %} 
+                </datalist>
+            </form>
+        </div>
+
+        <div class = "container mt-3">
+            <button type = "btn btn-primary mt-3 mb-3">Add to Cart</button>
+
+                {% for key,value in request.session.cart.items %}
+                {{value.name}} {{value.cost}} {{value.quantity}} 
+                {% endfor %}
+
+                {% if value %}
 
                 <div class = "container mt-3">
-                    <button type = "btn btn-primary mt-3 mb-3">Add to Cart</button>
-
-                    {% for key,value in request.session.cart.items %}
-                    {{value.name}} {{value.cost}} {{value.quantity}} 
-                    {% endfor %}
-
-                    {% if value %}
-
-                    <div class = "container mt-3">
-                        <button type = "btn btn-primary mt-3 mb-3">Add another item </button>
-                        <button type = "btn btn-primary mt-3 mb-3">Remove item </button>
-                        <button type = "btn btn-primary mt-3 mb-3"> Update cart </button>
-                    
-                    </div>
-                    {% endif %}
+                    <button type = "btn btn-primary mt-3 mb-3">Add another item </button>
+                    <button type = "btn btn-primary mt-3 mb-3">Remove item </button>
+                    <button type = "btn btn-primary mt-3 mb-3"> Update cart </button>   
+                </div>
+                {% endif %}
                 {% else %} 
                     
-                        <p> <br> <b>&emsp;Thank you for signing up and you are successful login in. <br>
-                        &emsp;Please complete the registration by creating your profile before placing order. <br>
-                        &emsp;We need your account number before you can add an item to the cart.</b>
-                        </p>
-                        <!-- To do put the link to registration page here -->
-                        
-                {% endif %} 
-        
-                </div>
+                    <p> <br> <b>&emsp;Thank you for signing up and you are successful login in. <br>
+                    &emsp;Please complete the registration by creating your profile before placing order. <br>
+                    &emsp;We need your account number before you can add an item to the cart.</b>
+                    </p>
+                    <!-- To do put the link to registration page here -->       
+                {% endif %}      
+            </div>
             </form>
             <p>&emsp;<a href="{% url 'home' %}">back</a></p>
     {% endblock %}   

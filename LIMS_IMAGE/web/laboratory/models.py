@@ -26,10 +26,14 @@ class Test(models.Model):
         return self.name # tests are referenced by their name
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     name = models.CharField(max_length=100) # name of the test
+    sample_type = models.CharField(max_length=100) # name of the sample type (examples, dairy or environement)
     code = models.CharField(max_length=100) # test code for internal referencing
     cost = models.FloatField() # cost of running this test (for the client)
     rush = models.BooleanField() # if there is a rush on the test
     time_taken = models.IntegerField() # time this test takes
+
+    def get_Test_name(self):
+        return self.name
 
 # What instruments are used by different tests (many to many)
 class TestInstrument(models.Model):

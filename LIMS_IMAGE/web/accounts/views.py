@@ -2,9 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import get_object_or_404, redirect, render
-
-
+from django.shortcuts import redirect, render
 from accounts.models import Client
 
 # view used for registration of a client or lab employee
@@ -33,7 +31,6 @@ def customer_home_page(request):
 # this function is for the employee home page, which is found in the laboratory app
 def employee_home_page(request):
     return redirect("laboratory:lab_home")
-
 
 # this funciton is used to redirect someone to the correct home page based on if they are login in and who they are login as
 def home_page(request):

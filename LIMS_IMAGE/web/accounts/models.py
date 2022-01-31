@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-
 # clients who will order tests
 
 class Client(models.Model):
@@ -16,16 +15,12 @@ class Client(models.Model):
     address        = models.CharField(max_length=200)
     account_number = models.IntegerField()
     # connect to authenticated user
-
     user           = models.OneToOneField(User, on_delete=models.CASCADE)
     
-    # def get_abusolute_url(self):
-    #     return self.account_number
+    def get_account_number(self):
+        return self.account_number
    
-
-
 # laboratory workers who will work on tests
-
 class LabWorker(models.Model):
     def __str__(self):
         return self.user.username # lab workers are referenced by their username
