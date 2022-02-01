@@ -5,6 +5,7 @@ from laboratoryOrders.models import *
 from accounts.models import Client
 from laboratory.models import * 
 from django.shortcuts import redirect, render
+from itertools import chain
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -72,8 +73,9 @@ def shopping(request):
     #sample_type_list = Sample.objects.all()
     package_list = Package.objects.all()
     tests_list = Test.objects.all()
-    #context_dict = {'sample_type_list':sample_types,'package_list':package_list}
-    context_dict = {'account': account_num, 'package':package_list,'tests':tests_list'}
+    package_and_individual_list = list(chain(package_list,tests_list))
+    #context_dict = {'account': account_num,'sample':sample_type_list','all_list': package_and_individual_list}
+    context_dict = {'account': account_num, 'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
     return render(request, 'shopping/shopping.html',context_dict)
 
 def appendix_b(request):

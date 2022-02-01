@@ -49,7 +49,7 @@
                 <input class="form-control" list="Packaged/individual" name="Packaged-individual" id="Packaged-individual">
                 <datalist id="Packaged/individual">
 
-                    {% for i in package_list %}
+                    {% for i in all_list %}
                         {{i.name}}
                         <option value={{i.name}}>
                     {% endfor %} 
