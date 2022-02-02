@@ -120,6 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+# Compared to the UTC, PST8PDT is Pacific Stanard Time with daylight savings
+# TIME_ZONE = 'UTC'
 TIME_ZONE = 'PST8PDT'
 
 USE_I18N = True
