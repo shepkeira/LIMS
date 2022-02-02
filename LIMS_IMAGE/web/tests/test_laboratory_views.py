@@ -61,7 +61,3 @@ class laboratoryViewsTestCase(TestCase):
         self.client.logout()
         response = self.client.get('/laboratory/sample_list/')
         self.assertRedirects(response, '/')
-        # Check that the correct template was used
-        self.assertTemplateUsed(response, '/laboratory/sample_list.html')
-        # Check that the correct context was used
-        self.assertEqual(response.context['sample_list'].count(), 1)
