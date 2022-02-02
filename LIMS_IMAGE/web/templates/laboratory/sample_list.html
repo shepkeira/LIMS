@@ -15,6 +15,9 @@
       <div class="search-wrapper">
         <input type="search" id="search" class="form-control" placeholder="Search samples" aria-label="Search">
       </div>
+      {% if samples|length is 0 %}
+      <p>No samples found</p>
+      {% else %}
       <div class="sample-list">
         {% for sample in samples %}
         {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
@@ -34,6 +37,7 @@
           </ul>
         {% endfor %}
       </div>
+      {% endif %}
       {% comment %} <div class="search-wrapper">
         <h1>Sample List</h1> 
         <button class="btn btn-success my-4" onclick="location.href='{% url 'admin:laboratoryOrders_sample_add' %}'">Add Sample</button>
