@@ -1,12 +1,22 @@
 version: "3.3"
 
 services:
-  db:
-    build: ./db
+  db-mssql:
+    build: ./db-mssql
     user: root
     volumes:
-      - ./db/data:/var/lib/mssql/data
-    container_name: lims_db_server
+      - ./db-mssql/data:/var/lib/mssql/data
+    container_name: lims_db_server_mssql
+  db-postgres:
+    container_name: lims_db_server_postgres
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    user: root
+    volumes:
+      - ./db-postgres/data:/var/lib/postgresql/backup
   web:
     build: ./web
     command: python manage.py runserver 0.0.0.0:8000
@@ -15,7 +25,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - db-mssql
+      - db-postgres
     container_name: lims_web_server
     env_file:
       - ./.env

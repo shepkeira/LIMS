@@ -145,5 +145,5 @@ While the docker container is running, run the `backup.sh` script in the `db` di
    1. Delete the existing backup file with `rm /var/opt/mssql/backup/lims_db_init.bak`.
       > There will be no response message if it completed successfully.
       > If you get `no such file` error then the file did not exist, and you are fine to continue
-1. Create new backup file, run `docker exec -it lims_db_server /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Lab_rats2021' -Q "BACKUP DATABASE [lims_db] TO DISK = N'/var/opt/mssql/backup/lims_db_init.bak' WITH NOFORMAT, NOINIT, NAME = 'lims_db', SKIP, NOREWIND, NOUNLOAD, STATS = 10"`
+1. Create new backup file, run `docker exec -it lims_db_server pg_dump -U sa -W -F t lims_db > lims_db_backup.tar`
 1. Copy the backup file from the container to the host (replacing the existing backup file in `db/data/`) with `docker cp lims_db_server:/var/opt/mssql/backup/lims_db_init.bak LIMS_IMAGE/db/data`
