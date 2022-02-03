@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    # TODO: why are there two accounts urls?
     path('accounts/', include('django.contrib.auth.urls')),
     path('orders/', include('orders.urls')),
     path('laboratory/', include('laboratory.urls')),

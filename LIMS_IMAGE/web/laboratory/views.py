@@ -3,6 +3,7 @@ from accounts.models import Client
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
+from laboratoryOrders.models import Sample
 
 # home page for laboratory workers
 def home_page(request):
@@ -12,12 +13,17 @@ def home_page(request):
         return redirect("accounts:customer_home_page")
     return render(request, 'laboratory/home_page.html')
 
-def read_barcode(request):
+# page listing all samples for laboratory workers
+def sample_list(request):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
+    sample_list = Sample.all_samples()
+    context = {'samples': sample_list}
+    return render(request, 'laboratory/sample_list.html', context)
 
+def read_barcode(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
@@ -45,3 +51,5 @@ def read_barcode(request):
     else:
         form = ImageForm()
     return render(request, 'laboratory/read_barcode.html', {'form': form})
+
+    
