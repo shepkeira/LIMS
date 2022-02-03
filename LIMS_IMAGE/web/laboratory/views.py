@@ -21,6 +21,11 @@ def read_barcode(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
+        mypath = "../../src/uploads/images"
+        for root, dirs, files in os.walk(mypath):
+            for file in files:
+                if file.endswith('jpg'):
+                    os.remove(os.path.join(root, file))
         if form.is_valid():
             form.save()
             # Get the current instance object to display in the template
