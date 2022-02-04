@@ -71,9 +71,9 @@ def shopping(request):
     account_list=Client.objects.all()
     account_num = Client.objects.filter(user=request.user)
     sample_types = {} 
-    sample_types_list = Test.get_sample_type()
-    for type in sample_types_list:
-        sample_types[type] = Test.get_sample_type()
+    #sample_types_list = Test.get_sample_type()
+   # for type in sample_types_list:
+      #  sample_types[type] = Test.get_sample_type()
     
     package_list = Package.objects.all()
     tests_list = Test.objects.all()
