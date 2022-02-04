@@ -13,3 +13,5 @@
 1. Restore from backup: `psql -U sa lims_db < lims_db_backup.tar`
 
 1. Restart container
+
+https://www.shubhamdipt.com/blog/django-transfer-data-from-sqlite-to-another-database/
