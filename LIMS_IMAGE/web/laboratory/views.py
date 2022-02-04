@@ -24,6 +24,10 @@ def sample_list(request):
     return render(request, 'laboratory/sample_list.html', context)
 
 def read_barcode(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
     """Process images uploaded by users"""
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
