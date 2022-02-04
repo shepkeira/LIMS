@@ -72,6 +72,10 @@ def shopping(request):
     account_num = Client.objects.filter(user=request.user)
     sample_type_list = Test.objects.all()
     package_list = Package.objects.all()
+    #for sample_type in 
+    #sample_type_list[0] = Test.get_sample_type()
+    #sample_type_list[1] = Test.get_sample_type()
+
     tests_list = Test.objects.all()
     package_and_individual_list = list(chain(package_list,tests_list))
     #sample_no_duplicate = set(sample_type_list)
