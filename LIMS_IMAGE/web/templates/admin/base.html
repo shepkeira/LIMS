@@ -1,0 +1,5 @@
+{% extends "admin/base.html" %} {% block userlinks %}
+<a href="{% url 'accounts:home_page' %}">Site Home</a> /
+<a href="{% url 'laboratory:lab_sample_list' %}">Sample List</a> /
+<a href="{% url 'admin:password_change' %}">Change password</a> /
+<a href="{% url 'admin:logout' %}">Log out</a> {%endblock %}
