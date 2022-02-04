@@ -33,10 +33,10 @@ class Test(models.Model):
     time_taken = models.IntegerField() # time this test takes
 
     def get_Test_name(self):
-        return self.name
+        return str(self.name)
     
-    #def get_sample_type(self):
-     #   return self.Sample_type
+    def get_sample_type(self):
+        return str(self.sample_type)
 
 # What instruments are used by different tests (many to many)
 class TestInstrument(models.Model):

@@ -9,8 +9,7 @@ urlpatterns = [
     path('results/', views.results, name='results'),
     path('shopping/', views.shopping, name='shopping'),
     path('home_page/', views.home_page, name='home'),
-    path('shopping/appendix_b',views.appendix_b, name = "appendix_b"),
-    
-    
+    path('shopping/appendix_b',views.appendix_b, name = "appendix_b"),  
+    path('shopping/appendix_b',views.shopping, name = "shopping")  
 
 ]

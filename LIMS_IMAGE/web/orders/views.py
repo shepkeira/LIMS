@@ -70,16 +70,32 @@ def shopping(request):
     context = RequestContext(request)
     account_list=Client.objects.all()
     account_num = Client.objects.filter(user=request.user)
-    #sample_type_list = Sample.objects.all()
+    sample_type_list = Test.objects.all()
     package_list = Package.objects.all()
     tests_list = Test.objects.all()
     package_and_individual_list = list(chain(package_list,tests_list))
-    #context_dict = {'account': account_num,'sample':sample_type_list','all_list': package_and_individual_list}
-    context_dict = {'account': account_num, 'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
+    #sample_no_duplicate = set(sample_type_list)
+    #sample_no_duplicate= list(dict.fromkeys(sample_type_list))
+    sample_no_duplicate=sample_type_list.distinct()
+    sample = list(sample_no_duplicate)
+    context_dict = {'account': account_num,'sample': sample,'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
+    #context_dict = {'account': account_num, 'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
     return render(request, 'shopping/shopping.html',context_dict)
 
 def appendix_b(request):
-    return render(request, 'shopping/appendix_b.html')
+    sample_type_list = Test.objects.all()
+    package_list = Package.objects.all()
+    package = list(package_list)
+    tests_list = Test.objects.all()
+    tests = list(tests_list)
+    package_and_individual_list = list(chain(package_list,tests_list))
+    #sample_no_duplicate = set(sample_type_list)
+    #sample_no_duplicate= list(dict.fromkeys(sample_type_list))
+    sample_no_duplicate=sample_type_list.distinct()
+    sample = list(sample_no_duplicate)
+    context_dict = {'sample': sample,'all_list': package_and_individual_list,'package':package,'tests':tests}
+
+    return render(request, 'shopping/appendix_b.html',context_dict)
 
 #context_dict = {'accounts': list(accounts_list)}
 #client = get_object_or_404(Client)
