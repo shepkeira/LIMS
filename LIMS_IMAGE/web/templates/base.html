@@ -44,6 +44,13 @@
                   >Sample List</a
                 >
               </li>
+              <li class="nav-link">
+                <a
+                  class="nav-link"
+                  href="{% url 'laboratory:read_barcode' %}"
+                  >Scan Barcode</a
+                >
+              </li>
               {% endif %} {% if user.is_superuser %}
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'admin:index' %}"

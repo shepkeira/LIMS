@@ -9,4 +9,5 @@ urlpatterns = [
     path('read_barcode/', views.read_barcode, name='read_barcode'),
     path('sample_list/', views.sample_list,
          name='lab_sample_list'),  # List of all samples + search bar
+    path("barcode/<sample_id>/", views.view_barcode, name="view_barcode")
 ]

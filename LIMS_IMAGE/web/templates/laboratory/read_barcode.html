@@ -15,20 +15,12 @@
       </form>
       
       {% if img_obj %}
-        <h3>Succesfully uploaded : {{img_obj.title}}</h3>
+        <h3>Succesfully uploaded</h3>
         <img src="{{ img_obj.image.url }}" alt="connect" style="max-height:300px">\
         {% if type == 'S' %}
             <p><a href="{% url 'admin:laboratoryOrders_sample_change' id %}" >Barcode: {{ img_barcode }}</a></p>
         {% endif %}
       {% endif %}
-
-    {% if user.is_authenticated %} Hi {{ user.first_name }}!
-    <p><a href="{% url 'logout' %}">Log Out</a></p>
-    {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
-    or
-    <a href="{% url 'accounts:signup' %}">Sign Up</a>
-    {% endif %} {% endblock %}
+  {% endblock %}
   </div>
 </body>

@@ -55,8 +55,4 @@ class InventoryItem(models.Model):
     estimated_need = models.IntegerField() # estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
 
 class Image(models.Model):
-    title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='uploads/images')
-
-    def __str__(self):
-        return self.title

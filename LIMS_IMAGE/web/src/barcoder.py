@@ -15,10 +15,10 @@ class Barcoder:
     def createBarcode(self, code):
         file_name = 'barcodes/' + code + '_barcode.jpg'
         if exists(file_name):
-            return 'src/' + file_name
-        with open('src/' + file_name, 'wb') as f:
+            return 'static/' + file_name
+        with open('static/' + file_name, 'wb') as f:
             Code128(code, writer=ImageWriter()).write(f)
-        return 'src/' + file_name
+        return 'static/' + file_name
 
     def __readBarcode(self, image):
         print("read------------------------------------------------")

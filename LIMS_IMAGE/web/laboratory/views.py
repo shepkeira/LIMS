@@ -51,5 +51,21 @@ def read_barcode(request):
     else:
         form = ImageForm()
     return render(request, 'laboratory/read_barcode.html', {'form': form})
-
-    
+ 
+# page listing all samples for laboratory workers
+def view_barcode(request, sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    # delete old files so we don't end up with a bunch in memory
+    mypath = os.path.join(os.getcwd(), "static/barcodes")
+    for root, dirs, files in os.walk(mypath):
+        for file in files:
+            if file.endswith('jpg'):
+                os.remove(os.path.join(root, file))
+    sample = Sample.objects.filter(id = sample_id).first()
+    barcode_file_path = sample.barcode()
+    barcode_file_path = os.path.join("../../../", barcode_file_path)
+    context = {'barcode_file_path': barcode_file_path}
+    return render(request, 'laboratory/view_barcode.html', context)
