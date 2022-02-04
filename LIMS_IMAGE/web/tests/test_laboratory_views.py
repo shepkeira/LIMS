@@ -34,6 +34,9 @@ class laboratoryViewsTestCase(TestCase):
             user=self.test_user_emp
         )
 
+        self.sample = baker.make(Sample)
+        self.order_sample = baker.make(OrderSample, sample = self.sample)
+
     def test_lab_home_page_unauth(self):
         # Unauthenticated user
         response = self.client.get('/laboratory/home_page/')
@@ -60,4 +63,25 @@ class laboratoryViewsTestCase(TestCase):
         # Unauthenticated user
         self.client.logout()
         response = self.client.get('/laboratory/sample_list/')
+        self.assertRedirects(response, '/')
+
+    def test_read_barcode(self):
+        # Authenticated lab worker
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/laboratory/read_barcode/')
+        self.assertEqual(response.status_code, 200)  # 200 means no redirect
+        # Unauthenticated user
+        self.client.logout()
+        response = self.client.get('/laboratory/read_barcode/')
+        self.assertRedirects(response, '/')
+
+    def test_view_barcode(self):
+        # Authenticated lab worker
+        self.client.login(username='testuser_e', password='asdf')
+        sample_id = Sample.objects.all().first().id
+        response = self.client.get('/laboratory/barcode/'+ str(sample_id) +'/')
+        self.assertEqual(response.status_code, 200)  # 200 means no redirect
+        # Unauthenticated user
+        self.client.logout()
+        response = self.client.get('/laboratory/barcode/'+ str(sample_id) +'/')
         self.assertRedirects(response, '/')
