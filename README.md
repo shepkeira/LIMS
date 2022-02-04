@@ -103,6 +103,7 @@ The [testing README](LIMS_IMAGE/web/tests/README.md) is found in the testing fol
 
 1. Ensure docker and docker-compose are installed, and that this repo is cloned to your machine.
 1. cd into `LIMS_IMAGE`.
+1. For first-time setup run `docker-compose up --build db-postgres` to let the database build.
 1. Run `docker-compose up --build`.
 
 ### Enter the Docker Image
