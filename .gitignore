@@ -3,9 +3,13 @@
 
 # Ignore environment variables
 .env
+.env2
 
 # Ignore VS Code workspace files
 /.vscode/
 
 #Ignore coverage files
 .coverage
+
+# Ignore postgres data
+LIMS_IMAGE/db-postgres/data/
