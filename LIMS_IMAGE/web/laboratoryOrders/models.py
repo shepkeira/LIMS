@@ -3,6 +3,7 @@ from django.db import models
 from orders.models import Order, Package
 from laboratory.models import Test, Location
 from accounts.models import *
+from src.barcoder import Barcoder
 
 
 # A sample sent in by the client
@@ -28,10 +29,12 @@ class Sample(models.Model):
         order_id = orderssample.order.order_number
         return str(order_id) + "-" + str(self.id)
 
+    def barcode(self):
+        return Barcoder().createBarcode("S-" + self.user_side_id())
+
     # this function returns a list of all samples
     def all_samples():
         return Sample.objects.all()
-
 
 # order sample, connects the order and samples tables
 class OrderSample(models.Model):
