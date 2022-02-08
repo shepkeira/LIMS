@@ -26,4 +26,5 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('laboratory/', include('laboratory.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),  # new
+    path('', TemplateView.as_view(template_name='shopping.html'), name='order_form'),  # new
 ]
