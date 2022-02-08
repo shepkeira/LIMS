@@ -52,15 +52,22 @@ More Info in [LIMS.pdf](LIMS.pdf)
 1. Your .env file should be formatted like so
 
 ```
-DB_NAME=fake_name
-DB_HOST=fake_host
+SECRET_KEY=fake_key
+DJANGO_SETTINGS_MODULE=src.settings
+
+MSSQL_HOST=fake_mssql_host_name
 DB_USER=fake_user
 DB_PASSWORD=fake_password
-SECRET_KEY=fake_key
+
+POSTGRES_DB=fake_postgres_db_name
+POSTGRES_HOST=fake_postgres_host_name
+POSTGRES_USER=fake_user
+POSTGRES_PASSWORD=fake_password
 ```
 
-1. Replace the fake data with the correct data for the first 4 variables.
 1. For the SECRET_KEY, start up the web server (instructions below) use the bash command to get inside the contianer and run
+1. Replace the fake data with the correct data for the rest of the variables.
+
 
 ```
 python -c "import secrets; print(secrets.token_urlsafe())"
