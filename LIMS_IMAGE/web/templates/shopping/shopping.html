@@ -8,9 +8,6 @@
     <div class="container my-4 text-center">
     <h1>Shopping Cart (Order Submission)</h1> 
     </div>
-    {{tests}}
-   {{all_list}} 
-   {{sample}}
     
     <div class="container p-4 my-5 bg-light border">
        {% if account %}
@@ -32,7 +29,7 @@
             <input class="form-control" list="sample-types" name="sample-type" id="sample-type">
             <datalist id="sample-types">
             {% for i in sample %}
-            <option value = {{i.sample_type}}>
+            <option value = {{i}}>
             {% endfor %}  
             </datalist>          
     </div>
@@ -41,14 +38,14 @@
             <label for="quantity">Quantity</label>
             <input type="number" id="quantity" name="quantity" min="1" max="50">  
     </div>  
-
+    
     <div class = "container mt-3"> 
             <label for="Packaged-individual" class="form-label">Choose your package or individual test</label>     
             <input class="form-control" list="Packaged/individual" name="Packaged-individual" id="Packaged-individual">
-            <datalist id="Packaged/individual">                
+            <datalist id="Packaged/individual">   
+                     
             {% for item in all_list %}
-            <option value ={{item.name}} ></option>
-            <option value="">----</option>
+            <option value = "{{item}}" ></option>
 
             {% endfor %}
             </datalist>

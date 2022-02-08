@@ -70,19 +70,23 @@ def shopping(request):
     context = RequestContext(request)
     account_list=Client.objects.all()
     account_num = Client.objects.filter(user=request.user)
-    sample_types = {} 
+    sample_types = []
     #sample_types_list = Test.get_sample_type()
-   # for type in sample_types_list:
-      #  sample_types[type] = Test.get_sample_type()
-    
+    for type in Test.objects.all():
+        sample_types.append(type.get_sample_type())
+    names =[]
     package_list = Package.objects.all()
+    for package in package_list:
+        names.append(package.name)
     tests_list = Test.objects.all()
+    for test in tests_list:
+        names.append(test.name)
     package_and_individual_list = list(chain(package_list,tests_list))
     #sample_no_duplicate = set(sample_type_list)
     #sample_no_duplicate= list(dict.fromkeys(sample_type_list))
     #sample_no_duplicate=sample_type_list.distinct()
-    sample = list(sample_types)
-    context_dict = {'account': account_num,"sample":sample,'sample': sample,'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
+    sample = list(dict.fromkeys(sample_types))
+    context_dict = {'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
     #context_dict = {'account': account_num, 'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
     return render(request, 'shopping/shopping.html',context_dict)
 

@@ -5,29 +5,36 @@
 <body>
  
     {% block content %}
-<h2>Appendix B - Test and Package recommendation</h2>
-<br>
-<h3>Choosing Test vs Package</h3>
+    <div class = "container p-3 my-4 text-center">
+        <h2>Appendix B - Test and Package recommendation</h2>
+    </div>  
+    <div class =" container p-3 my-3 bg-light border">
+        <h4>Choosing Test vs Package</h4>
+    
+        <p>You need to provide a set amount of sample per batches in order to order recommended tests.
+        If you do not have enough sample to submit, you want to choose indivisual test of your choice.
+        </p>
+    </div>
 
-<p>You need to provide a set amount of sample per batches in order to order recommended tests <br>
-    If you do not have enough sample to submit, you want to choose indivisual test of your choice.
-</p>
-<br>
-
-<h3> Recommended Tests </h3>
-<P>The recommended tests for your sample type are :<br>
-    {{tests}}
-    <!-- put recommeded test for each sample type when we get the detail -->
-   
-</P>
-<br>
-<h3> Recommended packages</h3>
-<p> Recommednded packages depend on the amount of sample you can provide. You can choose recommended test package for your sample type. <br>
-   <br>
-    Available package: 
-    <!-- put available package here when we know how many samples are required for the recommended packages --> 
-    {{package}}
-</p>
+    <div class = "container p-3 my-4">
+        <h3> Recommended Tests </h3>
+        <!-- put recommended test for each sample type when we get the detail -->
+            <P>The recommended tests are :</P>
+            {% for i in tests %}
+                {{i}} <br>
+            {% endfor %}
+            
+    </div>
+    <div class = "container p-3 my-4">
+        <h3> Recommended packages</h3>
+        <!-- put recommended package here when we know how many samples are required for the recommended packages --> 
+            <p> Recommednded packages depend on the amount of sample you can provide. You can choose recommended test package for your sample type. 
+            <p>    Available package: </p>
+                    {% for i in package%}
+                        {{i}} <br>
+                    {% endfor %}
+            </p>
+    </div>
 {% endblock %}   
 <br>
 </body>
