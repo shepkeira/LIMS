@@ -10,3 +10,4 @@ pyzbar<=0.1.8
 pyzbar[scripts]
 numpy<=1.22.1
 Pillow
+importlib-metadata
