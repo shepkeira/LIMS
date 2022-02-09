@@ -69,11 +69,13 @@ def shopping(request):
         return redirect("accounts:employee_home_page")
     context = RequestContext(request)
     account_list=Client.objects.all()
+    #  number to varify user has created profile 
     account_num = Client.objects.filter(user=request.user)
+    # the list of sample types for user to choose from
     sample_types = []
-    #sample_types_list = Test.get_sample_type()
     for type in Test.objects.all():
         sample_types.append(type.get_sample_type())
+    # the list of tests and packages for user to place order
     names =[]
     package_list = Package.objects.all()
     for package in package_list:
@@ -81,38 +83,21 @@ def shopping(request):
     tests_list = Test.objects.all()
     for test in tests_list:
         names.append(test.name)
-    package_and_individual_list = list(chain(package_list,tests_list))
-    #sample_no_duplicate = set(sample_type_list)
-    #sample_no_duplicate= list(dict.fromkeys(sample_type_list))
-    #sample_no_duplicate=sample_type_list.distinct()
     sample = list(dict.fromkeys(sample_types))
     context_dict = {'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
-    #context_dict = {'account': account_num, 'all_list': package_and_individual_list,'package':package_list,'tests':tests_list}
     return render(request, 'shopping/shopping.html',context_dict)
 
+# appendix b to help users decide which test and package to order for
+# <To Do> try to make it interactive depending on the sample quantities and the sample type
 def appendix_b(request):
     sample_type_list = Test.objects.all()
     package_list = Package.objects.all()
     package = list(package_list)
     tests_list = Test.objects.all()
     tests = list(tests_list)
-    package_and_individual_list = list(chain(package_list,tests_list))
-    #sample_no_duplicate = set(sample_type_list)
-    #sample_no_duplicate= list(dict.fromkeys(sample_type_list))
     sample_no_duplicate=sample_type_list.distinct()
     sample = list(sample_no_duplicate)
-    context_dict = {'sample': sample,'all_list': package_and_individual_list,'package':package,'tests':tests}
-
+    context_dict = {'sample': sample,'package':package,'tests':tests}
     return render(request, 'shopping/appendix_b.html',context_dict)
 
-#context_dict = {'accounts': list(accounts_list)}
-#client = get_object_or_404(Client)
-    '''
-    request.user gets thebrain
-    client = get_object_or_404(Client, pk = request.user)
-    '''  
-#client_list = Client.objects.all() 
-#context= {'client': client} 
-#context['account_number'] = account_number
-#client = Client.objects.filter(pk=request.user.id)
 

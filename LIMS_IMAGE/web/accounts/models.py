@@ -16,7 +16,8 @@ class Client(models.Model):
     account_number = models.IntegerField()
     # connect to authenticated user
     user           = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+
+    # this function returns client's account number
     def get_account_number(self):
         return self.account_number
    

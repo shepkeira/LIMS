@@ -32,9 +32,11 @@ class Test(models.Model):
     rush = models.BooleanField() # if there is a rush on the test
     time_taken = models.IntegerField() # time this test takes
 
+    # this function returns the name for individual tests
     def get_Test_name(self):
         return str(self.name)
     
+    # this function returns the sample types such as Daily and Cosmetics
     def get_sample_type(self):
         return str(self.sample_type)
 
