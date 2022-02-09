@@ -32,7 +32,8 @@
                     <p class="mb-1">SOP number: {{ sample.sop_number }}</p>
                     <small>Assigned worker: {{ sample.lab_personel }}</small><br>
                     <small>Last updated: {{ sample.updated_at }}</small><br>
-                    <a href="{% url 'admin:laboratoryOrders_sample_change' sample.id %}">Update info here</a>
+                    <a href="{% url 'admin:laboratoryOrders_sample_change' sample.id %}">Update info here</a><br>
+                    <a href="{% url 'laboratory:view_barcode' sample.id %}">Get barcode here</a>
               </li>
           </ul>
         {% endfor %}

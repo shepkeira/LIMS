@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 # Django reads URL patterns from top to bottom
 urlpatterns = [
@@ -28,3 +30,6 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),  # new
     path('', TemplateView.as_view(template_name='shopping.html'), name='order_form'),  # new
 ]
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
