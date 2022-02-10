@@ -20,6 +20,7 @@ from orders.views import *
 class laboratoryOrdersModelsTestCase(TestCase):
     def setUp(self):
         self.test_sample = baker.make_recipe('laboratoryOrders.sample_recipe')
+        self.test_sampleinspection = baker.make_recipe('laboratoryOrders.sampleinspection_recipe')
         self.test_order = baker.make_recipe('laboratoryOrders.order_recipe')
         self.test_ordersample = baker.make_recipe(
             'laboratoryOrders.ordersample_recipe')
@@ -38,7 +39,7 @@ class laboratoryOrdersModelsTestCase(TestCase):
         self.corr_labsample = baker.make(
             'laboratoryOrders.LabSample',
             sample=self.test_sample,
-            lab_location=baker.make_recipe('laboratory.location_recipe')
+            location=baker.make_recipe('laboratory.location_recipe')
         )
         self.corr_ordersample = baker.make(
             'laboratoryOrders.OrderSample',
@@ -66,6 +67,19 @@ class laboratoryOrdersModelsTestCase(TestCase):
         self.assertEqual(str(self.corr_ordersample.order.order_number) +
                          "-" + str(sample_result.id), sample_result.user_side_id())
 
+
+    def test_sampleinspection_model(self):
+
+        sampleinspection_result = SampleInspection.objects.all().first()
+
+        self.assertIsInstance(self.test_sampleinspection, SampleInspection)
+        self.assertIsInstance(self.test_sampleinspection.sample, Sample)
+        self.assertIsInstance(self.test_sampleinspection.inspector, LabWorker)
+        self.assertEqual(self.test_sampleinspection, sampleinspection_result)
+        
+        self.assertEqual(sampleinspection_result.__str__(), str(sampleinspection_result.sample))
+
+
     def test_orderSample_model(self):
 
         ordersample_result = OrderSample.objects.all().first()
@@ -89,14 +103,14 @@ class laboratoryOrdersModelsTestCase(TestCase):
 
         self.assertIsInstance(self.test_labsample, LabSample)
         self.assertIsInstance(labsample_result.sample, Sample)
-        self.assertIsInstance(labsample_result.lab_location, Location)
+        self.assertIsInstance(labsample_result.location, Location)
         self.assertEqual(self.test_labsample.sample, labsample_result.sample)
         self.assertEqual(str(self.test_labsample.sample) + " in " +
-                         str(self.test_labsample.lab_location), labsample_result.__str__())
+                         str(self.test_labsample.location), labsample_result.__str__())
 
         # user_side_id function
         self.assertEqual(str(self.corr_labsample.sample.user_side_id()) + "-" + str(
-            self.corr_labsample.lab_location.code), self.corr_labsample.user_side_id())
+            self.corr_labsample.location.code), self.corr_labsample.user_side_id())
 
     def test_testSample_model(self):
 
