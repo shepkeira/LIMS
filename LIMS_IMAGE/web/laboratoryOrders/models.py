@@ -46,6 +46,15 @@ class Sample(models.Model):
             test_samples += lab_sample.test_samples()
         return test_samples
 
+    def inspection_results(self):
+        inspection = Inspection.objects.filter(sample = self).first()
+        if inspection:
+            results = inspection.inspection_results
+            if results:
+                return "Valid"
+            return "Invalid"
+        return "Not Inspected"
+
 class Inspection(models.Model):
     sample = models.OneToOneField(Sample, on_delete=models.CASCADE)
     package_integrity = models.BooleanField()

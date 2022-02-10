@@ -12,6 +12,8 @@
     <p>Form: {{ sample.sample_form }}</p>
     <p>SOP Number: {{ sample.sop_number }}</p>
     <p>Lab Personal In Change of Sample: {{ sample.lab_personel }}</p>
+    <p>Valid? {{ inspection }}</p>
+    <p><a href = "{% url 'laboratory:validate_sample' sample.id %}">Update Or Add Inspection Result</a></p>
     <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px">
 
     {% if lab_samples %}

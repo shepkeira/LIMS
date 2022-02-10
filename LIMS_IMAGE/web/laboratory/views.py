@@ -40,7 +40,7 @@ def validate_sample(request, sample_id):
             inspection.sample = sample
             inspection.save()
             message = "Sample Validation Updated"
-        return render(request, 'laboratory/validate.html', {'sample': sample, 'form': form, 'complete': True, 'message': message})
+        return view_sample(request, sample_id)
     else:
         form = InspectionForm(instance=inspection)
         return render(request, 'laboratory/validate.html', {'sample': sample, 'form': form})
@@ -116,6 +116,7 @@ def view_sample(request, sample_id):
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
     sample = Sample.objects.filter(id = sample_id).first()
+    inspection = sample.inspection_results()
 
     barcode_file_path = sample.barcode()
     barcode_file_path = os.path.join("../../../", barcode_file_path)
@@ -123,7 +124,7 @@ def view_sample(request, sample_id):
     lab_samples = sample.lab_samples()
     test_samples = sample.test_samples()
 
-    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples, 'test_samples': test_samples}
+    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples, 'test_samples': test_samples, 'inspection': inspection}
     return render(request, 'laboratory/view_sample.html', context)
 
 def view_lab_sample(request, lab_sample_id):
