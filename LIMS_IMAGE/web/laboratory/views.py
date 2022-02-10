@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from laboratoryOrders.models import Inspection
+from laboratoryOrders.models import SampleInspection
 from laboratoryOrders.forms import InspectionForm
-from accounts.models import Client
+from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
@@ -31,15 +31,15 @@ def validate_sample(request, sample_id):
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     sample = Sample.objects.filter(id = sample_id).first()
-    inspection = Inspection.objects.filter(sample = sample).first()
+    inspection = SampleInspection.objects.filter(sample = sample).first()
     if request.method == 'POST':
         form = InspectionForm(request.POST, instance=inspection)
         message = ""
         if form.is_valid():
             inspection = form.save(commit=False)
             inspection.sample = sample
+            inspection.inspector = LabWorker.objects.filter(user = request.user).first()
             inspection.save()
-            message = "Sample Validation Updated"
         return view_sample(request, sample_id)
     else:
         form = InspectionForm(instance=inspection)
