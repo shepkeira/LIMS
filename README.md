@@ -100,6 +100,8 @@ When you change something about the database structure in the application we nee
 1. `python manage.py makemigrations`
 1. `python manage.py migrate`
 
+Note: If a change to the models was made that prevents the container from starting before the migrations are made, you can run this command in isolation: `docker-compose run web python manage.py makemigrations` and do the same to migrate.
+
 ### Testing
 
 The [testing README](LIMS_IMAGE/web/tests/README.md) is found in the testing folder, along with all the tests
