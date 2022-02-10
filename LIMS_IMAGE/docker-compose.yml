@@ -6,7 +6,8 @@ services:
     volumes:
       - ./web:/src
     command: bash -c "
-        python manage.py migrate
+        python manage.py makemigrations
+        && python manage.py migrate
         && python manage.py shell < src/delete_content_type.py
         && python manage.py loaddata datadump.json
         && python manage.py runserver 0.0.0.0:8000

@@ -36,6 +36,21 @@ class Sample(models.Model):
     def all_samples():
         return Sample.objects.all()
 
+# Sample Inspection results
+class SampleInspection(models.Model):
+    def __str__(self):
+        return str(self.sample)
+
+    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
+    inspector = models.ForeignKey(LabWorker, on_delete=models.CASCADE)
+
+    received_quantity = models.IntegerField()
+    package_intact = models.BooleanField()
+    material_intact = models.BooleanField()
+    inspection_pass = models.BooleanField()
+
+
 # order sample, connects the order and samples tables
 class OrderSample(models.Model):
     def __str__(self):
@@ -55,16 +70,16 @@ class OrderSample(models.Model):
 # lab sample, seperates the sample into different sub-samples for each lab
 class LabSample(models.Model):
     def __str__(self):
-        return str(self.sample) + " in " + str(self.lab_location)
+        return str(self.sample) + " in " + str(self.location)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    lab_location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
     # this function takes in a lab sample, and returns the user side lab sample id
     # lab specific sample no = sample-no - lab code e.g. 0001-01-A
     def user_side_id(self):
         sample_no = self.sample.user_side_id()
-        return str(sample_no) + "-" + str(self.lab_location.code)
+        return str(sample_no) + "-" + str(self.location.code)
 
 
 # test sample, separates the lab sample into different sub-samples for each test
