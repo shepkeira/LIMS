@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Laboratory Home{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Sample Page</h1>
+    <p>Welcome to the sample page!</p>
+    <p>ID: {{ sample.user_side_id }}</p>
+    <p>Type: {{ sample.sample_type }}</p>
+    <p>Form: {{ sample.sample_form }}</p>
+    <p>SOP Number: {{ sample.sop_number }}</p>
+    <p>Lab Personal In Change of Sample: {{ sample.lab_personel }}</p>
+    <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px">
+
+    {% if lab_samples %}
+        <h2>Lab Samples</h2>
+        <ul>
+        {% for lab_sample in lab_samples %}
+            <li><a href = "{% url 'laboratory:view_lab_sample' lab_sample.id %}">{{ lab_sample.user_side_id }}</a></li>
+        {% endfor %}
+        </ul>
+        {% if test_samples %}
+        <h2>Test Samples</h2>
+        <ul>
+        {% for test_sample in test_samples %}
+            <li><a href = "{% url 'laboratory:view_test_sample' test_sample.id %}">{{ test_sample.user_side_id }}</a></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endif %}
+  {% endblock %}
+  </div>
+</body>

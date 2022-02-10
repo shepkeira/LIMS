@@ -36,6 +36,22 @@ class Sample(models.Model):
     def all_samples():
         return Sample.objects.all()
 
+    def lab_samples(self):
+        return LabSample.objects.filter(sample=self)
+
+    def test_samples(self):
+        test_samples = []
+        lab_samples = self.lab_samples()
+        for lab_sample in lab_samples:
+            test_samples += lab_sample.test_samples()
+        return test_samples
+
+class Inspection(models.Model):
+    sample = models.OneToOneField(Sample, on_delete=models.CASCADE)
+    package_integrity = models.BooleanField()
+    material_integrity = models.BooleanField()
+    inspection_results = models.BooleanField()
+
 # order sample, connects the order and samples tables
 class OrderSample(models.Model):
     def __str__(self):
@@ -51,7 +67,6 @@ class OrderSample(models.Model):
         sample_id = self.sample.id
         return str(order_number) + " " + str(sample_id)
 
-
 # lab sample, seperates the sample into different sub-samples for each lab
 class LabSample(models.Model):
     def __str__(self):
@@ -65,6 +80,12 @@ class LabSample(models.Model):
     def user_side_id(self):
         sample_no = self.sample.user_side_id()
         return str(sample_no) + "-" + str(self.lab_location.code)
+
+    def test_samples(self):
+        return TestSample.objects.filter(lab_sample_id=self)
+
+    def barcode(self):
+        return Barcoder().createBarcode("S-" + self.user_side_id())
 
 
 # test sample, separates the lab sample into different sub-samples for each test
@@ -81,6 +102,9 @@ class TestSample(models.Model):
         lab_sample_no = self.lab_sample_id.user_side_id()
         test_id = self.test.id
         return str(lab_sample_no) + "-" + str(test_id)
+
+    def barcode(self):
+        return Barcoder().createBarcode("S-" + self.user_side_id())
 
 
 # Result for a given instance of a test for a sample

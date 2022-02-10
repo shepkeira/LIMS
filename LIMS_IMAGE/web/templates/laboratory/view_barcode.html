@@ -8,6 +8,7 @@
     <h1>Barcode Home</h1>
     <p>Welcome to the LIMS home page.</p>
     <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px">
+    <p><a href="{% url 'laboratory:view_sample' sample_id %}">Sample Barcode</a></p>
 
   {% endblock %}
   </div>
