@@ -38,7 +38,7 @@ def validate_sample(request, sample_id):
         if form.is_valid():
             inspection = form.save(commit=False)
             inspection.sample = sample
-            inspection.inspector = LabWorker.objects.filter(user = request.user).first()
+            inspection.inspector = request.user
             inspection.save()
         return view_sample(request, sample_id)
     else:

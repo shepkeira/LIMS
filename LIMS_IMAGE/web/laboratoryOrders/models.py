@@ -1,10 +1,9 @@
-from datetime import datetime
 from django.db import models
 from orders.models import Order, Package
 from laboratory.models import Test, Location
 from accounts.models import *
 from src.barcoder import Barcoder
-
+from django.contrib.auth.models import User
 
 # A sample sent in by the client
 class Sample(models.Model):
@@ -63,7 +62,7 @@ class SampleInspection(models.Model):
 
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    inspector = models.ForeignKey(LabWorker, on_delete=models.CASCADE)
+    inspector = models.ForeignKey(User, on_delete=models.CASCADE)
 
     received_quantity = models.IntegerField()
     package_intact = models.BooleanField()
