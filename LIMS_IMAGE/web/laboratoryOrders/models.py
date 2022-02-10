@@ -3,7 +3,6 @@ from django.db import models
 from orders.models import Order, Package
 from laboratory.models import Test, Location
 from accounts.models import *
-from laboratoryOrders import  *
 from src.barcoder import Barcoder
 
 

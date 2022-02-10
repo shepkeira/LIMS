@@ -3,9 +3,6 @@ from django.template import RequestContext
 from orders.models import Order, Package
 from laboratoryOrders.models import *
 from accounts.models import Client
-from laboratory.models import * 
-from django.shortcuts import redirect, render
-from itertools import chain
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
