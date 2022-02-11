@@ -74,7 +74,7 @@ class laboratoryOrdersModelsTestCase(TestCase):
 
         self.assertIsInstance(self.test_sampleinspection, SampleInspection)
         self.assertIsInstance(self.test_sampleinspection.sample, Sample)
-        self.assertIsInstance(self.test_sampleinspection.inspector, LabWorker)
+        self.assertIsInstance(self.test_sampleinspection.inspector, User)
         self.assertEqual(self.test_sampleinspection, sampleinspection_result)
         
         self.assertEqual(sampleinspection_result.__str__(), str(sampleinspection_result.sample))

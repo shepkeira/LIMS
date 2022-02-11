@@ -21,12 +21,8 @@ class Barcoder:
         return 'static/' + file_name
 
     def __readBarcode(self, image):
-        print("read------------------------------------------------")
-        print(image)
         barcode = decode(image)
-        print(barcode)
         for obj in barcode:
-            print("trying obj")
             points = obj.polygon
             (x,y,w,h) = obj.rect
             pts = np.array(points, np.int32)

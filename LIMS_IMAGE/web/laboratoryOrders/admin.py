@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import OrderTest, Sample, SampleInspection, TestPackage, TestSample, OrderSample, LabSample, TestResult
 
 # Register your models here.

@@ -28,7 +28,7 @@ sample_recipe = Recipe(
 sampleinspection_recipe = Recipe(
     SampleInspection,
     sample = foreign_key(sample_recipe),
-    inspector = foreign_key('accounts.labworker_recipe')
+    inspector = foreign_key('accounts.user_recipe')
 )
 order_recipe = Recipe(
     Order,
