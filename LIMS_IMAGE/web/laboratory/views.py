@@ -15,6 +15,15 @@ def home_page(request):
         return redirect("accounts:customer_home_page")
     return render(request, 'laboratory/home_page.html')
 
+def distribution(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    sample_list = Sample.all_samples()
+    context = {'samples': sample_list}
+    return render(request, 'laboratory/distribution.html', context)
+
 # page listing all samples for laboratory workers
 def sample_list(request):
     if not request.user.is_authenticated:
