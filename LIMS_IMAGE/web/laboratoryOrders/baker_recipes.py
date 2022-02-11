@@ -25,6 +25,11 @@ sample_recipe = Recipe(
     Sample,
     lab_personel = foreign_key('accounts.labworker_recipe')
 )
+sampleinspection_recipe = Recipe(
+    SampleInspection,
+    sample = foreign_key(sample_recipe),
+    inspector = foreign_key('accounts.user_recipe')
+)
 order_recipe = Recipe(
     Order,
     account_number = foreign_key('accounts.client_recipe')
@@ -37,7 +42,7 @@ ordersample_recipe = Recipe(
 labsample_recipe = Recipe(
     LabSample,
     sample = foreign_key(sample_recipe),
-    lab_location = foreign_key('laboratory.location_recipe')
+    location = foreign_key('laboratory.location_recipe')
 )
 testsample_recipe = Recipe(
     TestSample,

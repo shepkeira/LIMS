@@ -1,9 +1,9 @@
 from django.contrib import admin
-
-from .models import OrderTest, Sample, TestPackage, TestSample, OrderSample, LabSample, TestResult
+from .models import OrderTest, Sample, SampleInspection, TestPackage, TestSample, OrderSample, LabSample, TestResult
 
 # Register your models here.
 admin.site.register(Sample)
+admin.site.register(SampleInspection)
 admin.site.register(OrderTest)
 admin.site.register(TestSample)
 admin.site.register(OrderSample)

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Validate Sample{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Validate Sample</h1>
+
+    <p>ID: {{ sample.user_side_id }}</p>
+    <p>Type: {{ sample.sample_type }}</p>
+    <p>Form: {{ sample.sample_form }}</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+         {{ form.as_p }}
+        <button type="submit">Validate</button>
+      </form>
+      
+      {% if complete and message %}
+        <h3>{{ message }}</h3>
+      {% endif %}
+      {% if complete and not message %}
+        <h3>Succesfully Updated</h3>
+      {% endif %}
+  {% endblock %}
+  </div>
+</body>
