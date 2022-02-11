@@ -45,10 +45,13 @@
                 >
               </li>
               <li class="nav-link">
-                <a
-                  class="nav-link"
-                  href="{% url 'laboratory:read_barcode' %}"
+                <a class="nav-link" href="{% url 'laboratory:read_barcode' %}"
                   >Scan Barcode</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:inventory' %}"
+                  >Inventory Management</a
                 >
               </li>
               {% endif %} {% if user.is_superuser %}
