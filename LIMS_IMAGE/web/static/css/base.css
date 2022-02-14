@@ -1,0 +1,14 @@
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .search-wrapper {
+    flex-direction: row;
+    gap: 0.5rem;
+    width: 50%;
+  }
+}
