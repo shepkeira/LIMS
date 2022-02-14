@@ -6,10 +6,10 @@ from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
 from laboratoryOrders.models import Sample, LabSample, TestSample
+from laboratory.models import InventoryItem
+
 
 # home page for laboratory workers
-
-
 def home_page(request):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -17,9 +17,8 @@ def home_page(request):
         return redirect("accounts:customer_home_page")
     return render(request, 'laboratory/home_page.html')
 
+
 # page listing all samples for laboratory workers
-
-
 def sample_list(request):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -29,15 +28,16 @@ def sample_list(request):
     context = {'samples': sample_list}
     return render(request, 'laboratory/sample_list.html', context)
 
+
 # page for inventory management
-
-
 def inventory_management(request):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    return render(request, 'laboratory/inventory.html')
+    inventory_list = InventoryItem.objects.all()
+    context = {'inventory_list': inventory_list}
+    return render(request, 'laboratory/inventory.html', context)
 
 
 def validate_sample(request, sample_id):
@@ -103,9 +103,8 @@ def read_barcode(request):
         form = ImageForm()
     return render(request, 'laboratory/read_barcode.html', {'form': form})
 
+
 # page listing all samples for laboratory workers
-
-
 def view_barcode(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
