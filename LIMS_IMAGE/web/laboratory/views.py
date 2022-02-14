@@ -5,7 +5,8 @@ from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
-from laboratoryOrders.models import Sample, LabSample, TestSample
+from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample
+from orders.models import Order
 
 # home page for laboratory workers
 def home_page(request):
@@ -24,6 +25,16 @@ def sample_list(request):
     sample_list = Sample.all_samples()
     context = {'samples': sample_list}
     return render(request, 'laboratory/sample_list.html', context)
+
+# page listing all samples for laboratory workers
+def order_list(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    sample_list = Order.objects.all()
+    context = {'samples': sample_list}
+    return render(request, 'laboratory/order_list.html', context)
 
 def validate_sample(request, sample_id):
     if not request.user.is_authenticated:
@@ -104,6 +115,21 @@ def view_barcode(request, sample_id):
     context = {'barcode_file_path': barcode_file_path, "sample_id": sample_id}
     return render(request, 'laboratory/view_barcode.html', context)
 
+def view_order(request, order_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    order = Order.objects.filter(id = order_id).first()
+    samples = OrderSample.samples_for_order(order)
+
+    order_inspected = True
+    for sample in samples:
+        order_inspected = order_inspected and sample.insepcted()
+
+    context = {'order': order, 'samples': samples, 'order_inspected': order_inspected}
+    return render(request, 'laboratory/view_order.html', context)
+
 def view_sample(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -124,7 +150,9 @@ def view_sample(request, sample_id):
     lab_samples = sample.lab_samples()
     test_samples = sample.test_samples()
 
-    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples, 'test_samples': test_samples, 'inspection': inspection}
+    order = sample.order()
+
+    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples, 'test_samples': test_samples, 'inspection': inspection, 'order': order}
     return render(request, 'laboratory/view_sample.html', context)
 
 def view_lab_sample(request, lab_sample_id):
