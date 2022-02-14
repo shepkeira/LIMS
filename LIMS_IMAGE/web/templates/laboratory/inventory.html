@@ -1,1 +1,271 @@
-{% extends 'base.html' %}
+{%extends 'base.html'%}
+<!-- Linter sucks so I have to put this here -->
+{%load bootstrap5%}
+<!-- Linter sucks so I have to put this here -->
+{%bootstrap_javascript%}
+<!-- Linter sucks so I have to put this here -->
+{% load static %}
+<!-- Linter sucks so I have to put this here -->
+{% block additionalStyles %}
+<link rel="stylesheet" href="{% static 'laboratory/css/inventory.css' %}" />
+{% endblock %} {% block title %}Inventory Management{% endblock %}
+<!-- Start of content -->
+{%block content%}
+<div class="container">
+  <h1>Inventory Management</h1>
+  <div class="search-wrapper">
+    <input
+      type="search"
+      id="search"
+      class="form-control my-4"
+      placeholder="Search inventory"
+      aria-label="Search"
+    />
+  </div>
+  <div class="d-flex align-items-start my-4">
+    <div
+      class="nav flex-column nav-pills me-3"
+      id="v-pills-tab"
+      role="tablist"
+      aria-orientation="vertical"
+    >
+      <button
+        class="nav-link active"
+        id="v-pills-home-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#v-pills-home"
+        type="button"
+        role="tab"
+        aria-controls="v-pills-home"
+        aria-selected="true"
+      >
+        Summary
+      </button>
+      <button
+        class="nav-link"
+        id="v-pills-profile-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#v-pills-profile"
+        type="button"
+        role="tab"
+        aria-controls="v-pills-profile"
+        aria-selected="false"
+      >
+        Chemicals
+      </button>
+      <button
+        class="nav-link"
+        id="v-pills-messages-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#v-pills-messages"
+        type="button"
+        role="tab"
+        aria-controls="v-pills-messages"
+        aria-selected="false"
+      >
+        Buffers / media
+      </button>
+      <button
+        class="nav-link"
+        id="v-pills-settings-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#v-pills-settings"
+        type="button"
+        role="tab"
+        aria-controls="v-pills-settings"
+        aria-selected="false"
+      >
+        Consumables
+      </button>
+      <button
+        class="nav-link"
+        id="v-pills-rawmaterials-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#v-pills-rawmaterials"
+        type="button"
+        role="tab"
+        aria-controls="v-pills-rawmaterials"
+        aria-selected="false"
+      >
+        Raw materials
+      </button>
+      <button
+        class="nav-link"
+        id="v-pills-products-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#v-pills-products"
+        type="button"
+        role="tab"
+        aria-controls="v-pills-products"
+        aria-selected="false"
+      >
+        Products tracking
+      </button>
+    </div>
+    <div class="tab-content" id="v-pills-tabContent">
+      <div
+        class="tab-pane fade show active"
+        id="v-pills-home"
+        role="tabpanel"
+        aria-labelledby="v-pills-home-tab"
+      >
+        Inventory Dashboard
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-pills-profile"
+        role="tabpanel"
+        aria-labelledby="v-pills-profile-tab"
+      >
+        <div class="d-flex align-items-start">
+          <div
+            class="nav flex-column nav-pills me-3"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <button
+              class="nav-link active"
+              id="v-pills-solvents-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#v-pills-solvents"
+              type="button"
+              role="tab"
+              aria-controls="v-pills-solvents"
+              aria-selected="true"
+            >
+              Solvents
+            </button>
+            <button
+              class="nav-link"
+              id="v-pills-organic-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#v-pills-organic"
+              type="button"
+              role="tab"
+              aria-controls="v-pills-organic"
+              aria-selected="false"
+            >
+              Organic
+            </button>
+            <button
+              class="nav-link"
+              id="v-pills-inorganic-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#v-pills-inorganic"
+              type="button"
+              role="tab"
+              aria-controls="v-pills-inorganic"
+              aria-selected="false"
+            >
+              Inorganic
+            </button>
+            <button
+              class="nav-link"
+              id="v-pills-standards-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#v-pills-standards"
+              type="button"
+              role="tab"
+              aria-controls="v-pills-standards"
+              aria-selected="false"
+            >
+              Standards
+            </button>
+          </div>
+          <div class="tab-content" id="v-pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="v-pills-solvents"
+              role="tabpanel"
+              aria-labelledby="v-pills-solvents-tab"
+            >
+              Solvents
+              <!-- Loop through inventory list -->
+              {%for item in inventory_list%}
+              <!-- check if item is inorganic -->
+              {%if item.item_type == "Solvent"%}
+              <p>{{item.type}}</p>
+              {%endif%} {%endfor%}
+            </div>
+            <div
+              class="tab-pane fade"
+              id="v-pills-organic"
+              role="tabpanel"
+              aria-labelledby="v-pills-organic-tab"
+            >
+              Organic compounds
+              <!-- Loop through inventory list -->
+              {%for item in inventory_list%}
+              <!-- check if item is inorganic -->
+              {%if item.item_type == "Organic"%}
+              <p>{{item.type}}</p>
+              {%endif%} {%endfor%}
+            </div>
+            <div
+              class="tab-pane fade"
+              id="v-pills-inorganic"
+              role="tabpanel"
+              aria-labelledby="v-pills-inorganic-tab"
+            >
+              Inorganic compounds
+              <!-- Loop through inventory list -->
+              {%for item in inventory_list%}
+              <!-- check if item is inorganic -->
+              {%if item.item_type == "Inorganic"%}
+              <p>{{item.type}}</p>
+              {%endif%} {%endfor%}
+            </div>
+            <div
+              class="tab-pane fade"
+              id="v-pills-standards"
+              role="tabpanel"
+              aria-labelledby="v-pills-standards-tab"
+            >
+              Standards
+              <!-- Loop through inventory list -->
+              {%for item in inventory_list%}
+              <!-- check if item is inorganic -->
+              {%if item.item_type == "Standard"%}
+              <p>{{item.type}}</p>
+              {%endif%} {%endfor%}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-pills-messages"
+        role="tabpanel"
+        aria-labelledby="v-pills-messages-tab"
+      >
+        3
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-pills-settings"
+        role="tabpanel"
+        aria-labelledby="v-pills-settings-tab"
+      >
+        4
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-pills-rawmaterials"
+        role="tabpanel"
+        aria-labelledby="v-pills-rawmaterials-tab"
+      >
+        5
+      </div>
+      <div
+        class="tab-pane fade"
+        id="v-pills-products"
+        role="tabpanel"
+        aria-labelledby="v-pills-products-tab"
+      >
+        6
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

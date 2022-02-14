@@ -11,9 +11,9 @@
   {% block content %}
     <div class="container">
       <h1>Sample List</h1> 
-      <button class="btn btn-success my-4" onclick="location.href='{% url 'admin:laboratoryOrders_sample_add' %}'">Add Sample</button>
+      {% comment %} <button class="btn btn-success my-4" onclick="location.href='{% url 'admin:laboratoryOrders_sample_add' %}'">Add Sample</button> {% endcomment %}
       <div class="search-wrapper">
-        <input type="search" id="search" class="form-control" placeholder="Search samples" aria-label="Search">
+        <input type="search" id="search" class="form-control my-4" placeholder="Search inventory" aria-label="Search">
       </div>
       {% if samples|length is 0 %}
       <p>No samples found</p>
