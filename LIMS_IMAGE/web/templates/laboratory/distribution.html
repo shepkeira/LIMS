@@ -10,32 +10,31 @@
 <body>
   {% block content %}
     <div class="container">
-      <h1>Sample List</h1> 
-      <button class="btn btn-success my-4" onclick="location.href='{% url 'admin:laboratoryOrders_sample_add' %}'">Add Sample</button>
-      <div class="search-wrapper">
-        <input type="search" id="search" class="form-control" placeholder="Search samples" aria-label="Search">
-      </div>
+      <h1>Sample Distribution List</h1> 
       {% if samples|length is 0 %}
       <p>No samples found</p>
       {% else %}
       <div class="sample-list">
-        {% for sample in samples %}
-        {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
-          <ul class="list-group">
-              <li class="list-group-item bg-light">
-                  <div class="d-flex justify-content-between">
-                      <h5 class="mb-1">Sample: {{ sample }}</h5>
-                      
-                    </div>
-                    <p class="mb-1">Sample Type: {{ sample.sample_type }}</p>
-                    <p class="mb-1">Sample Form: {{ sample.sample_form }}</p>
-                    <p class="mb-1">SOP number: {{ sample.sop_number }}</p>
-                    <small>Assigned worker: {{ sample.lab_personel }}</small><br>
-                    <small>Last updated: {{ sample.updated_at }}</small><br>
-                    <a href="{% url 'laboratory:view_sample' sample.id %}">Get sample info here</a>
-              </li>
-          </ul>
-        {% endfor %}
+        <table>
+          <tr>
+            <th>Sample No.</th>
+            <th>Sample Type</th>
+            <th>Sample Form</th>
+            <th>Test Code (Appendix-C)</th>
+            <th>SOP No.</th>
+            <th>Lab Personnel</th>
+          </tr>
+          {% for sample in samples %}
+          {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
+            <tr>
+              <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
+              <td>{{ sample.sample_type }}</td>
+              <td>{{ sample.sample_form }}</td>
+              <td>{{ sample.sop_number }}</td>
+              <td> {{ sample.lab_personel }}</td>
+            </tr>
+          {% endfor %}
+        </table>
       </div>
       {% endif %}
       {% comment %} <div class="search-wrapper">
