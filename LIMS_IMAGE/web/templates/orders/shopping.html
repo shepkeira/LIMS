@@ -8,120 +8,57 @@
     <div class="container my-4 text-center">
     <h1>Shopping Cart (Order Submission)</h1> 
     </div>
-    {{account}}
-    {% for sample_type, tests in tests_by_type.items %}
-    {{tests}}
-    {% endfor %}
     <div class="container p-4 my-5 bg-light border">
     
-       {% if account %}
-        <p class=> 
+        <p> 
             <b> Hello, {{user.first_name}} <br>
-                <br>
             Please complete the sample submission form by selecting your sample type, test type and the quantity for each order. <br>
             If you are not sure which tests or packages to order please see  <a href="/orders/appendix_b">Appendix B</a>  for the test recommendation. 
             </b>
         </p>
     </div> 
+    <form method = "POST" action =" ">
+        {% for sample_type, tests in tests_by_type.items %}
+        <input type = "checkbox" name = "sample-type" id ="sample-type">
+        <label>{{sample_type}}</label>
+        <label for="quantity"></label>
+        <input type="number" id="quantity" name="quantity" min="1" placeholder = "Number of Test" >
+        <select name = "tests" id= "tests">
+            <option value = "" disabled selected> choose your test</option> 
+            {% for item in tests %}
+                
 
-    <section>
-    
-        <div class="container p-4 my-3 text-center">  
-            <h2> Sample submission form</h2>
-        </div> 
-        <form method = "POST" action =" ">
+                
+                <option value> {{item}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        {% endfor %}
 
-          <div class ="container-fluid px-4">
-            
-            <div class = "row">
-               {# {% for type in tests_by_type %} #}
-                <div class = "col-sm">
-                    <div>
-                        {% for i in sample %}
-                        <input type = "checkbox" name = "sample-type" id ="sample-type">
-                        <label> &emsp; {{i}}</label>
-                        <br>
-                        <br>
-                        {% endfor %}
-
-                        <input type = "checkbox" name= "Packages" id="Packages" >
-                        <label for ="Packages"> &emsp; Package </label>
-                        <p>Note: Packages require multiple samples</p>
-                    </div>
-                 </div>   
-                <div class = "col-sm"> 
-                    {% for i in sample %}
-                    <label for="quantity"></label>
-                    <input type="number" id="quantity" name="quantity" min="1" placeholder = "Number of Test" > 
-                    <br>
-                    <br>
-                        
-                    {% endfor %}
-                    <label for="quantity"></label>
-                    <input type="number" id="quantity" name="quantity" min="1" placeholder = "Number of Package">
-                </div>  
+        <input type = "checkbox" name= "Packages" id="Packages" >
+        <label for ="Packages"> Package </label>
         
-                <div class = "col-sm">
-            
-                    {% for item in tests %}
-                    <select name = "tests" id= "tests">  
-     
-                        {#<option label = {% firstof item %} ></option> #} 
-                        <option value = "" disabled selected> choose your test</option> 
-                        <option value> {{item}}</option>
-                    {% endfor %} 
-        
-                    </select>
-                    
-                    <select name = "packages" id= "packages">  
-                        <option value = "" disabled selected> choose your package</option>
-                        
+        <label for="quantity"></label>
+        <input type="number" id="quantity" name="quantity" min="1" placeholder = "Number of Package">
+        <select name = "packages" id= "packages">  
+            <option value = "" disabled selected> choose your package</option>
 
-                        <option value>"{{item}}"</option> 
-                    
-                    </select>
-                </div>
 
-            </div>
+            <option value>"{{item}}"</option> 
+
+        </select>
+        <p>Note: Packages require multiple samples</p>
+
+        <div class="container p-4 mt-3">
+            {% csrf_token %} 
+        <br>
+        <br>
+
+        <input type="reset">
+        <input type="submit" value="Order" />
+
         </div>
-            <div class="container p-4 mt-3">
-                {% csrf_token %} 
-            <br>
-            <br>
-            
-            <button type = "reset" class="btn btn-primary">Reset</button> 
-
-            <button type = "submit" class="btn btn-primary">Add to cart</button>
-            
-            </div>
-            <div>
-        {#    {% endfor %} #}
-
-                    {% for key,value in request.session.cart.items %}
-                    {{value.name}} {{value.cost}} {{value.quantity}} 
-                    {% endfor %}
-
-                    {% if value %}
-
-                    <div class = "container my-3">
-                        <button type = "btn btn-primary mt-3 mb-3">Add another item </button>
-                        <button type = "btn btn-primary mt-3 mb-3">Remove item </button>
-                        <button type = "btn btn-primary mt-3 mb-3"> Update cart </button>   
-                    
-                    {% endif %}
-                    {% else %} 
-                        
-                        <p> <br> <b>&emsp;Thank you for signing up and you are successful login in. <br>
-                        &emsp;Please complete the registration by creating your profile before placing order. <br>
-                        &emsp;We need your account number before you can add an item to the cart.</b>
-                        </p>
-                        <!-- To do put the link to registration page here -->       
-                    {% endif %}    
-                    </div>  
-            </div>
-        </form>
-    </section>
-            <p>&emsp;<a href="{% url 'home' %}">back</a></p>
+    </form>
     {% endblock %}   
     <br>
 </body>
