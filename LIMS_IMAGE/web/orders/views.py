@@ -1,8 +1,10 @@
+from random import sample
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from orders.models import Order, Package
 from laboratoryOrders.models import *
 from accounts.models import Client
+#from .forms import OrderForm
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -81,8 +83,11 @@ def shopping(request):
     for test in tests_list:
         names.append(test.name)
     sample = list(dict.fromkeys(sample_types))
+    # if request.method == 'POST':
+    #     form = OrderForm(request.POST)
+    #context_dict = {'form': form, 'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
     context_dict = {'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
-    return render(request, 'shopping/shopping.html',context_dict)
+    return render(request, 'orders/shopping.html',context_dict)
 
 # appendix b to help users decide which test and package to order for
 # <To Do> try to make it interactive depending on the sample quantities and the sample type
@@ -95,6 +100,24 @@ def appendix_b(request):
     sample_no_duplicate=sample_type_list.distinct()
     sample = list(sample_no_duplicate)
     context_dict = {'sample': sample,'package':package,'tests':tests}
-    return render(request, 'shopping/appendix_b.html',context_dict)
+    return render(request, 'orders/appendix_b.html',context_dict)
+
+def tests_by_type(request):
+    context =RequestContext(request)
+    tests_by_type ={}
+    
+    tests = Test.objects.all()
+
+    for test in tests:
+        sample_type = test.sample_type
+        if tests_by_type[sample_type]:
+            tests_by_type[sample_type].apppend(test)
+        else:
+         tests_by_type[sample_type] = [test]
+
+    context_dict = {'tests_by_type': tests_by_type}
+
+   
+    return render(request,'orders/shopping.html',context_dict)
 
 
