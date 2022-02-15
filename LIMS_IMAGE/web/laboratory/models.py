@@ -31,6 +31,7 @@ class Test(models.Model):
     cost = models.FloatField() # cost of running this test (for the client)
     rush = models.BooleanField() # if there is a rush on the test
     time_taken = models.IntegerField() # time this test takes
+    limit = models.CharField(max_length=100) # this limit is used to determine if a result passes or fails a test
 
 # What instruments are used by different tests (many to many)
 class TestInstrument(models.Model):

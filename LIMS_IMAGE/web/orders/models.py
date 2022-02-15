@@ -20,7 +20,8 @@ class Order(models.Model):
 
     order_number = models.IntegerField()
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
-    submission_date = models.DateField()
+    submission_date = models.DateField() #date the order was sent
+    arrival_date = models.DateField(null=True) #date the order was recieved // null until recieved
 
     # this funciton takes in an order and returns the user side order number
     # order number = account number - id e.g. 0001-0001
