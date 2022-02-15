@@ -110,8 +110,8 @@ def tests_by_type(request):
 
     for test in tests:
         sample_type = test.sample_type
-        if tests_by_type[sample_type]:
-            tests_by_type[sample_type].apppend(test)
+        if sample_type in tests_by_type:
+            tests_by_type[sample_type].append(test)
         else:
          tests_by_type[sample_type] = [test]
 
