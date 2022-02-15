@@ -15,12 +15,16 @@ def home_page(request):
         return redirect("accounts:customer_home_page")
     return render(request, 'laboratory/home_page.html')
 
-def distribution(request):
+# Show samples ready to be distributed
+def ready_for_distribution(request):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    sample_list = Sample.all_samples()
+    # Get all lab samples that are ready to be distributed then get related samples
+    labsamples = LabSample.objects.select_related('sample').filter(location__code='D')
+    sample_list = []
+    for ls in labsamples: sample_list.append(ls.sample)
     context = {'samples': sample_list}
     return render(request, 'laboratory/distribution.html', context)
 
