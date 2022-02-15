@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 <!-- Not having this here makes the interpreter mad -->
-{% block title %}Laboratory Home{% endblock %}
+{% block title %}Scan Barcode{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
 <body>
   {% block content%}
   <div class="container">
-    <h1>Barcode Home</h1>
-    <p>Welcome to the LIMS home page.</p>
+    <h1>Scan Barcode</h1>
+    <p>Scan your barcode.</p>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
