@@ -10,11 +10,10 @@
 <body>
   {% block content %}
     <div class="container">
-      <h1>Sample Distribution List</h1> 
       {% if samples|length is 0 %}
       <p>No samples found</p>
       {% else %}
-      <div class="sample-list">
+      <h1>Samples Ready for Distribution</h1> 
         <table>
           <tr>
             <th>Sample No.</th>
@@ -30,12 +29,59 @@
               <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
               <td>{{ sample.sample_type }}</td>
               <td>{{ sample.sample_form }}</td>
+              <td></td>
               <td>{{ sample.sop_number }}</td>
               <td> {{ sample.lab_personel }}</td>
             </tr>
           {% endfor %}
         </table>
-      </div>
+
+        <h1>Lab Breakdown</h1> 
+        <table>
+          <tr>
+            <th>Sample No.</th>
+            <th>Sample Type</th>
+            <th>Sample Form</th>
+            <th>Test Code (Appendix-C)</th>
+            <th>SOP No.</th>
+            <th>Lab Personnel</th>
+          </tr>
+          {% for sample in samples %}
+          {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
+            <tr>
+              <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
+              <td>{{ sample.sample_type }}</td>
+              <td>{{ sample.sample_form }}</td>
+              <td></td>
+              <td>{{ sample.sop_number }}</td>
+              <td> {{ sample.lab_personel }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+
+        <h1>Test Breakdown</h1> 
+        <table>
+          <tr>
+            <th>Sample No.</th>
+            <th>Sample Type</th>
+            <th>Sample Form</th>
+            <th>Test Code (Appendix-C)</th>
+            <th>SOP No.</th>
+            <th>Lab Personnel</th>
+          </tr>
+          {% for sample in samples %}
+          {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
+            <tr>
+              <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
+              <td>{{ sample.sample_type }}</td>
+              <td>{{ sample.sample_form }}</td>
+              <td></td>
+              <td>{{ sample.sop_number }}</td>
+              <td> {{ sample.lab_personel }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+
       {% endif %}
       {% comment %} <div class="search-wrapper">
         <h1>Sample List</h1> 
@@ -57,6 +103,6 @@
             </li>
         </ul>
         {% endfor %} {% endcomment %}
-      <div>
+    <div>
     {% endblock content %}
 </body>
