@@ -1,3 +1,7 @@
+from orders.models import Order
+from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample
+from laboratory.models import InventoryItem
+from laboratoryOrders.models import Sample, LabSample, TestSample
 from django.shortcuts import render, redirect
 from laboratoryOrders.models import SampleInspection
 from laboratoryOrders.forms import InspectionForm
@@ -5,8 +9,6 @@ from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
-from laboratoryOrders.models import Sample, LabSample, TestSample
-from laboratory.models import InventoryItem
 
 
 # home page for laboratory workers
@@ -31,13 +33,20 @@ def sample_list(request):
 
 # page for inventory management
 def inventory_management(request):
+    inventory_list = InventoryItem.objects.all()
+    context = {'inventory_list': inventory_list}
+    return render(request, 'laboratory/inventory.html', context)
+
+
+# page listing all samples for laboratory workers
+def order_list(request):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    inventory_list = InventoryItem.objects.all()
-    context = {'inventory_list': inventory_list}
-    return render(request, 'laboratory/inventory.html', context)
+    sample_list = Order.objects.all()
+    context = {'samples': sample_list}
+    return render(request, 'laboratory/order_list.html', context)
 
 
 def validate_sample(request, sample_id):
@@ -123,6 +132,23 @@ def view_barcode(request, sample_id):
     return render(request, 'laboratory/view_barcode.html', context)
 
 
+def view_order(request, order_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    order = Order.objects.filter(id=order_id).first()
+    samples = OrderSample.samples_for_order(order)
+
+    order_inspected = True
+    for sample in samples:
+        order_inspected = order_inspected and sample.insepcted()
+
+    context = {'order': order, 'samples': samples,
+               'order_inspected': order_inspected}
+    return render(request, 'laboratory/view_order.html', context)
+
+
 def view_sample(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -143,8 +169,10 @@ def view_sample(request, sample_id):
     lab_samples = sample.lab_samples()
     test_samples = sample.test_samples()
 
-    context = {'barcode_file_path': barcode_file_path, 'sample': sample,
-               'lab_samples': lab_samples, 'test_samples': test_samples, 'inspection': inspection}
+    order = sample.order()
+
+    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples,
+               'test_samples': test_samples, 'inspection': inspection, 'order': order}
     return render(request, 'laboratory/view_sample.html', context)
 
 

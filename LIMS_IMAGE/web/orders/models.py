@@ -15,7 +15,7 @@ class Package(models.Model):
 # an order placed by a client of tests they which to purchase
 class Order(models.Model):
     def __str__(self):
-        return 'Order: ' + str(self.account_number.company_name) + " " + str(self.order_number)
+        return str(self.account_number.company_name) + " " + str(self.order_number)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
 
     order_number = models.IntegerField()
@@ -25,7 +25,7 @@ class Order(models.Model):
     # this funciton takes in an order and returns the user side order number
     # order number = account number - id e.g. 0001-0001
     def user_side_id(self):
-        return str(self.account_number.company_name) + " " + str(self.order_number)
+        return str(self.account_number.id) + "-" + str(self.order_number)
 
     # this functions takes in a user (client), and returns a list of orders related to that client
     def order_for_user(user):
