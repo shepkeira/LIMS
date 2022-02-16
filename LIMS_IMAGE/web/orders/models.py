@@ -36,4 +36,9 @@ class Order(models.Model):
             return Order.objects.none()
         return Order.objects.filter(account_number = client)
 
+class Invoice(models.Model):
+    def __str__(self):
+        return self.type + " " + str(self.created_at) + " " + self.id
+    created_at = models.DateField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
