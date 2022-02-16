@@ -19,32 +19,29 @@
     </div> 
     <form method = "POST" action =" ">
         {% for sample_type, tests in tests_by_type.items %}
-        <input type = "checkbox" name = "sample-type" id ="sample-type">
-        <label>{{sample_type}}</label>
-        <label for="quantity"></label>
-        <input type="number" id="quantity" name="quantity" min="1" placeholder = "Number of Test" >
-        <select name = "tests" id= "tests">
-            <option value = "" disabled selected> choose your test</option> 
-            {% for item in tests %}
-                
-
-                
-                <option value> {{item}}</option>
-            {% endfor %}
-        </select>
-        <br>
+            <input type = "checkbox" name = "{{sample_type}}_check" id ="sample-type">
+            <label>{{sample_type}}</label>
+            <label for="quantity"></label>
+            <input type="number" id="quantity" name="quantity_{{sample_type}}" min="1" placeholder = "Number of Test" >
+            <select name = "tests_{{sample_type}}" id= "tests">
+                <option value = "" disabled selected> choose your test</option> 
+                {% for item in tests %}
+                    <option value={{item}}> {{item}}</option>
+                {% endfor %}
+            </select>
+            <br>
         {% endfor %}
 
-        <input type = "checkbox" name= "Packages" id="Packages" >
-        <label for ="Packages"> Package </label>
+        <input type = "checkbox" name= "packages" id="packages" >
+        <label for ="packages"> Package </label>
         
         <label for="quantity"></label>
-        <input type="number" id="quantity" name="quantity" min="1" placeholder = "Number of Package">
-        <select name = "packages" id= "packages">  
+        <input type="number" id="quantity" name="quantity_packages" min="1" placeholder = "Number of Package">
+        <select name = "package_name" id= "packages">  
             <option value = "" disabled selected> choose your package</option>
-
-
-            <option value>"{{item}}"</option> 
+            {% for package in packages %}
+            <option value="{{package}}"> {{package}}</option>
+            {% endfor %}
 
         </select>
         <p>Note: Packages require multiple samples</p>

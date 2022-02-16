@@ -10,7 +10,7 @@ class Package(models.Model):
     def __str__(self):
         return 'Package: ' + self.name
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def package(self):
         return str(self.name)
@@ -37,5 +37,10 @@ class Order(models.Model):
         except IndexError: # User not a client
             return Order.objects.none()
         return Order.objects.filter(account_number = client)
+    
+    def next_order_number(account):
+        orders = Order.objects.filter(account_number = account).order_by('order_number')
+        return orders.last().order_number + 1
+
 
 
