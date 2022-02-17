@@ -12,9 +12,9 @@ class Sample(models.Model):
         return "SID " + str(self.id) + " -> " + str(self.sample_type)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     sample_type = models.CharField(max_length=100)  # e.g. dairy
-    sample_form = models.CharField(max_length=100)  # e.g. liquid
-    sop_number = models.CharField(max_length=100)  # e.g. SPO-AN-X
-    lab_personel = models.ForeignKey(LabWorker, on_delete=models.CASCADE)
+    sample_form = models.CharField(max_length=100, null=True)  # e.g. liquid
+    sop_number = models.CharField(max_length=100, null=True)  # e.g. SPO-AN-X
+    lab_personel = models.ForeignKey(LabWorker, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True)  # when the sample was created
     updated_at = models.DateTimeField(

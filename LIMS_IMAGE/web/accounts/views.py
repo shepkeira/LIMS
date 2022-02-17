@@ -3,7 +3,6 @@ from django.http.response import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import redirect, render
-
 from accounts.models import Client
 
 # view used for registration of a client or lab employee
@@ -41,3 +40,4 @@ def home_page(request):
         else:
             return redirect("accounts:employee_home_page")
     return redirect("/")
+

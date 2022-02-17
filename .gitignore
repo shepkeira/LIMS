@@ -13,3 +13,5 @@
 
 # Ignore postgres data
 LIMS_IMAGE/db-postgres/data/
+
+*_barcode.jpg
