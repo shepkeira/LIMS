@@ -4,7 +4,7 @@
 {% load admin_urls %}
 {% block title %}Sample List{% endblock %}
 {% block additionalStyles %}
-<link rel="stylesheet" href="{% static 'laboratory/css/sample_list.css' %}" />
+<link rel="stylesheet" href="{% static 'laboratory/css/distribution.css' %}" />
 <script src="{% static 'laboratory/js/sample_list_search.js' %}" defer></script>
 {% endblock %}
 <body>
@@ -40,21 +40,13 @@
         <table>
           <tr>
             <th>Sample No.</th>
-            <th>Sample Type</th>
-            <th>Sample Form</th>
-            <th>Test Code (Appendix-C)</th>
-            <th>SOP No.</th>
-            <th>Lab Personnel</th>
+            <th>Assigned Lab</th>
           </tr>
-          {% for sample in samples %}
+          {% for ls in labsamples %}
           {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
             <tr>
-              <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
-              <td>{{ sample.sample_type }}</td>
-              <td>{{ sample.sample_form }}</td>
-              <td></td>
-              <td>{{ sample.sop_number }}</td>
-              <td> {{ sample.lab_personel }}</td>
+              <td> <a href="{% url 'laboratory:view_sample' ls.sample.id %}">{{ ls.sample.id }}</a></td>
+              <td>{{ ls.location }}</td>
             </tr>
           {% endfor %}
         </table>
@@ -63,21 +55,13 @@
         <table>
           <tr>
             <th>Sample No.</th>
-            <th>Sample Type</th>
-            <th>Sample Form</th>
-            <th>Test Code (Appendix-C)</th>
-            <th>SOP No.</th>
-            <th>Lab Personnel</th>
+            <th>Test</th>
           </tr>
-          {% for sample in samples %}
+          {% for ts in testsamples %}
           {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
             <tr>
-              <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
-              <td>{{ sample.sample_type }}</td>
-              <td>{{ sample.sample_form }}</td>
-              <td></td>
-              <td>{{ sample.sop_number }}</td>
-              <td> {{ sample.lab_personel }}</td>
+              <td> <a href="{% url 'laboratory:view_sample' ts.0 %}">{{ ts.0 }}</a></td>
+              <td>{{ ts.1 }}</td>
             </tr>
           {% endfor %}
         </table>

@@ -22,10 +22,17 @@ def ready_for_distribution(request):
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     # Get all lab samples that are ready to be distributed then get related samples
-    labsamples = LabSample.objects.select_related('sample').filter(location__code='D')
+    labsamples = LabSample.objects.select_related('sample').order_by('sample')#.filter(location__code='D')
+    
+    # Get samples and test samples from labsamples
+    testsamples = []
     sample_list = []
-    for ls in labsamples: sample_list.append(ls.sample)
-    context = {'samples': sample_list}
+    for ls in labsamples:
+        sample_list.append(ls.sample)
+        for ts in ls.test_samples():
+            testsamples.append([ls.sample.id, ts])
+    
+    context = {'samples': sample_list, 'labsamples': labsamples, 'testsamples':testsamples}
     return render(request, 'laboratory/distribution.html', context)
 
 # page listing all samples for laboratory workers
