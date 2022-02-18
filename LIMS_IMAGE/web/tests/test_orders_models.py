@@ -39,8 +39,8 @@ class ordersModelsTestCase(TestCase):
 
         self.assertIsInstance(self.test_order, Order)
         self.assertIsInstance(order_result.account_number, Client)
-        self.assertEqual('Order: ' + str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.__str__())
-        self.assertEqual(str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.user_side_id())
+        self.assertEqual(str(self.test_order.account_number.company_name) + " " + str(self.test_order.order_number), order_result.__str__())
+        self.assertEqual(str(self.test_order.account_number.id) + "-" + str(self.test_order.order_number), order_result.user_side_id())
 
         # order_for_user method - user with orders
         self.assertQuerysetEqual(Order.objects.filter(account_number = self.test_client), Order.order_for_user(self.test_client.user))
