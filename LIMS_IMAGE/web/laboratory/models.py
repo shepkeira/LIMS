@@ -97,26 +97,8 @@ class InventoryItem(models.Model):
         (GLA, 'Glassware'),
     )
 
-    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-<< << << < HEAD
-type = models.CharField(max_length=50)  # type of item
-expiration_date = models.DateTimeField  # when this item expires if ever
-status = models.CharField(
-    max_length=10, choices=STATUS_CHOICES, default=O)  # status of this item (more ordered)
-item_type = models.CharField(
-    max_length=10, choices=TYPE_CHOICES, default=SOL)  # type of item (solvent, organic, liquid, inorganic, standard, etc.)
-# category of this item (example, food, medicine, etc)
-estimated_quantity = models.IntegerField()  # estimated quantity of items
-# unit of the quantity (ml, packs of 10 etc.)
-quantity_unit = models.CharField(max_length=10)
-usage_rate = models.IntegerField()  # estimated usage of this item
-usage_rate_unit = models.CharField(
-    max_length=10)  # unit of usage rate ml/week
-# estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
-estimated_need = models.IntegerField()
-# TODO: add barcode for each item
 
-== == == =
+# By default, Django gives each model an auto-incrementing primary key with the type specified per app
 type = models.CharField(max_length=50)  # type of item
 expiration_date = models.DateTimeField()  # when this item expires if ever
 # status of this item (more ordered)
@@ -129,7 +111,6 @@ usage_rate_unit = models.CharField(
     max_length=10)  # unit of usage rate ml/week
 # estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
 estimated_need = models.IntegerField()
->>>>>> > development
 
 
 class Image(models.Model):
