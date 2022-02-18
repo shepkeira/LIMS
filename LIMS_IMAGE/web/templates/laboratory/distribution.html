@@ -26,42 +26,12 @@
           {% for sample in samples %}
           {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
             <tr>
-              <td> <a href="{% url 'laboratory:view_sample' sample.id %}">{{ sample.id }}</a></td>
-              <td>{{ sample.sample_type }}</td>
-              <td>{{ sample.sample_form }}</td>
+              <td> <a href="{% url 'laboratory:view_sample' sample.0.id %}">{{ sample.1 }}</a></td>
+              <td>{{ sample.0.sample_type }}</td>
+              <td>{{ sample.0.sample_form }}</td>
               <td></td>
-              <td>{{ sample.sop_number }}</td>
-              <td> {{ sample.lab_personel }}</td>
-            </tr>
-          {% endfor %}
-        </table>
-
-        <h1>Lab Breakdown</h1> 
-        <table>
-          <tr>
-            <th>Sample No.</th>
-            <th>Assigned Lab</th>
-          </tr>
-          {% for ls in labsamples %}
-          {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
-            <tr>
-              <td> <a href="{% url 'laboratory:view_sample' ls.sample.id %}">{{ ls.sample.id }}</a></td>
-              <td>{{ ls.location }}</td>
-            </tr>
-          {% endfor %}
-        </table>
-
-        <h1>Test Breakdown</h1> 
-        <table>
-          <tr>
-            <th>Sample No.</th>
-            <th>Test</th>
-          </tr>
-          {% for ts in testsamples %}
-          {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
-            <tr>
-              <td> <a href="{% url 'laboratory:view_sample' ts.0 %}">{{ ts.0 }}</a></td>
-              <td>{{ ts.1 }}</td>
+              <td>{{ sample.0.sop_number }}</td>
+              <td> {{ sample.0.lab_personel }}</td>
             </tr>
           {% endfor %}
         </table>
