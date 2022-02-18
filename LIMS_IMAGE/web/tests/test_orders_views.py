@@ -136,8 +136,6 @@ class modelTestCase(TestCase):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/orders/shopping/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['orders'], list(Order.order_for_user(self.test_user_client)))
-
     
     def test_shopping_unauth(self):
         response = self.client.get('/orders/shopping/')

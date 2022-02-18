@@ -11,6 +11,7 @@ urlpatterns = [
          views.validate_sample, name='validate_sample'),
     path('sample_list/', views.sample_list,
          name='lab_sample_list'),  # List of all samples + search bar
+    path('distribution/', views.ready_for_distribution, name='distribution'),
     path('order_list/', views.order_list,
          name='order_list'),  # List of all samples + search bar
     path("barcode/<sample_id>/", views.view_barcode, name="view_barcode"),

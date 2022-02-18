@@ -31,7 +31,7 @@ class Test(models.Model):
     def __str__(self):
         return self.name  # tests are referenced by their name
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    name = models.CharField(max_length=100)  # name of the test
+    name = models.CharField(max_length=100, unique=True)  # name of the test
     # sample-type for the test (example, Daily or Environment)
     sample_type = models.CharField(max_length=100, null=True)
     # test code for internal referencing
@@ -39,6 +39,16 @@ class Test(models.Model):
     cost = models.FloatField()  # cost of running this test (for the client)
     rush = models.BooleanField()  # if there is a rush on the test
     time_taken = models.IntegerField()  # time this test takes
+    # this limit is used to determine if a result passes or fails a test
+    limit = models.CharField(max_length=100)
+
+    # this function returns the name for individual tests
+    def get_Test_name(self):
+        return str(self.name)
+
+    # this function returns the sample types such as Daily and Cosmetics
+    def get_sample_type(self):
+        return str(self.sample_type)
 
 # What instruments are used by different tests (many to many)
 
@@ -86,23 +96,40 @@ class InventoryItem(models.Model):
         (CON, 'Consumable'),
         (GLA, 'Glassware'),
     )
+
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    type = models.CharField(max_length=50)  # type of item
-    expiration_date = models.DateTimeField  # when this item expires if ever
-    status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default=O)  # status of this item (more ordered)
-    item_type = models.CharField(
-        max_length=10, choices=TYPE_CHOICES, default=SOL)  # type of item (solvent, organic, liquid, inorganic, standard, etc.)
-    # category of this item (example, food, medicine, etc)
-    estimated_quantity = models.IntegerField()  # estimated quantity of items
-    # unit of the quantity (ml, packs of 10 etc.)
-    quantity_unit = models.CharField(max_length=10)
-    usage_rate = models.IntegerField()  # estimated usage of this item
-    usage_rate_unit = models.CharField(
-        max_length=10)  # unit of usage rate ml/week
-    # estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
-    estimated_need = models.IntegerField()
-    # TODO: add barcode for each item
+<< << << < HEAD
+type = models.CharField(max_length=50)  # type of item
+expiration_date = models.DateTimeField  # when this item expires if ever
+status = models.CharField(
+    max_length=10, choices=STATUS_CHOICES, default=O)  # status of this item (more ordered)
+item_type = models.CharField(
+    max_length=10, choices=TYPE_CHOICES, default=SOL)  # type of item (solvent, organic, liquid, inorganic, standard, etc.)
+# category of this item (example, food, medicine, etc)
+estimated_quantity = models.IntegerField()  # estimated quantity of items
+# unit of the quantity (ml, packs of 10 etc.)
+quantity_unit = models.CharField(max_length=10)
+usage_rate = models.IntegerField()  # estimated usage of this item
+usage_rate_unit = models.CharField(
+    max_length=10)  # unit of usage rate ml/week
+# estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
+estimated_need = models.IntegerField()
+# TODO: add barcode for each item
+
+== == == =
+type = models.CharField(max_length=50)  # type of item
+expiration_date = models.DateTimeField()  # when this item expires if ever
+# status of this item (more ordered)
+status = models.CharField(max_length=50)
+estimated_quantity = models.IntegerField()  # estimated quantity of items
+# unit of the quantity (ml, packs of 10 etc.)
+quantity_unit = models.CharField(max_length=10)
+usage_rate = models.IntegerField()  # estimated usage of this item
+usage_rate_unit = models.CharField(
+    max_length=10)  # unit of usage rate ml/week
+# estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
+estimated_need = models.IntegerField()
+>>>>>> > development
 
 
 class Image(models.Model):

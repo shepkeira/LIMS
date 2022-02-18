@@ -12,9 +12,9 @@ class Sample(models.Model):
         return "SID " + str(self.id) + " -> " + str(self.sample_type)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     sample_type = models.CharField(max_length=100)  # e.g. dairy
-    sample_form = models.CharField(max_length=100)  # e.g. liquid
-    sop_number = models.CharField(max_length=100)  # e.g. SPO-AN-X
-    lab_personel = models.ForeignKey(LabWorker, on_delete=models.CASCADE)
+    sample_form = models.CharField(max_length=100, null=True)  # e.g. liquid
+    sop_number = models.CharField(max_length=100, null=True)  # e.g. SPO-AN-X
+    lab_personel = models.ForeignKey(LabWorker, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True)  # when the sample was created
     updated_at = models.DateTimeField(
@@ -149,6 +149,9 @@ class TestResult(models.Model):
     status = models.CharField(max_length=50)
     result = models.CharField(max_length=200)
     test_id = models.ForeignKey(TestSample, on_delete=models.CASCADE)
+    pass_fail = models.BooleanField()
+    date_entry = models.DateTimeField(
+        auto_now_add=True) # entry of when the testResult was created
 
     # takes in a list of tests and returns a list of results for those tests
     def get_test_results(tests):
@@ -196,3 +199,24 @@ class TestPackage(models.Model):
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+
+class InternalReport(models.Model):
+    TYPE = (
+       ('lab', ('Lab Report')),
+       ('operations', ('Operations Report')),
+   )
+    choices = ['Lab Report', 'Operations Report']
+    created_at = models.DateField(auto_now_add=True)
+    type = models.CharField(
+        max_length=100,
+        choices=TYPE,
+    )
+    approved = models.BooleanField()
+    approved_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class OrderReport(models.Model):
+    def __str__(self):
+        return self.report + " " + self.order + " " + self.lab
+    report = models.ForeignKey(InternalReport, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    lab = models.ForeignKey(Location, on_delete=models.CASCADE, null=True) #if its a lab report we need the lab
