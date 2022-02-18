@@ -12,9 +12,9 @@ class Sample(models.Model):
         return "SID " + str(self.id) + " -> " + str(self.sample_type)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     sample_type = models.CharField(max_length=100)  # e.g. dairy
-    sample_form = models.CharField(max_length=100)  # e.g. liquid
-    sop_number = models.CharField(max_length=100)  # e.g. SPO-AN-X
-    lab_personel = models.ForeignKey(LabWorker, on_delete=models.CASCADE)
+    sample_form = models.CharField(max_length=100, null=True)  # e.g. liquid
+    sop_number = models.CharField(max_length=100, null=True)  # e.g. SPO-AN-X
+    lab_personel = models.ForeignKey(LabWorker, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True)  # when the sample was created
     updated_at = models.DateTimeField(
@@ -55,6 +55,16 @@ class Sample(models.Model):
             return "Invalid"
         return "Not Inspected"
 
+    def insepcted(self):
+        inspection = SampleInspection.objects.filter(sample = self).first()
+        if inspection:
+            return True
+        return False
+
+    def order(self):
+        order_sample = OrderSample.objects.filter(sample = self).first()
+        return order_sample.order
+
 # Sample Inspection results
 class SampleInspection(models.Model):
     def __str__(self):
@@ -83,6 +93,13 @@ class OrderSample(models.Model):
         order_number = self.order.order_number
         sample_id = self.sample.id
         return str(order_number) + " " + str(sample_id)
+
+    def samples_for_order(order):
+        order_samples = OrderSample.objects.filter(order = order)
+        samples = []
+        for order_sample in order_samples:
+            samples.append(order_sample.sample)
+        return samples
 
 # lab sample, seperates the sample into different sub-samples for each lab
 class LabSample(models.Model):

@@ -9,4 +9,6 @@ urlpatterns = [
     path('results/', views.results, name='results'),
     path('shopping/', views.shopping, name='shopping'),
     path('home_page/', views.home_page, name='home'),
+    path('appendix_b/',views.appendix_b, name ='appendix_b'), 
+
 ]

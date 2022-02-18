@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Order Page{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Order Page</h1>
+    <p>Welcome to the order page!</p>
+    <p>ID: {{ order.user_side_id }}</p>
+    <p>Order Number: {{ order.order_number }}</p>
+    <p>Account: {{ order.account_number.company_name }}</p>
+    <p>Submission Date: {{ order.submission_date }}</p>
+    
+    {% if samples %}
+    <p>Order Inspected? {{ order_inspected }}</p>
+        <h2>Samples</h2>
+        <ul>
+        {% for sample in samples %}
+            <li><a href = "{% url 'laboratory:view_sample' sample.id %}">{{ sample.user_side_id }}</a> Sample Inspected? {{ sample.inspection_results }}</li>
+        {% endfor %}
+        </ul>
+        
+    {% endif %}
+  {% endblock %}
+  </div>
+</body>

@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'training',
     'laboratoryOrders',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -77,7 +76,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'src.wsgi.application'
 
 
