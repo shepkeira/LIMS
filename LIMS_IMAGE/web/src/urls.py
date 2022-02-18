@@ -18,16 +18,17 @@ from django.urls import path, include
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+import accounts
 
 # Django reads URL patterns from top to bottom
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    # TODO: why are there two accounts urls?
+    # below contains urls for login and registration
     path('accounts/', include('django.contrib.auth.urls')),
     path('orders/', include('orders.urls')),
     path('laboratory/', include('laboratory.urls')),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),  # new
+    path('', accounts.views.home_page, name='home')
 ]
 
 if settings.DEBUG:
