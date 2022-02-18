@@ -1,8 +1,11 @@
+from random import sample
 from django.shortcuts import render, redirect
 from django.template import RequestContext
-from orders.models import Order
-from laboratoryOrders.models import TestResult, OrderTest
+from orders.models import Order, Package
+from laboratoryOrders.models import *
 from accounts.models import Client
+import datetime
+#from .forms import OrderForm
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -65,7 +68,103 @@ def shopping(request):
     if not Client.objects.filter(user=request.user):
         return redirect("accounts:employee_home_page")
     context = RequestContext(request)
-    shopping_list = Order.order_for_user(request.user)
-
-    context_dict = {'orders': list(shopping_list)}
+    account_list=Client.objects.all()
+    #  number to varify user has created profile 
+    account_num = Client.objects.filter(user=request.user)
+    # the list of sample types for user to choose from
+    sample_types = []
+    for type in Test.objects.all():
+        sample_types.append(type.get_sample_type())
+    # the list of tests and packages for user to place order
+    names =[]
+    package_list = Package.objects.all()
+    for package in package_list:
+        names.append(package.name)
+    tests_list = Test.objects.all()
+    for test in tests_list:
+        names.append(test.name)
+    sample = list(dict.fromkeys(sample_types))
+    # if request.method == 'POST':
+    #     form = OrderForm(request.POST)
+    #context_dict = {'form': form, 'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
+    context_dict = {'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
     return render(request, 'orders/shopping.html',context_dict)
+
+def shopping(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
+    account = Client.objects.filter(user = request.user).first()
+    date = datetime.datetime.now()
+    order_number = Order.next_order_number(account)
+
+    tests_by_type ={}
+    tests = Test.objects.all()
+    for test in tests:
+        sample_type = test.sample_type
+        if sample_type in tests_by_type:
+            tests_by_type[sample_type].append(test)
+        else:
+         tests_by_type[sample_type] = [test]
+
+    tests_by_package = {}
+    packages = Package.objects.all()
+    for package in packages:
+        test_packages = TestPackage.objects.filter(package=package)
+        tests = []
+        for test_package in test_packages:
+            test = test_package.test
+            tests.append(test)
+        tests_by_package[package.name] = tests
+
+    if request.method == "POST":
+        print(request.POST)
+        order = Order(order_number= order_number, account_number=account, submission_date=date)
+        order.save()
+        for sample_type, tests in tests_by_type.items():
+            if request.POST.get(sample_type + "_check") and request.POST.get("tests_" + sample_type):
+                quantity = request.POST.get("quantity_" + sample_type)
+                for count in range(0, int(quantity)):
+                    sample = Sample(sample_type=sample_type)
+                    sample.save()
+                    ordersample = OrderSample(order=order, sample = sample)
+                    ordersample.save()
+                test_name = request.POST.get("tests_" + sample_type)
+                test = Test.objects.filter(name=test_name).first()
+                ordertest = OrderTest(order_number=order, test_id=test)
+                ordertest.save()
+
+        if request.POST.get("packages_check"):
+            quantity = request.POST.get("quantity_packages")
+            package_name = request.POST.get("package_name")
+            for count in range(0, int(quantity)):
+                tests = tests_by_package[package_name]
+                for test_name in tests:
+                    test = Test.objects.filter(name=test_name).first()
+                    ordertest = OrderTest(order_number=order, test_id=test)
+                    ordertest.save()
+                    sample = Sample(sample_type=test.sample_type)
+                    sample.save()
+                    ordersample = OrderSample(order=order, sample = sample)
+                    ordersample.save()
+
+        return redirect('orders:order_history')
+
+    context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
+
+    return render(request,'orders/shopping.html',context_dict)
+
+
+# appendix b to help users decide which test and package to order for
+# <To Do> try to make it interactive depending on the sample quantities and the sample type
+def appendix_b(request):
+    sample_type_list = Test.objects.all()
+    package_list = Package.objects.all()
+    package = list(package_list)
+    tests_list = Test.objects.all()
+    tests = list(tests_list)
+    sample_no_duplicate=sample_type_list.distinct()
+    sample = list(sample_no_duplicate)
+    context_dict = {'sample': sample,'package':package,'tests':tests}
+    return render(request, 'orders/appendix_b.html',context_dict)
