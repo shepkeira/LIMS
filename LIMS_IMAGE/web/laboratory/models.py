@@ -55,7 +55,7 @@ class InventoryItem(models.Model):
         return self.type
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     type = models.CharField(max_length=50) # type of item
-    expiration_date = models.DateTimeField # when this item expires if ever
+    expiration_date = models.DateTimeField() # when this item expires if ever
     status = models.CharField(max_length=50) # status of this item (more ordered)
     estimated_quantity = models.IntegerField() # estimated quantity of items
     quantity_unit = models.CharField(max_length=10) # unit of the quantity (ml, packs of 10 etc.)
