@@ -16,6 +16,23 @@ def home_page(request):
         return redirect("accounts:customer_home_page")
     return render(request, 'laboratory/home_page.html')
 
+# Show samples ready to be distributed
+def ready_for_distribution(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    # Get samples that have passed inspection, but don't yet have a lab sample
+    sample_results = Sample.objects.all()
+    samples = []
+    for s in sample_results:
+        if not s.lab_samples() and s.inspection_results() == 'Valid':
+            samples.append([s, s.user_side_id()])
+        
+    
+    context = {'samples': samples}
+    return render(request, 'laboratory/distribution.html', context)
+
 # page listing all samples for laboratory workers
 def sample_list(request):
     if not request.user.is_authenticated:
