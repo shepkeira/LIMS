@@ -23,7 +23,8 @@ class Order(models.Model):
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     order_number = models.IntegerField()
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
-    submission_date = models.DateField()
+    submission_date = models.DateField() #date the order was sent
+    arrival_date = models.DateField(null=True) #date the order was recieved // null until recieved
 
     # this funciton takes in an order and returns the user side order number
     # order number = account number - id e.g. 0001-0001
@@ -43,4 +44,9 @@ class Order(models.Model):
         return orders.last().order_number + 1
 
 
+class Invoice(models.Model):
+    def __str__(self):
+        return self.type + " " + str(self.created_at) + " " + self.id
+    created_at = models.DateField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 

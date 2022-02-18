@@ -31,6 +31,7 @@ class Test(models.Model):
     cost = models.FloatField() # cost of running this test (for the client)
     rush = models.BooleanField() # if there is a rush on the test
     time_taken = models.IntegerField() # time this test takes
+    limit = models.CharField(max_length=100) # this limit is used to determine if a result passes or fails a test
 
     # this function returns the name for individual tests
     def get_Test_name(self):
@@ -54,7 +55,7 @@ class InventoryItem(models.Model):
         return self.type
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     type = models.CharField(max_length=50) # type of item
-    expiration_date = models.DateTimeField # when this item expires if ever
+    expiration_date = models.DateTimeField() # when this item expires if ever
     status = models.CharField(max_length=50) # status of this item (more ordered)
     estimated_quantity = models.IntegerField() # estimated quantity of items
     quantity_unit = models.CharField(max_length=10) # unit of the quantity (ml, packs of 10 etc.)
