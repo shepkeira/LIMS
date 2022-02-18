@@ -149,9 +149,9 @@ class TestResult(models.Model):
     status = models.CharField(max_length=50)
     result = models.CharField(max_length=200)
     test_id = models.ForeignKey(TestSample, on_delete=models.CASCADE)
-    # pass_fail = models.BooleanField()
-    # date_entry = models.DateTimeField(
-    #     auto_now_add=True)  # when the sample was created
+    pass_fail = models.BooleanField()
+    date_entry = models.DateTimeField(
+        auto_now_add=True)  # when the sample was created
 
     # takes in a list of tests and returns a list of results for those tests
     def get_test_results(tests):
