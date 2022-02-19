@@ -7,8 +7,11 @@ from src.barcoder import Barcoder
 import os
 from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample
 from orders.models import Order
+from laboratory.models import InventoryItem
 
 # home page for laboratory workers
+
+
 def home_page(request):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -17,6 +20,8 @@ def home_page(request):
     return render(request, 'laboratory/home_page.html')
 
 # Show samples ready to be distributed
+
+
 def ready_for_distribution(request):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -28,12 +33,13 @@ def ready_for_distribution(request):
     for s in sample_results:
         if not s.lab_samples() and s.inspection_results() == 'Valid':
             samples.append([s, s.user_side_id()])
-        
-    
+
     context = {'samples': samples}
     return render(request, 'laboratory/distribution.html', context)
 
 # page listing all samples for laboratory workers
+
+
 def sample_list(request):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -44,6 +50,8 @@ def sample_list(request):
     return render(request, 'laboratory/sample_list.html', context)
 
 # page listing all samples for laboratory workers
+
+
 def order_list(request):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -53,13 +61,14 @@ def order_list(request):
     context = {'samples': sample_list}
     return render(request, 'laboratory/order_list.html', context)
 
+
 def validate_sample(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    sample = Sample.objects.filter(id = sample_id).first()
-    inspection = SampleInspection.objects.filter(sample = sample).first()
+    sample = Sample.objects.filter(id=sample_id).first()
+    inspection = SampleInspection.objects.filter(sample=sample).first()
     if request.method == 'POST':
         form = InspectionForm(request.POST, instance=inspection)
         message = ""
@@ -73,12 +82,13 @@ def validate_sample(request, sample_id):
         form = InspectionForm(instance=inspection)
         return render(request, 'laboratory/validate.html', {'sample': sample, 'form': form})
 
+
 def read_barcode(request):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    #Process images uploaded by users
+    # Process images uploaded by users
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
         mypath = "../../src/uploads/images"
@@ -91,7 +101,7 @@ def read_barcode(request):
             # Get the current instance object to display in the template
             img_obj = form.instance
             img_path = os.path.basename(img_obj.image.url)
-            
+
             image_path_2 = os.path.join("../../src/uploads/images", img_path)
             img_barcode = Barcoder().scanBarcode(img_obj.image.url)
             barcode_parts = img_barcode.split("-")
@@ -108,13 +118,16 @@ def read_barcode(request):
                 else:
                     # this is a test sample
                     type = "test_sample"
-            context = {'form': form, 'img_obj': img_obj, 'img_url': image_path_2, 'img_barcode': img_barcode, 'type': type, 'id': id}
+            context = {'form': form, 'img_obj': img_obj, 'img_url': image_path_2,
+                       'img_barcode': img_barcode, 'type': type, 'id': id}
             return render(request, 'laboratory/read_barcode.html', context)
     else:
         form = ImageForm()
     return render(request, 'laboratory/read_barcode.html', {'form': form})
- 
+
 # page listing all samples for laboratory workers
+
+
 def view_barcode(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -126,26 +139,29 @@ def view_barcode(request, sample_id):
         for file in files:
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
-    sample = Sample.objects.filter(id = sample_id).first()
+    sample = Sample.objects.filter(id=sample_id).first()
     barcode_file_path = sample.barcode()
     barcode_file_path = os.path.join("../../../", barcode_file_path)
     context = {'barcode_file_path': barcode_file_path, "sample_id": sample_id}
     return render(request, 'laboratory/view_barcode.html', context)
+
 
 def view_order(request, order_id):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    order = Order.objects.filter(id = order_id).first()
+    order = Order.objects.filter(id=order_id).first()
     samples = OrderSample.samples_for_order(order)
 
     order_inspected = True
     for sample in samples:
         order_inspected = order_inspected and sample.insepcted()
 
-    context = {'order': order, 'samples': samples, 'order_inspected': order_inspected}
+    context = {'order': order, 'samples': samples,
+               'order_inspected': order_inspected}
     return render(request, 'laboratory/view_order.html', context)
+
 
 def view_sample(request, sample_id):
     if not request.user.is_authenticated:
@@ -158,7 +174,7 @@ def view_sample(request, sample_id):
         for file in files:
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
-    sample = Sample.objects.filter(id = sample_id).first()
+    sample = Sample.objects.filter(id=sample_id).first()
     inspection = sample.inspection_results()
 
     barcode_file_path = sample.barcode()
@@ -169,8 +185,10 @@ def view_sample(request, sample_id):
 
     order = sample.order()
 
-    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples, 'test_samples': test_samples, 'inspection': inspection, 'order': order}
+    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples,
+               'test_samples': test_samples, 'inspection': inspection, 'order': order}
     return render(request, 'laboratory/view_sample.html', context)
+
 
 def view_lab_sample(request, lab_sample_id):
     if not request.user.is_authenticated:
@@ -184,7 +202,7 @@ def view_lab_sample(request, lab_sample_id):
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
 
-    lab_sample = LabSample.objects.filter(id = lab_sample_id).first()
+    lab_sample = LabSample.objects.filter(id=lab_sample_id).first()
 
     barcode_file_path = lab_sample.barcode()
     barcode_file_path = os.path.join("../../../", barcode_file_path)
@@ -192,8 +210,10 @@ def view_lab_sample(request, lab_sample_id):
     test_samples = lab_sample.test_samples()
     sample = lab_sample.sample
 
-    context = {'barcode_file_path': barcode_file_path, 'lab_sample': lab_sample, 'test_samples': test_samples, 'sample': sample}
+    context = {'barcode_file_path': barcode_file_path,
+               'lab_sample': lab_sample, 'test_samples': test_samples, 'sample': sample}
     return render(request, 'laboratory/view_lab_sample.html', context)
+
 
 def view_test_sample(request, test_sample_id):
     if not request.user.is_authenticated:
@@ -207,7 +227,7 @@ def view_test_sample(request, test_sample_id):
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
 
-    test_sample = TestSample.objects.filter(id = test_sample_id).first()
+    test_sample = TestSample.objects.filter(id=test_sample_id).first()
 
     barcode_file_path = test_sample.barcode()
     barcode_file_path = os.path.join("../../../", barcode_file_path)
@@ -215,6 +235,16 @@ def view_test_sample(request, test_sample_id):
     lab_sample = test_sample.lab_sample_id
     sample = lab_sample.sample
 
-    context = {'barcode_file_path': barcode_file_path, 'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample}
+    context = {'barcode_file_path': barcode_file_path,
+               'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample}
     return render(request, 'laboratory/view_test_sample.html', context)
 
+
+def inventory_page(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    inventory_list = InventoryItem.objects.all()
+    context = {'inventory_list': inventory_list}
+    return render(request, 'laboratory/inventory.html', context)
