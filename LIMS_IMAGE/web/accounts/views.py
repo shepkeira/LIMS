@@ -39,5 +39,5 @@ def home_page(request):
             return redirect("accounts:customer_home_page")
         else:
             return redirect("accounts:employee_home_page")
-    return redirect("/")
+    return render(request,'home.html')
 
