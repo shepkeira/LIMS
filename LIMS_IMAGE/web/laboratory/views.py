@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from laboratoryOrders.models import SampleInspection
-from laboratoryOrders.forms import InspectionForm
+from laboratoryOrders.forms import InspectionForm, DistributionForm
 from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
 from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample
 from orders.models import Order
-from laboratory.models import InventoryItem
+from laboratory.models import InventoryItem, Location
 
 # home page for laboratory workers
 
@@ -36,6 +36,33 @@ def ready_for_distribution(request):
 
     context = {'samples': samples}
     return render(request, 'laboratory/distribution.html', context)
+
+
+def create_lab_sample(request, sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+
+    locations = Location.objects.all()
+    sample = Sample.objects.filter(id=sample_id).first()
+
+    # Form
+    if request.method == 'POST': # Form callback with post
+        results = request.POST.items()
+        for result in results:
+            if result[0] != 'csrfmiddlewaretoken' and not LabSample.objects.filter(sample=sample_id, location__name=result[0]):
+                print('Result: ' + str(result), flush=True)
+                print('Location: ' + str(Location.objects.filter(name=result[0]).first()))
+                #ls = LabSample(
+                #    sample=Sample.objects.filter(id=sample_id).first(),
+                #    location=Location.objects.filter(name=result[0]).first()
+                #    )
+                #print('Created new lab sample: ' + str(ls))
+
+    context = {'sample': sample, 'locations': locations}
+    return render(request, 'laboratory/distribute_sample.html', context)
+
 
 # page listing all samples for laboratory workers
 
