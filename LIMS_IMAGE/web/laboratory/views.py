@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from laboratoryOrders.models import SampleInspection
-from laboratoryOrders.forms import InspectionForm, DistributionForm
+from laboratoryOrders.forms import InspectionForm
 from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
