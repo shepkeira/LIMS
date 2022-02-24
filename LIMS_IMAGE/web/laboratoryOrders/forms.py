@@ -1,5 +1,5 @@
 from django import forms
-from .models import SampleInspection
+from .models import SampleInspection, LabSample
 
 class InspectionForm(forms.ModelForm):
     """Form for the image model"""
