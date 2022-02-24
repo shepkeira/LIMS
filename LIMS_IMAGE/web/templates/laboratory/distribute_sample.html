@@ -23,12 +23,7 @@
     </form>
 
       
-      {% if complete and message %}
-        <h3>{{ message }}</h3>
-      {% endif %}
-      {% if complete and not message %}
-        <h3>Successfully Updated</h3>
-      {% endif %}
+    <p>{{ message }}</p>
   {% endblock %}
   </div>
 </body>

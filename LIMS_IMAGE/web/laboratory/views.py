@@ -48,8 +48,10 @@ def create_lab_sample(request, sample_id):
     sample = Sample.objects.filter(id=sample_id).first()
 
     # Form
+    message = ''
     if request.method == 'POST': # Form callback with post
         results = request.POST.items()
+        added = ''
         for result in results:
             if result[0] != 'csrfmiddlewaretoken' and not LabSample.objects.filter(sample=sample_id, location__code=result[1]):
                 #print('Result: ' + str(result), flush=True)
@@ -57,10 +59,18 @@ def create_lab_sample(request, sample_id):
                 ls = LabSample(
                     sample=Sample.objects.filter(id=sample_id).first(),
                     location=Location.objects.filter(code=result[1]).first()
-                    ).save()
+                    )
+                added += str(ls) + ', '
+                ls.save()
+                #print(added, flush=True)
                 #print('Created new lab sample: ' + str(ls), flush=True)
+        if added != '':
+            message = 'Added lab samples: ' + added[:-2]
+            print('Message: ' + message, flush=True)
+            context = {'sample': sample, 'locations': locations, 'message': message}
+            return render(request, 'laboratory/distribute_sample.html', context)
 
-    context = {'sample': sample, 'locations': locations}
+    context = {'sample': sample, 'locations': locations, 'message': message}
     return render(request, 'laboratory/distribute_sample.html', context)
 
 
