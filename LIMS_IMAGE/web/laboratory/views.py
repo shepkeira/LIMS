@@ -5,9 +5,9 @@ from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
-from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample
+from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest
 from orders.models import Order
-from laboratory.models import InventoryItem, Location
+from laboratory.models import InventoryItem, Location, Test
 
 # home page for laboratory workers
 
@@ -37,6 +37,48 @@ def ready_for_distribution(request):
     context = {'samples': samples}
     return render(request, 'laboratory/distribution.html', context)
 
+
+def create_test_sample(request, sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+
+    lab_sample = LabSample.objects.filter(id=sample_id).first()
+    sample_order = OrderSample.objects.filter(sample=lab_sample.sample).first()
+    order_tests = OrderTest.objects.filter(order_number=sample_order.order)
+    tests = []
+    for order_test in order_tests:
+        tests.append(order_test.test_id)
+
+    # Form
+    message = ''
+    if request.method == 'POST': # Form callback with post
+        results = request.POST.items()
+        added = ''
+        for result in results:
+            print('Result: ' + str(result[1]), flush=True)
+            print('Result: ' + str(result), flush=True)
+            test = Test.objects.filter(name=result[0]).first()
+            if result[0] != 'csrfmiddlewaretoken' and not TestSample.objects.filter(lab_sample_id=sample_id, test=test):
+                # print('Result: ' + str(result), flush=True)
+                #print('Location: ' + str(Location.objects.filter(code=result[1]).first()), flush=True)
+                ts = TestSample(
+                    lab_sample_id=LabSample.objects.filter(id=sample_id).first(),
+                    test=Test.objects.filter(name=result[0]).first()
+                    )
+                added += str(ts) + ', '
+                ts.save()
+                #print(added, flush=True)
+                print('Created new lab sample: ' + str(ts), flush=True)
+        if added != '':
+            message = 'Added test samples: ' + added[:-2]
+            print('Message: ' + message, flush=True)
+            context = {'sample': lab_sample, 'tests': tests, 'message': message}
+            return render(request, 'laboratory/analysis_sample.html', context)
+
+    context = {'sample': lab_sample, 'tests': tests, 'message': message}
+    return render(request, 'laboratory/analysis_sample.html', context)
 
 def create_lab_sample(request, sample_id):
     if not request.user.is_authenticated:

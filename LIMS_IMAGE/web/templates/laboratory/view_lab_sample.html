@@ -24,6 +24,7 @@
         {% endfor %}
         </ul>
     {% endif %}
+    <a href="{% url 'laboratory:analysis_sample' sample.id %}">Create Test Samples</a>
   {% endblock %}
   </div>
 </body>
