@@ -5,17 +5,16 @@
 <body>
   {% block content%}
   <div class="container">
-    <h1>Test Sample Page</h1>
+    <h1>Test Analysis Page</h1>
     <p>Welcome to the test sample page!</p>
     <p>Test Sample ID: {{ test_sample.user_side_id }}</p>
-    <p>Type: {{ sample.sample_type }}</p>
-    <p>Form: {{ sample.sample_form }}</p>
     <p>SOP Number: {{ sample.sop_number }}</p>
     <p>Lab Personal In Change of Sample: {{ sample.lab_personel }}</p>
-    <p>Location: {{ lab_sample.location }}</p>
     <p>Test: {{ test_sample.test }}</p>
-    <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px"><br>
-    <a href="{% url 'laboratory:view_sample' sample.id %}">Sample Page</a> 
+
+    <p>Results: {{ result.result }}</p>
+    <p>Pass/Fail: {{ result.pass_fail }}</p>
+    <p><a href = "{% url 'laboratory:view_test_sample' test_sample.id %}">View Test Sample</a></p>
 
   {% endblock %}
   </div>

@@ -5,7 +5,7 @@ from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
 import os
-from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest
+from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest, TestResult
 from orders.models import Order
 from laboratory.models import InventoryItem, Location, Test
 
@@ -327,3 +327,38 @@ def inventory_page(request):
     inventory_list = InventoryItem.objects.all()
     context = {'inventory_list': inventory_list}
     return render(request, 'laboratory/inventory.html', context)
+
+def lab_analysis(request, lab_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+
+    lab = Location.objects.filter(id = lab_id).first()
+    lab_samples = LabSample.objects.filter(location = lab)
+    context = {'lab': lab, 'samples': lab_samples}
+    return render(request, 'laboratory/lab_analysis.html', context)
+
+def analysis(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+
+    labs = Location.objects.all()
+    context = {'labs': labs}
+    return render(request, 'laboratory/analysis.html', context)
+
+def sample_analysis(request, sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+
+    test_sample = TestSample.objects.filter(id=sample_id).first()
+    test_result = TestResult.objects.filter(test_id = test_sample).first()
+    lab_sample = test_sample.lab_sample_id
+    sample = lab_sample.sample
+
+    context = {'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample, 'result': test_result}
+    return render(request, 'laboratory/test_analysis.html', context)

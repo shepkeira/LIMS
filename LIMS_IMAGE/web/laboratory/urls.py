@@ -23,5 +23,8 @@ urlpatterns = [
     path("lab_sample/<lab_sample_id>",
          views.view_lab_sample, name="view_lab_sample"),
     path("test_sample/<test_sample_id>",
-         views.view_test_sample, name="view_test_sample")
+         views.view_test_sample, name="view_test_sample"),
+    path('analysis/<lab_id>', views.lab_analysis, name="lab_analysis"),
+    path('sample_analysis/<sample_id>', views.sample_analysis, name="sample_analysis"),
+    path('analysis/', views.analysis, name='analysis')
 ]

@@ -149,7 +149,7 @@ class TestResult(models.Model):
     status = models.CharField(max_length=50)
     result = models.CharField(max_length=200)
     test_id = models.ForeignKey(TestSample, on_delete=models.CASCADE)
-    pass_fail = models.BooleanField()
+    pass_fail = models.BooleanField(null=True)
     date_entry = models.DateTimeField(
         auto_now_add=True) # entry of when the testResult was created
 
