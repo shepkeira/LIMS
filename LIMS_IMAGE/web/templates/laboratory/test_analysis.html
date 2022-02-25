@@ -12,9 +12,16 @@
     <p>Lab Personal In Change of Sample: {{ sample.lab_personel }}</p>
     <p>Test: {{ test_sample.test }}</p>
 
-    <p>Results: {{ result.result }}</p>
-    <p>Pass/Fail: {{ result.pass_fail }}</p>
-    <p><a href = "{% url 'laboratory:view_test_sample' test_sample.id %}">View Test Sample</a></p>
+    {% if result %}
+        <p>Status: {{ result.status }}</p>
+        {% if result.status == 'completed' %}
+            <p>Results: {{ result.result }}</p>
+            <p>Pass/Fail: {{ result.pass_fail }}</p>
+        {% endif %}
+    {% else %}
+        <p>No Information Recorded About Sample</p>
+    {% endif %}
+    <p><a href = "{% url 'laboratory:update_test_result' test_sample.id %}">Update Results</a></p>
 
   {% endblock %}
   </div>

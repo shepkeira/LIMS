@@ -26,5 +26,7 @@ urlpatterns = [
          views.view_test_sample, name="view_test_sample"),
     path('analysis/<lab_id>', views.lab_analysis, name="lab_analysis"),
     path('sample_analysis/<sample_id>', views.sample_analysis, name="sample_analysis"),
-    path('analysis/', views.analysis, name='analysis')
+    path('analysis/', views.analysis, name='analysis'),
+    path('update_test_result/<sample_id>/',
+         views.update_test_result, name='update_test_result'),
 ]
