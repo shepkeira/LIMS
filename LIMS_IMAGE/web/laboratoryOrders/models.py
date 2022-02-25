@@ -156,7 +156,7 @@ class TestResult(models.Model):
         max_length=100,
         choices=STATUS,
     )
-    result = models.CharField(max_length=200)
+    result = models.CharField(max_length=200, null=True)
     test_id = models.ForeignKey(TestSample, on_delete=models.CASCADE)
     pass_fail = models.BooleanField(null=True)
     date_entry = models.DateTimeField(

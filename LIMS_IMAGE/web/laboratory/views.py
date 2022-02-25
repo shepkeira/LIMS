@@ -70,7 +70,12 @@ def create_test_sample(request, sample_id):
                 added += str(ts) + ', '
                 ts.save()
                 #print(added, flush=True)
-                print('Created new lab sample: ' + str(ts), flush=True)
+                # print('Created new lab sample: ' + str(ts), flush=True)
+                tr = TestResult(
+                    status = 'Recieved',
+                    test_id = ts,
+                )
+                tr.save()
         if added != '':
             message = 'Added test samples: ' + added[:-2]
             print('Message: ' + message, flush=True)
