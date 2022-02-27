@@ -69,8 +69,8 @@ class accountsViewsTestCase(TestCase):
     def test_home_page_unauth(self):
         # Unauthenticated user
         response = self.client.get('/accounts/home_page/')
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
 
 
     def test_home_page_lab_worker(self):
