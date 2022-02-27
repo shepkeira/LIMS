@@ -3,9 +3,17 @@
 
 # Ignore environment variables
 .env
+.env2
 
 # Ignore VS Code workspace files
 /.vscode/
 
 #Ignore coverage files
 .coverage
+
+# Ignore postgres data
+LIMS_IMAGE/db-postgres/data/
+
+# Ignore adding and removing barcodes (leaving the ones in there so the folders persist
+LIMS_IMAGE/web/uploads/images/*.jpg
+LIMS_IMAGE/web/static/barcodes/*.jpg

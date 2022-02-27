@@ -1,0 +1,62 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load bootstrap5 %} 
+{% load admin_urls %}
+{% block title %}Sample List{% endblock %}
+{% block additionalStyles %}
+<link rel="stylesheet" href="{% static 'laboratory/css/sample_list.css' %}" />
+<script src="{% static 'laboratory/js/sample_list_search.js' %}" defer></script>
+{% endblock %}
+<body>
+  {% block content %}
+    <div class="container">
+      <h1>Sample List</h1> 
+      <div class="search-wrapper">
+        <input type="search" id="search" class="form-control" placeholder="Search samples" aria-label="Search">
+      </div>
+      {% if samples|length is 0 %}
+      <p>No samples found</p>
+      {% else %}
+      <div class="sample-list">
+        {% for sample in samples %}
+        {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
+          <ul class="list-group">
+              <li class="list-group-item bg-light">
+                  <div class="d-flex justify-content-between">
+                      <h5 class="mb-1">Sample: {{ sample }}</h5>
+                      
+                    </div>
+                    <p class="mb-1">Sample Type: {{ sample.sample_type }}</p>
+                    <p class="mb-1">Sample Form: {{ sample.sample_form }}</p>
+                    <p class="mb-1">SOP number: {{ sample.sop_number }}</p>
+                    <small>Assigned worker: {{ sample.lab_personel }}</small><br>
+                    <small>Last updated: {{ sample.updated_at }}</small><br>
+                    <a href="{% url 'laboratory:view_sample' sample.id %}">Get sample info here</a>
+              </li>
+          </ul>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% comment %} <div class="search-wrapper">
+        <h1>Sample List</h1> 
+        <button class="btn btn-success my-4" onclick="location.href='{% url 'admin:laboratoryOrders_sample_add' %}'">Add Sample</button>
+        <input type="search" id="search" class="form-control" placeholder="Search" aria-label="Search">
+        {% for sample in samples %}
+        <ul class="list-group">
+            <li class="list-group-item bg-light">
+                <div class="d-flex justify-content-between">
+                    <h5 class="mb-1">Sample: {{ sample }}</h5>
+                    
+                  </div>
+                  <p class="mb-1">Sample Type: {{ sample.sample_type }}</p>
+                  <p class="mb-1">Sample Form: {{ sample.sample_form }}</p>
+                  <p class="mb-1">SOP number: {{ sample.sop_number }}</p>
+                  <small>Assigned worker: {{ sample.lab_personel }}</small><br>
+                  <small>Last updated: {{ sample.updated_at }}</small><br>
+                  <a href="{% url 'admin:laboratoryOrders_sample_change' sample.id %}"><small>Update info here</small></a>
+            </li>
+        </ul>
+        {% endfor %} {% endcomment %}
+      <div>
+    {% endblock content %}
+</body>

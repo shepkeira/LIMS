@@ -10,22 +10,26 @@ class Package(models.Model):
     def __str__(self):
         return 'Package: ' + self.name
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
+
+    def package(self):
+        return str(self.name)
 
 # an order placed by a client of tests they which to purchase
+
 class Order(models.Model):
     def __str__(self):
-        return 'Order: ' + str(self.account_number.company_name) + " " + str(self.order_number)
+        return str(self.account_number.company_name) + " " + str(self.order_number)
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-
     order_number = models.IntegerField()
     account_number = models.ForeignKey(Client, on_delete=models.CASCADE)
-    submission_date = models.DateField()
+    submission_date = models.DateField() #date the order was sent
+    arrival_date = models.DateField(null=True) #date the order was recieved // null until recieved
 
     # this funciton takes in an order and returns the user side order number
     # order number = account number - id e.g. 0001-0001
     def user_side_id(self):
-        return str(self.account_number.company_name) + " " + str(self.order_number)
+        return str(self.account_number.id) + "-" + str(self.order_number)
 
     # this functions takes in a user (client), and returns a list of orders related to that client
     def order_for_user(user):
@@ -34,5 +38,15 @@ class Order(models.Model):
         except IndexError: # User not a client
             return Order.objects.none()
         return Order.objects.filter(account_number = client)
+    
+    def next_order_number(account):
+        orders = Order.objects.filter(account_number = account).order_by('order_number')
+        return orders.last().order_number + 1
 
+
+class Invoice(models.Model):
+    def __str__(self):
+        return self.type + " " + str(self.created_at) + " " + self.id
+    created_at = models.DateField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 

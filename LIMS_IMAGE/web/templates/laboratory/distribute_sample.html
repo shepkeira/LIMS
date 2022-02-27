@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Distribute Sample{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Distribute Sample</h1>
+
+    <p>ID: {{ sample.user_side_id }}</p>
+    <p>Type: {{ sample.sample_type }}</p>
+    <p>Form: {{ sample.sample_form }}</p>
+
+    <form method="post">
+        <p><strong>Select lab locations to create lab samples for:</strong></p>
+        {% csrf_token %}
+        {% for location in locations %}
+          <input type='checkbox' value={{ location.code }} id='{{ location.code }}' name={{ location.name }}></input>
+          <label for='{{location.code}}'>{{location.name}}</label><br>
+        {% endfor %}
+        <br>
+        <button type="submit">Create Lab Sample(s)</button>
+    </form>
+
+      
+    <p>{{ message }}</p>
+  {% endblock %}
+  </div>
+</body>

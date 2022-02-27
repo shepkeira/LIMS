@@ -2,30 +2,60 @@
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Client Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
-
 <body>
+ 
+    {% block content %}
+    <div class="container my-4 text-center">
+    <h1>Shopping Cart (Order Submission)</h1> 
+    </div>
+    <div class="container p-4 my-5 bg-light border">
     
-    {% block content%}
-    <h1>Shopping</h1> 
-    <h2>Your shopping cart</h2>
-
-    {% if orders %}
-        <table>
-            <tr>
-                <th>Test/Package &nbsp; </th>
-                <th> Total Price </th> 
-            </tr>
-        
-                {% for order in orders %}
-                <tr>
-                    <td>{{order.order_number}}</td>
-                    <td>$  TBD  </td>
-                
-                </tr>
+        <p> 
+            <b> Hello, {{user.first_name}} <br>
+            Please complete the sample submission form by selecting your sample type, test type and the quantity for each order. <br>
+            If you are not sure which tests or packages to order please see  <a href="/orders/appendix_b">Appendix B</a>  for the test recommendation. 
+            </b>
+        </p>
+    </div> 
+    <form method = "POST" action =" ">
+        {% for sample_type, tests in tests_by_type.items %}
+            <input type = "checkbox" name = "{{sample_type}}_check" id ="sample-type">
+            <label>{{sample_type}}</label>
+            <label for="quantity"></label>
+            <input type="number" id="quantity" name="quantity_{{sample_type}}" min="1" placeholder = "Number of Test" >
+            <select name = "tests_{{sample_type}}" id= "tests">
+                <option value = "" disabled selected> choose your test</option> 
+                {% for item in tests %}
+                    <option value={{item}}> {{item}}</option>
                 {% endfor %}
-        </table>
-    {% else %}
-        <strong>Your shopping cart is empty.</strong>
-    {% endif %}
-    {% endblock %}
+            </select>
+            <br>
+        {% endfor %}
+
+        <input type = "checkbox" name= "packages" id="packages" >
+        <label for ="packages"> Package </label>
+        
+        <label for="quantity"></label>
+        <input type="number" id="quantity" name="quantity_packages" min="1" placeholder = "Number of Package">
+        <select name = "package_name" id= "packages">  
+            <option value = "" disabled selected> choose your package</option>
+            {% for package in packages %}
+            <option value="{{package}}"> {{package}}</option>
+            {% endfor %}
+
+        </select>
+        <p>Note: Packages require multiple samples</p>
+
+        <div class="container p-4 mt-3">
+            {% csrf_token %} 
+        <br>
+        <br>
+
+        <input type="reset">
+        <input type="submit" value="Order" />
+
+        </div>
+    </form>
+    {% endblock %}   
+    <br>
 </body>

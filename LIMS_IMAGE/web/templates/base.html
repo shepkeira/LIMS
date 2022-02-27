@@ -1,11 +1,10 @@
-{% load user_tags %}
+{% load static %} {% load user_tags %} {% load bootstrap5 %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}LIMS Base Template{% endblock %}</title>
-    {% load bootstrap5 %}
     <!-- load bootstrap css -->
     {% bootstrap_css %}
     <!-- load bootstrap javascript -->
@@ -14,10 +13,10 @@
     {# Display django.contrib.messages as Bootstrap alerts #}
     <!-- Import bootstrap messages -->
     {% bootstrap_messages %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
   </head>
   <body>
     <main>
-      <!-- TODO: Should go into its own html file and imported into the template -->
       <!-- TODO: Navbar content could be dynamic and pulled from database -->
       <nav
         class="navbar navbar-expand-lg navbar-light"
@@ -38,7 +37,30 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {% if user.is_superuser %}
+              {% if user.is_staff %}
+              <li class="nav-link">
+                <a
+                  class="nav-link"
+                  href="{% url 'laboratory:lab_sample_list' %}"
+                  >Sample List</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:distribution' %}"
+                  >Distribution</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:order_list' %}"
+                  >Order List</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:read_barcode' %}"
+                  >Scan Barcode</a
+                >
+              </li>
+              {% endif %} {% if user.is_superuser %}
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'admin:index' %}"
                   >Administrator Dashboard</a
@@ -69,7 +91,7 @@
               {% endif %}
             </ul>
             {% if user.is_authenticated %}
-            <div>Hi {{ user.first_name }}!</div>
+            <div>Hi <i>{{ user.first_name }}</i>!</div>
             <a href="{% url 'logout' %}" class="btn btn-outline-primary ms-2">
               Log Out</a
             >
@@ -84,7 +106,7 @@
           </div>
         </div>
       </nav>
-      {% block content %} {% endblock %}
+      {%block additionalStyles%}{%endblock%} {%block content%}{%endblock%}
     </main>
   </body>
 </html>

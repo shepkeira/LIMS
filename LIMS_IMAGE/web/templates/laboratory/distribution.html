@@ -1,0 +1,43 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% load bootstrap5 %} 
+{% load admin_urls %}
+{% block title %}Distribution{% endblock %}
+{% block additionalStyles %}
+<link rel="stylesheet" href="{% static 'laboratory/css/distribution.css' %}" />
+<script src="{% static 'laboratory/js/sample_list_search.js' %}" defer></script>
+{% endblock %}
+<body>
+  {% block content %}
+    <div class="container">
+      {% if samples|length is 0 %}
+      <p>No samples found</p>
+      {% else %}
+      <h1>Samples Ready for Distribution</h1> 
+        <table>
+          <tr>
+            <th>Sample No.</th>
+            <th>Sample Type</th>
+            <th>Sample Form</th>
+            <th>Test Code (Appendix-C)</th>
+            <th>SOP No.</th>
+            <th>Lab Personnel</th>
+            <th></th>
+          </tr>
+          {% for sample in samples %}
+            <tr>
+              <td> <a href="{% url 'laboratory:view_sample' sample.0.id %}">{{ sample.1 }}</a></td>
+              <td>{{ sample.0.sample_type }}</td>
+              <td>{{ sample.0.sample_form }}</td>
+              <td></td>
+              <td>{{ sample.0.sop_number }}</td>
+              <td> {{ sample.0.lab_personel }}</td>
+              <td><a href="{% url 'laboratory:distribute_sample' sample.0.id %}">Distribute Sample</a></td>
+            </tr>
+          {% endfor %}
+        </table>
+
+      {% endif %}
+    <div>
+    {% endblock content %}
+</body>
