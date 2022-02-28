@@ -20,6 +20,7 @@ urlpatterns = [
     path("barcode/<sample_id>/", views.view_barcode, name="view_barcode"),
     path("order/<order_id>", views.view_order, name="view_order"),
     path("sample/<sample_id>", views.view_sample, name="view_sample"),
+    path("update_sample/<sample_id>", views.update_sample, name="update_sample"),
     path("lab_sample/<lab_sample_id>",
          views.view_lab_sample, name="view_lab_sample"),
     path("test_sample/<test_sample_id>",

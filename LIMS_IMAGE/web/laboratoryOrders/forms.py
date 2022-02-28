@@ -1,5 +1,5 @@
 from django import forms
-from .models import SampleInspection, TestResult
+from .models import SampleInspection, TestResult, Sample
 
 class InspectionForm(forms.ModelForm):
     """Form for the image model"""
@@ -11,3 +11,8 @@ class TestResultForm(forms.ModelForm):
     class Meta:
         model = TestResult
         fields = ('status', 'result', 'pass_fail')
+
+class SampleForm(forms.ModelForm):
+    class Meta:
+        model = Sample
+        fields = ('sample_type', 'sample_form', 'sop_number')

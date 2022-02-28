@@ -8,6 +8,7 @@
     <h1>Sample Page</h1>
     <p>Welcome to the sample page!</p>
     <p>ID: {{ sample.user_side_id }}</p>
+    <p><a href = "{% url 'laboratory:update_sample' sample.id %}">Update Sample Information</a></p>
     <p>Type: {{ sample.sample_type }}</p>
     <p>Form: {{ sample.sample_form }}</p>
     <p>SOP Number: {{ sample.sop_number }}</p>

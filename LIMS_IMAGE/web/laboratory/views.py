@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from laboratoryOrders.models import SampleInspection
-from laboratoryOrders.forms import InspectionForm, TestResultForm
+from laboratoryOrders.forms import InspectionForm, TestResultForm, SampleForm
 from accounts.models import Client, LabWorker
 from .forms import ImageForm
 from src.barcoder import Barcoder
@@ -386,3 +386,22 @@ def update_test_result(request, sample_id):
     else:
         form = TestResultForm(instance=result)
         return render(request, 'laboratory/update_results.html', {'sample': sample, 'form': form})
+
+def update_sample(request, sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if Client.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    sample = Sample.objects.filter(id=sample_id).first()
+    # result = TestResult.objects.filter(test_id = sample).first()
+    if request.method == 'POST':
+        form = SampleForm(request.POST, instance=sample)
+        message = ""
+        if form.is_valid():
+            sample = form.save(commit=False)
+            sample.lab_personel = LabWorker.objects.filter(user=request.user).first()
+            sample.save()
+        return view_sample(request, sample_id)
+    else:
+        form = SampleForm(instance=sample)
+        return render(request, 'laboratory/update_sample.html', {'sample': sample, 'form': form})
