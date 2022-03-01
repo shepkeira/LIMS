@@ -10,7 +10,7 @@ class InspectionForm(forms.ModelForm):
 class TestResultForm(forms.ModelForm):
     class Meta:
         model = TestResult
-        fields = ('status', 'result', 'pass_fail')
+        fields = ('status', 'result', 'test_pass')
 
 class SampleForm(forms.ModelForm):
     class Meta:
