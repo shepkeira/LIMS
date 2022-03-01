@@ -15,7 +15,8 @@
     <p>Location: {{ lab_sample.location }}</p>
     <p>Test: {{ test_sample.test }}</p>
     <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px"><br>
-    <a href="{% url 'laboratory:view_sample' sample.id %}">Sample Page</a> 
+    <a href="{% url 'laboratory:view_sample' sample.id %}">Sample Page</a> <br>
+    <a href="{% url 'laboratory:sample_analysis' test_sample.id %}">Test Sample Analysis</a>
 
   {% endblock %}
   </div>

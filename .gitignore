@@ -16,4 +16,4 @@ LIMS_IMAGE/db-postgres/data/
 
 # Ignore adding and removing barcodes (leaving the ones in there so the folders persist
 LIMS_IMAGE/web/uploads/images/*.jpg
-LIMS_IMAGE/web/static/barcodes/*.jpg
+LIMS_IMAGE/web/static/barcodes/*
