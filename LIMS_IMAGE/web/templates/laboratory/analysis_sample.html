@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Analysis Sample{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Analysis Sample</h1>
+
+    <p>ID: {{ sample.user_side_id }}</p>
+    <!-- <p>Type: {{ sample.sample_type }}</p>
+    <p>Form: {{ sample.sample_form }}</p> -->
+
+    <form method="post">
+        <p><strong>Select lab locations to create lab samples for:</strong></p>
+        {% csrf_token %}
+        {% for test in tests %}
+          <input type='checkbox' value='{{ test.name }}' id='{{ test.name }}' name='{{ test.name }}'></input>
+          <label for='{{test.name}}'>{{test.name}}</label><br>
+        {% endfor %}
+        <br>
+        <button type="submit">Create Test Sample(s)</button>
+    </form>
+
+      
+    <p>{{ message }}</p>
+  {% endblock %}
+  </div>
+</body>

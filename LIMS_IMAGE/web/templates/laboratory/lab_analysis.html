@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Lab Sample Page{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>{{ lab }} Analysis Page</h1>
+    <h2>Lab Samples</h2>
+    <ul>
+    {% for sample in samples %}
+        <li><a href = "{% url 'laboratory:view_lab_sample' sample.id %}">{{ sample.user_side_id }}</a></li>
+        <ul>
+        {% for test_sample in sample.test_samples %}
+            <li><a href = "{% url 'laboratory:sample_analysis' test_sample.id %}">{{ test_sample.user_side_id }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    </ul>
+    {% endblock %}
+</div>
+</body>

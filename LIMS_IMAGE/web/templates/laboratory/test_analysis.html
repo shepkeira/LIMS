@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Test Sample Page{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Test Analysis Page</h1>
+    <p>Welcome to the test sample page!</p>
+    <p>Test Sample ID: {{ test_sample.user_side_id }}</p>
+    <p>SOP Number: {{ sample.sop_number }}</p>
+    <p>Lab Personal In Charge of Sample: {{ sample.lab_personel }}</p>
+    <p>Test: {{ test_sample.test }}</p>
+
+    {% if result %}
+        <p>Status: {{ result.status }}</p>
+        {% if result.status == 'completed' %}
+            <p>Results: {{ result.result }}</p>
+            <p>Pass/Fail: {{ result.pass_fail }}</p>
+        {% endif %}
+    {% else %}
+        <p>No Information Recorded About Sample</p>
+    {% endif %}
+    <p><a href = "{% url 'laboratory:update_test_result' test_sample.id %}">Update Results</a></p>
+
+  {% endblock %}
+  </div>
+</body>

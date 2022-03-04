@@ -146,10 +146,19 @@ class TestResult(models.Model):
         return self.test_id.test.name
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
     # Ready to ship, Received, In Progress, Result, Adverse Event
-    status = models.CharField(max_length=50)
-    result = models.CharField(max_length=200)
+    STATUS = (
+       ('received', ('Recieved')),
+       ('progress', ('In Progress')),
+       ('completed', ('Completed')),
+       ('incomplete', ('Adverse Event')),
+    )
+    status = models.CharField(
+        max_length=100,
+        choices=STATUS,
+    )
+    result = models.CharField(max_length=200, null=True)
     test_id = models.ForeignKey(TestSample, on_delete=models.CASCADE)
-    pass_fail = models.BooleanField()
+    test_pass = models.BooleanField(null=True)
     date_entry = models.DateTimeField(
         auto_now_add=True) # entry of when the testResult was created
 

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Lab Sample Page{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Lab Analysis Page</h1>
+    <ul>
+    {% for lab in labs %}
+        <li><a href="{% url 'laboratory:lab_analysis' lab.id %}">{{ lab.name }} Analysis Page</a></li>
+    {% endfor %}
+    </ul>
+    {% endblock %}
+</div>
+</body>

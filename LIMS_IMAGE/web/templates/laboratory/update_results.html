@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Update Sample Results{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Update Sample Results</h1>
+
+    <p>ID: {{ sample.user_side_id }}</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+         {{ form.as_p }}
+        <button type="submit">Update</button>
+      </form>
+      
+      {% if complete and message %}
+        <h3>{{ message }}</h3>
+      {% endif %}
+      {% if complete and not message %}
+        <h3>Succesfully Updated</h3>
+      {% endif %}
+  {% endblock %}
+  </div>
+</body>
