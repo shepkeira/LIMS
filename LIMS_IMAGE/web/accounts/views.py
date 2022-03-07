@@ -4,12 +4,31 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import redirect, render
 from accounts.models import Client
+from accounts.forms import clientForm, createUserForm
+from django.contrib import messages
 
 # view used for registration of a client or lab employee
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
+
+def registration(request):
+    form = createUserForm()
+    profile_form = clientForm()
+    if request.method == 'POST':
+        form = createUserForm(request.POST)
+        profile_form = clientForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
+            user = form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.account_number = Client.next_account_number()
+            profile.save()
+            messages.success(request, 'Your account has been successfully created')
+            return redirect('login')
+    context = {'form': form, 'profile_form': profile_form}
+    return render(request, 'registration/registration.html', context)
 
 # this function is used to rediect a user after login to the correct home_page
 def login_success(request): # TODO this can be renamed
