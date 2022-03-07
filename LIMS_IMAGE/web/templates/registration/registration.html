@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% load bootstrap5 %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Sign Up{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+{% block content %}
+<div class="container"></div>
+    <form method="POST" action="">
+        {% csrf_token %} 
+            <h3>Register Profile</h3>
+            {% bootstrap_form form %}
+            {% bootstrap_form profile_form %}
+        <button type="submit">Register</button>
+        <br>
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </form>
+</div>
+{% endblock %}

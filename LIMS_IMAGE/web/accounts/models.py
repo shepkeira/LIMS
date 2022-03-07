@@ -20,6 +20,10 @@ class Client(models.Model):
     # this function returns client's account number
     def get_account_number(self):
         return self.account_number
+
+    def next_account_number():
+        orders = Client.objects.order_by('account_number')
+        return orders.last().account_number + 1
    
 # laboratory workers who will work on tests
 class LabWorker(models.Model):
