@@ -8,6 +8,7 @@ import os
 from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest, TestResult
 from orders.models import Order
 from laboratory.models import InventoryItem, Location, Test
+from django.core.mail import send_mail
 
 # home page for laboratory workers
 
@@ -161,11 +162,31 @@ def validate_sample(request, sample_id):
             inspection.sample = sample
             inspection.inspector = request.user
             inspection.save()
+
+            # Send email to client
+            send_mail(
+                'Inspection Received',
+                f"""
+                Dear {inspection.sample.order().account_number},
+
+                Your {inspection.sample.sample_type} sample ID {inspection.sample.id} order #{inspection.sample.order().order_number} has been inspected by {inspection.inspector}.
+                Results:
+                    received quantity: {inspection.received_quantity}
+                    Package intact: {inspection.package_intact}
+                    Material intact: {inspection.material_intact}
+                    Inspection pass: {inspection.inspection_pass}
+
+                Please do not reply to this email.
+                """,
+                'lims0.system@gmail.com',
+                ['wilmc17@gmail.com'],
+                fail_silently=False,
+            )
+
         return view_sample(request, sample_id)
     else:
         form = InspectionForm(instance=inspection)
         return render(request, 'laboratory/validate.html', {'sample': sample, 'form': form})
-
 
 def read_barcode(request):
     if not request.user.is_authenticated:
