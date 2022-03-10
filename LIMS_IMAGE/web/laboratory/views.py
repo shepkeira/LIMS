@@ -167,7 +167,7 @@ def validate_sample(request, sample_id):
             send_mail(
                 'Inspection Received',
                 f"""
-                Dear {inspection.sample.order().account_number},
+                Dear {inspection.sample.order().account_number.user.first_name},
 
                 Your {inspection.sample.sample_type} sample ID {inspection.sample.id} order #{inspection.sample.order().order_number} has been inspected by {inspection.inspector}.
                 Results:
@@ -179,7 +179,7 @@ def validate_sample(request, sample_id):
                 Please do not reply to this email.
                 """,
                 'lims0.system@gmail.com',
-                ['wilmc17@gmail.com'],
+                [inspection.sample.order().account_number.user.email],
                 fail_silently=False,
             )
 
