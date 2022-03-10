@@ -169,7 +169,7 @@ def validate_sample(request, sample_id):
                 f"""
                 Dear {inspection.sample.order().account_number.user.first_name},
 
-                Your {inspection.sample.sample_type} sample ID {inspection.sample.id} order #{inspection.sample.order().order_number} has been inspected by {inspection.inspector}.
+                Your {inspection.sample.sample_type} sample ID {inspection.sample.id} order #{inspection.sample.order().order_number} has been inspected by {inspection.inspector.first_name}.
                 Results:
                     received quantity: {inspection.received_quantity}
                     Package intact: {inspection.package_intact}
