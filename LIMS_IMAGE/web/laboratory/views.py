@@ -165,7 +165,7 @@ def validate_sample(request, sample_id):
 
             # Send email to client
             send_mail(
-                'Inspection Received',
+                'Inspection Received', # Subject
                 f"""
                 Dear {inspection.sample.order().account_number.user.first_name},
 
@@ -177,10 +177,10 @@ def validate_sample(request, sample_id):
                     Inspection pass: {inspection.inspection_pass}
 
                 Please do not reply to this email.
-                """,
-                'lims0.system@gmail.com',
-                [inspection.sample.order().account_number.user.email],
-                fail_silently=False,
+                """, # Body
+                'lims0.system@gmail.com', # From
+                [inspection.sample.order().account_number.user.email], # To
+                fail_silently=False, # Raise exception if failure
             )
 
         return view_sample(request, sample_id)
