@@ -9,10 +9,12 @@ Repository for UBC Capstone project 2021/2022, group LIMS 0
   - [Accessing Admin Site](#accessing-the-admin-site)
   - [Making Migrations](#making-migrations)
   - [Testing](#testing)
+  - [Email Setup](#email-setup)
 - [Database Instructions](#database-instructions)
   - [Using Docker Image to Run Web Server](#using-docker-image-to-run-web-server)
   - [Enter the Docker Image](#enter-the-docker-image)
   - [Exporting a Database Backup](#exporting-a-database-backup)
+- [Test Guide](LIMS_IMAGE/web/tests/README.md)
 - [Style Guide](LIMS%20Style%20Guide.pdf)
 - [Meeting Notes](Notes/)
 
@@ -54,6 +56,7 @@ More Info in [LIMS.pdf](LIMS.pdf)
 ```
 SECRET_KEY=fake_key
 DJANGO_SETTINGS_MODULE=src.settings
+EMAIL_PASSWORD=email_app_password
 
 MSSQL_HOST=fake_mssql_host_name
 DB_USER=fake_user
@@ -101,6 +104,10 @@ When you change something about the database structure in the application we nee
 1. `python manage.py migrate`
 
 Note: If a change to the models was made that prevents the container from starting before the migrations are made, you can run this command in isolation: `docker-compose run web python manage.py makemigrations` and do the same to migrate.
+
+### Email Setup
+
+Email settings are defined in `settings.py`. To change the email address, change the `EMAIL_HOST_USER` and `EMAIL_HOST_PASSWORD` values (and other values if changing to a provider other than gmail). The email host password is defined in the .env file. To change to a new gmail account, ensure to use an app password and *not* the google account password.
 
 ### Testing
 
