@@ -41,7 +41,9 @@ class Order(models.Model):
     
     def next_order_number(account):
         orders = Order.objects.filter(account_number = account).order_by('order_number')
-        return orders.last().order_number + 1
+        if orders.last() != None:
+            return orders.last().order_number + 1
+        else: return 1
 
 
 class Invoice(models.Model):
