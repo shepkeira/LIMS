@@ -1,1 +1,0 @@
-# this folder holds uploaded images
