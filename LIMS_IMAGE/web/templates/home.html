@@ -1,23 +1,28 @@
 {% extends 'base.html' %}
-{% load bootstrap5 %}
 {% load static %} 
 {% block title %}LIMS Home{% endblock %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}"/>
-<body>
-  {% block content %}
-    <div class="container p-4">
-      <h1>LIMS Home</h1>
-      {% if user.is_authenticated %} Hi {{ user.first_name }}!
-      <p><a href="{% url 'logout' %}">Log Out</a></p>
-      {% else %}
-      <p><i>You are not logged in</i></p>
-      <section id = "main">
-        <h2>Welcome to the LIMS home page</h2>
-        <div class ="container p-4">
-            <img src ="{% static 'image/images2.jpg' %}" alt ="Background image with Laboraroty theme" height = 500px width = 800px>
-        </div>
-      </section>
-      {% endif %} 
-  {% endblock %}
-    </div>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/> 
+  </head>
+  <body>
+    {% block content %}
+      <div class="container p-4">
+        <h1>LIMS Home</h1>
+        {% if user.is_authenticated %} Hi {{ user.first_name }}!
+        <p><a href="{% url 'logout' %}">Log Out</a></p>
+        {% else %}
+        <p><i>You are not logged in</i></p>
+          <h2>Welcome to the LIMS home page</h2>
+          <div class ="container p-4">
+              <img src ="{% static 'image/homepage_image.jpg' %}" alt ="Background image with Laboraroty theme" height = 500px>
+          </div>
+        {% endif %} 
+    {% endblock %}
+      </div>
+  </body>
+</html>
