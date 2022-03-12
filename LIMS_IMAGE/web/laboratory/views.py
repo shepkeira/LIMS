@@ -54,7 +54,7 @@ def create_test_sample(request, sample_id):
 
     # Form
     message = ''
-    if request.method == 'POST': # Form callback with post
+    if request.method == 'POST':  # Form callback with post
         results = request.POST.items()
         added = ''
         for result in results:
@@ -65,26 +65,29 @@ def create_test_sample(request, sample_id):
                 # print('Result: ' + str(result), flush=True)
                 #print('Location: ' + str(Location.objects.filter(code=result[1]).first()), flush=True)
                 ts = TestSample(
-                    lab_sample_id=LabSample.objects.filter(id=sample_id).first(),
+                    lab_sample_id=LabSample.objects.filter(
+                        id=sample_id).first(),
                     test=Test.objects.filter(name=result[0]).first()
-                    )
+                )
                 added += str(ts) + ', '
                 ts.save()
                 #print(added, flush=True)
                 # print('Created new lab sample: ' + str(ts), flush=True)
                 tr = TestResult(
-                    status = 'Recieved',
-                    test_id = ts,
+                    status='Recieved',
+                    test_id=ts,
                 )
                 tr.save()
         if added != '':
             message = 'Added test samples: ' + added[:-2]
             print('Message: ' + message, flush=True)
-            context = {'sample': lab_sample, 'tests': tests, 'message': message}
+            context = {'sample': lab_sample,
+                       'tests': tests, 'message': message}
             return render(request, 'laboratory/analysis_sample.html', context)
 
     context = {'sample': lab_sample, 'tests': tests, 'message': message}
     return render(request, 'laboratory/analysis_sample.html', context)
+
 
 def create_lab_sample(request, sample_id):
     if not request.user.is_authenticated:
@@ -97,7 +100,7 @@ def create_lab_sample(request, sample_id):
 
     # Form
     message = ''
-    if request.method == 'POST': # Form callback with post
+    if request.method == 'POST':  # Form callback with post
         results = request.POST.items()
         added = ''
         for result in results:
@@ -107,7 +110,7 @@ def create_lab_sample(request, sample_id):
                 ls = LabSample(
                     sample=Sample.objects.filter(id=sample_id).first(),
                     location=Location.objects.filter(code=result[1]).first()
-                    )
+                )
                 added += str(ls) + ', '
                 ls.save()
                 #print(added, flush=True)
@@ -115,7 +118,8 @@ def create_lab_sample(request, sample_id):
         if added != '':
             message = 'Added lab samples: ' + added[:-2]
             print('Message: ' + message, flush=True)
-            context = {'sample': sample, 'locations': locations, 'message': message}
+            context = {'sample': sample,
+                       'locations': locations, 'message': message}
             return render(request, 'laboratory/distribute_sample.html', context)
 
     context = {'sample': sample, 'locations': locations, 'message': message}
@@ -165,7 +169,7 @@ def validate_sample(request, sample_id):
 
             # Send email to client
             send_mail(
-                'Inspection Received', # Subject
+                'Inspection Received',  # Subject
                 f"""
                 Dear {inspection.sample.order().account_number.user.first_name},
 
@@ -177,16 +181,17 @@ def validate_sample(request, sample_id):
                     Inspection pass: {inspection.inspection_pass}
 
                 Please do not reply to this email.
-                """, # Body
-                'lims0.system@gmail.com', # From
-                [inspection.sample.order().account_number.user.email], # To
-                fail_silently=False, # Raise exception if failure
+                """,  # Body
+                'lims0.system@gmail.com',  # From
+                [inspection.sample.order().account_number.user.email],  # To
+                fail_silently=False,  # Raise exception if failure
             )
 
         return view_sample(request, sample_id)
     else:
         form = InspectionForm(instance=inspection)
         return render(request, 'laboratory/validate.html', {'sample': sample, 'form': form})
+
 
 def read_barcode(request):
     if not request.user.is_authenticated:
@@ -345,7 +350,7 @@ def view_test_sample(request, test_sample_id):
     return render(request, 'laboratory/view_test_sample.html', context)
 
 
-def inventory_page(request):
+def inventory(request):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -354,16 +359,18 @@ def inventory_page(request):
     context = {'inventory_list': inventory_list}
     return render(request, 'laboratory/inventory.html', context)
 
+
 def lab_analysis(request, lab_id):
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
 
-    lab = Location.objects.filter(id = lab_id).first()
-    lab_samples = LabSample.objects.filter(location = lab)
+    lab = Location.objects.filter(id=lab_id).first()
+    lab_samples = LabSample.objects.filter(location=lab)
     context = {'lab': lab, 'samples': lab_samples}
     return render(request, 'laboratory/lab_analysis.html', context)
+
 
 def analysis(request):
     if not request.user.is_authenticated:
@@ -375,6 +382,7 @@ def analysis(request):
     context = {'labs': labs}
     return render(request, 'laboratory/analysis.html', context)
 
+
 def sample_analysis(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -382,12 +390,14 @@ def sample_analysis(request, sample_id):
         return redirect("accounts:customer_home_page")
 
     test_sample = TestSample.objects.filter(id=sample_id).first()
-    test_result = TestResult.objects.filter(test_id = test_sample).first()
+    test_result = TestResult.objects.filter(test_id=test_sample).first()
     lab_sample = test_sample.lab_sample_id
     sample = lab_sample.sample
 
-    context = {'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample, 'result': test_result}
+    context = {'lab_sample': lab_sample, 'test_sample': test_sample,
+               'sample': sample, 'result': test_result}
     return render(request, 'laboratory/test_analysis.html', context)
+
 
 def update_test_result(request, sample_id):
     if not request.user.is_authenticated:
@@ -395,7 +405,7 @@ def update_test_result(request, sample_id):
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     sample = TestSample.objects.filter(id=sample_id).first()
-    result = TestResult.objects.filter(test_id = sample).first()
+    result = TestResult.objects.filter(test_id=sample).first()
     if request.method == 'POST':
         form = TestResultForm(request.POST, instance=result)
         message = ""
@@ -407,6 +417,7 @@ def update_test_result(request, sample_id):
     else:
         form = TestResultForm(instance=result)
         return render(request, 'laboratory/update_results.html', {'sample': sample, 'form': form})
+
 
 def update_sample(request, sample_id):
     if not request.user.is_authenticated:
@@ -420,7 +431,8 @@ def update_sample(request, sample_id):
         message = ""
         if form.is_valid():
             sample = form.save(commit=False)
-            sample.lab_personel = LabWorker.objects.filter(user=request.user).first()
+            sample.lab_personel = LabWorker.objects.filter(
+                user=request.user).first()
             sample.save()
         return view_sample(request, sample_id)
     else:

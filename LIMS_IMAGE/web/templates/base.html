@@ -65,6 +65,11 @@
                   >Scan Barcode</a
                 >
               </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:inventory' %}"
+                  >Inventory Management</a
+                >
+              </li>
               {% endif %} {% if user.is_superuser %}
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'admin:index' %}"
@@ -93,14 +98,20 @@
                   >Order Tests</a
                 >
               </li>
-              {% endif %} {% if request.user|has_group:"Lab admins" or request.user.is_superuser %}
+              {% endif %} 
+              <!-- Register new workers + admins -->
+              {% if request.user|has_group:"Lab admins" or request.user.is_superuser %}
               <li class="nav-link">
-                <a class="nav-link" href="{% url 'accounts:employee_registration' %}"
+                <a
+                  class="nav-link"
+                  href="{% url 'accounts:employee_registration' %}"
                   >Register New Worker</a
                 >
               </li>
               <li class="nav-link">
-                <a class="nav-link" href="{% url 'accounts:admin_registration' %}"
+                <a
+                  class="nav-link"
+                  href="{% url 'accounts:admin_registration' %}"
                   >Register New Admin</a
                 >
               </li>

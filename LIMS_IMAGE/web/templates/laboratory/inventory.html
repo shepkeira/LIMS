@@ -53,6 +53,7 @@
       >
         Chemicals
       </button>
+      {% comment %}
       <button
         class="nav-link"
         id="v-pills-messages-tab"
@@ -101,6 +102,7 @@
       >
         Products tracking
       </button>
+      {% endcomment %}
     </div>
     <div class="tab-content" id="v-pills-tabContent">
       <div
@@ -109,7 +111,8 @@
         role="tabpanel"
         aria-labelledby="v-pills-home-tab"
       >
-        Inventory Dashboard
+        <h2>Dashboard</h2>
+        <p>Click a tab to get more detailed information</p>
       </div>
       <div
         class="tab-pane fade"
@@ -180,13 +183,102 @@
               role="tabpanel"
               aria-labelledby="v-pills-solvents-tab"
             >
-              Solvents
-              <!-- Loop through inventory list -->
-              {%for item in inventory_list%}
-              <!-- check if item is inorganic -->
-              {%if item.item_type == "Solvent"%}
-              <p>{{item.type}}</p>
-              {%endif%} {%endfor%}
+              <h2>Solvents</h2>
+              <table class="table table-striped">
+                <th>Reorder automatically?</th>
+                <th>Catalog number</th>
+                <th>Last order date</th>
+                <th>Status</th>
+                <th>Item name</th>
+                <th>Vendor</th>
+                <th>Purity</th>
+                <th>Stock location</th>
+                <th>Unit</th>
+                <th>Cost per unit</th>
+                <th>Estimated quantity</th>
+                <th>Total value</th>
+                <th>Reorder level</th>
+                <th>Reorder quantity</th>
+                <th>Item discontinued?</th>
+                <th>Notes</th>
+                <!-- Loop through inventory list -->
+                {%for item in inventory_list%}
+                <!-- check if item is inorganic -->
+                {%if item.item_type == "Solvent"%}
+                <tr>
+                  <td>
+                    {%if item.reorder_automatically%}
+                    <p>Yes</p>
+                    {%else%}
+                    <p>No</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.catalog_number}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.last_ordered}}</p>
+                  </td>
+                  <td>
+                    {%if item.status == "Received"%}
+                    <p class="text-success">{{item.status}}</p>
+                    {%elif item.status == "Ordered"%}
+                    <p class="text-warning">{{item.status}}</p>
+                    {% elif item.status == "Out of stock"%}
+                    <p class="text-danger">{{item.status}}</p>
+                    {% elif item.status == "Shipped"%}
+                    <p class="text-warning">{{item.status}}</p>
+                    {%else%}
+                    <p>{{item.status}}</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.type}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.vendor}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.purity}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.location}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.quantity_unit}}</p>
+                  </td>
+                  <td>
+                    <p>${{item.cost_per_unit}}</p>
+                  </td>
+                  <td>
+                    {%if item.estimated_quantity%}
+                    <p>{{item.estimated_quantity}}</p>
+                    {%else%}
+                    <p>N/A</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>${{item.total_value}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.reorder_level}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.estimated_quantity}}</p>
+                  </td>
+                  <td>
+                    {%if item.item_discontinued%}
+                    <p>Yes</p>
+                    {%else%}
+                    <p>No</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.notes}}</p>
+                  </td>
+                </tr>
+                {%endif%} {%endfor%}
+              </table>
             </div>
             <div
               class="tab-pane fade"
@@ -194,13 +286,102 @@
               role="tabpanel"
               aria-labelledby="v-pills-organic-tab"
             >
-              Organic compounds
-              <!-- Loop through inventory list -->
-              {%for item in inventory_list%}
-              <!-- check if item is inorganic -->
-              {%if item.item_type == "Organic"%}
-              <p>{{item.type}}</p>
-              {%endif%} {%endfor%}
+              <h2>Organic compounds</h2>
+              <table class="table table-striped">
+                <th>Reorder automatically?</th>
+                <th>Catalog number</th>
+                <th>Last order date</th>
+                <th>Status</th>
+                <th>Item name</th>
+                <th>Vendor</th>
+                <th>Purity</th>
+                <th>Stock location</th>
+                <th>Unit</th>
+                <th>Cost per unit</th>
+                <th>Estimated quantity</th>
+                <th>Total value</th>
+                <th>Reorder level</th>
+                <th>Reorder quantity</th>
+                <th>Item discontinued?</th>
+                <th>Notes</th>
+                <!-- Loop through inventory list -->
+                {%for item in inventory_list%}
+                <!-- check if item is inorganic -->
+                {%if item.item_type == "Organic"%}
+                <tr>
+                  <td>
+                    {%if item.reorder_automatically%}
+                    <p>Yes</p>
+                    {%else%}
+                    <p>No</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.catalog_number}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.last_ordered}}</p>
+                  </td>
+                  <td>
+                    {%if item.status == "Received"%}
+                    <p class="text-success">{{item.status}}</p>
+                    {%elif item.status == "Ordered"%}
+                    <p class="text-warning">{{item.status}}</p>
+                    {% elif item.status == "Out of stock"%}
+                    <p class="text-danger">{{item.status}}</p>
+                    {% elif item.status == "Shipped"%}
+                    <p class="text-warning">{{item.status}}</p>
+                    {%else%}
+                    <p>{{item.status}}</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.type}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.vendor}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.purity}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.location}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.quantity_unit}}</p>
+                  </td>
+                  <td>
+                    <p>${{item.cost_per_unit}}</p>
+                  </td>
+                  <td>
+                    {%if item.estimated_quantity%}
+                    <p>{{item.estimated_quantity}}</p>
+                    {%else%}
+                    <p>N/A</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>${{item.total_value}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.reorder_level}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.estimated_quantity}}</p>
+                  </td>
+                  <td>
+                    {%if item.item_discontinued%}
+                    <p>Yes</p>
+                    {%else%}
+                    <p>No</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.notes}}</p>
+                  </td>
+                </tr>
+                {%endif%} {%endfor%}
+              </table>
             </div>
             <div
               class="tab-pane fade"
@@ -208,13 +389,102 @@
               role="tabpanel"
               aria-labelledby="v-pills-inorganic-tab"
             >
-              Inorganic compounds
-              <!-- Loop through inventory list -->
-              {%for item in inventory_list%}
-              <!-- check if item is inorganic -->
-              {%if item.item_type == "Inorganic"%}
-              <p>{{item.type}}</p>
-              {%endif%} {%endfor%}
+              <h2>Inorganic compounds</h2>
+              <table class="table table-striped">
+                <th>Reorder automatically?</th>
+                <th>Catalog number</th>
+                <th>Last order date</th>
+                <th>Status</th>
+                <th>Item name</th>
+                <th>Vendor</th>
+                <th>Purity</th>
+                <th>Stock location</th>
+                <th>Unit</th>
+                <th>Cost per unit</th>
+                <th>Estimated quantity</th>
+                <th>Total value</th>
+                <th>Reorder level</th>
+                <th>Reorder quantity</th>
+                <th>Item discontinued?</th>
+                <th>Notes</th>
+                <!-- Loop through inventory list -->
+                {%for item in inventory_list%}
+                <!-- check if item is inorganic -->
+                {%if item.item_type == "Inorganic"%}
+                <tr>
+                  <td>
+                    {%if item.reorder_automatically%}
+                    <p>Yes</p>
+                    {%else%}
+                    <p>No</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.catalog_number}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.last_ordered}}</p>
+                  </td>
+                  <td>
+                    {%if item.status == "Received"%}
+                    <p class="text-success">{{item.status}}</p>
+                    {%elif item.status == "Ordered"%}
+                    <p class="text-warning">{{item.status}}</p>
+                    {% elif item.status == "Out of stock"%}
+                    <p class="text-danger">{{item.status}}</p>
+                    {% elif item.status == "Shipped"%}
+                    <p class="text-warning">{{item.status}}</p>
+                    {%else%}
+                    <p>{{item.status}}</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.type}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.vendor}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.purity}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.location}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.quantity_unit}}</p>
+                  </td>
+                  <td>
+                    <p>${{item.cost_per_unit}}</p>
+                  </td>
+                  <td>
+                    {%if item.estimated_quantity%}
+                    <p>{{item.estimated_quantity}}</p>
+                    {%else%}
+                    <p>N/A</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>${{item.total_value}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.reorder_level}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.estimated_quantity}}</p>
+                  </td>
+                  <td>
+                    {%if item.item_discontinued%}
+                    <p>Yes</p>
+                    {%else%}
+                    <p>No</p>
+                    {%endif%}
+                  </td>
+                  <td>
+                    <p>{{item.notes}}</p>
+                  </td>
+                </tr>
+                {%endif%} {%endfor%}
+              </table>
             </div>
             <div
               class="tab-pane fade"
@@ -222,7 +492,7 @@
               role="tabpanel"
               aria-labelledby="v-pills-standards-tab"
             >
-              Standards
+              <h2>Standards</h2>
               <!-- Loop through inventory list -->
               {%for item in inventory_list%}
               <!-- check if item is inorganic -->
