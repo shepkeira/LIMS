@@ -1,13 +1,11 @@
 .nav-pills > .nav-link {
   padding: 0.5rem 0.75rem;
-  font-size: 0.9rem;
   line-height: 1.25;
   border-radius: 0.25rem;
   color: rgb(175, 40, 40);
 }
 .nav-pills > .nav-link.active {
   padding: 0.5rem 0.75rem;
-  font-size: 0.9rem;
   line-height: 1.25;
   border-radius: 0.25rem;
   background-color: rgb(175, 40, 40);
