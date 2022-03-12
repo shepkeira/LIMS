@@ -1,5 +1,8 @@
+h2{
+    font-size:larger;
+}
 
-body{background-color: bisque;}
-h1{
-    color: red;
+.container{
+    padding: 30px;
+    width:80%;
 }
