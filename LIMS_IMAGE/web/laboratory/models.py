@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import *
+from datetime import datetime
 
 # Create your models here.
 
@@ -73,12 +74,14 @@ class InventoryItem(models.Model):
     S = 'Shipped'
     A = 'Arrived'
     C = 'Completed'
+    Ou = 'Out of Stock'
     STATUS_CHOICES = (
         (O, 'Ordered'),
         (R, 'Received'),
         (S, 'Shipped'),
         (A, 'Arrived'),
         (C, 'Completed'),
+        (Ou, 'Out of Stock'),
     )
     SOL = "Solvent"
     ORG = "Organic"
@@ -97,21 +100,44 @@ class InventoryItem(models.Model):
         (GLA, 'Glassware'),
     )
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    # if the item should be reordered automatically
+    reorder_automatically = models.BooleanField(default=False)
+    catalog_number = models.CharField(
+        max_length=100, default="0000-00")  # catalog number of the item
     type = models.CharField(max_length=50)  # type of item
     # type of item (solvent, organic, liquid, inorganic, standard, etc.)
     item_type = models.CharField(
         max_length=10, choices=TYPE_CHOICES, default=SOL)
+    vendor = models.CharField(
+        max_length=100, default="Unknown")  # vendor of the item
+    purity = models.CharField(
+        max_length=50, default="Unknown")  # purity of the item
     expiration_date = models.DateTimeField()  # when this item expires if ever
+    # when this item was last ordered
+    last_ordered = models.DateTimeField(default=datetime.now())
+    location = models.CharField(
+        max_length=100, default="Unknown")  # location of the item
     # status of this item (more ordered)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=O)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=O)
     estimated_quantity = models.IntegerField()  # estimated quantity of items
     # unit of the quantity (ml, packs of 10 etc.)
     quantity_unit = models.CharField(max_length=10)
-    usage_rate = models.IntegerField()  # estimated usage of this item
+    cost_per_unit = models.DecimalField(
+        max_digits=6, decimal_places=2)  # cost per unit of the item
+    total_value = models.DecimalField(
+        max_digits=6, decimal_places=2)  # total value of item
+    usage_rate = models.IntegerField(default=0)  # estimated usage of this item
     usage_rate_unit = models.CharField(
         max_length=10)  # unit of usage rate ml/week
+    reorder_level = models.IntegerField(
+        default=0)  # reorder level of this item
+    item_reorder_level = models.IntegerField(
+        default=0)  # reorder level of this item
     # estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
     estimated_need = models.IntegerField()
+    item_discontinued = models.BooleanField(
+        default=False)  # if this item is discontinued
+    notes = models.TextField(default="No notes")  # notes about this item
 
 
 class Image(models.Model):
