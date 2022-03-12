@@ -19,10 +19,11 @@
         <p><a href="{% url 'logout' %}">Log Out</a></p>
         {% else %}
         <p><i>You are not logged in</i></p>
-          <h2>Welcome to the LIMS home page</h2>
+        <section id ="main">
           <div class ="container">
               <img src ="{% static 'image/homepage_image.jpg' %}" alt ="Background image with Laboraroty theme" height = 500px>
           </div>
+        </section>
         {% endif %} 
     {% endblock %}
       </div>
