@@ -62,8 +62,6 @@ def create_test_sample(request, sample_id):
             print('Result: ' + str(result), flush=True)
             test = Test.objects.filter(name=result[0]).first()
             if result[0] != 'csrfmiddlewaretoken' and not TestSample.objects.filter(lab_sample_id=sample_id, test=test):
-                # print('Result: ' + str(result), flush=True)
-                #print('Location: ' + str(Location.objects.filter(code=result[1]).first()), flush=True)
                 ts = TestSample(
                     lab_sample_id=LabSample.objects.filter(
                         id=sample_id).first(),
@@ -71,8 +69,6 @@ def create_test_sample(request, sample_id):
                 )
                 added += str(ts) + ', '
                 ts.save()
-                #print(added, flush=True)
-                # print('Created new lab sample: ' + str(ts), flush=True)
                 tr = TestResult(
                     status='Recieved',
                     test_id=ts,
@@ -83,7 +79,7 @@ def create_test_sample(request, sample_id):
             print('Message: ' + message, flush=True)
             context = {'sample': lab_sample,
                        'tests': tests, 'message': message}
-            return render(request, 'laboratory/analysis_sample.html', context)
+            return view_lab_sample(request, sample_id)
 
     context = {'sample': lab_sample, 'tests': tests, 'message': message}
     return render(request, 'laboratory/analysis_sample.html', context)
@@ -105,22 +101,18 @@ def create_lab_sample(request, sample_id):
         added = ''
         for result in results:
             if result[0] != 'csrfmiddlewaretoken' and not LabSample.objects.filter(sample=sample_id, location__code=result[1]):
-                #print('Result: ' + str(result), flush=True)
-                #print('Location: ' + str(Location.objects.filter(code=result[1]).first()), flush=True)
                 ls = LabSample(
                     sample=Sample.objects.filter(id=sample_id).first(),
                     location=Location.objects.filter(code=result[1]).first()
                 )
                 added += str(ls) + ', '
                 ls.save()
-                #print(added, flush=True)
-                #print('Created new lab sample: ' + str(ls), flush=True)
         if added != '':
             message = 'Added lab samples: ' + added[:-2]
             print('Message: ' + message, flush=True)
             context = {'sample': sample,
                        'locations': locations, 'message': message}
-            return render(request, 'laboratory/distribute_sample.html', context)
+            return view_sample(request, sample_id)
 
     context = {'sample': sample, 'locations': locations, 'message': message}
     return render(request, 'laboratory/distribute_sample.html', context)
