@@ -203,8 +203,9 @@ def read_barcode(request):
         form = ImageForm(request.POST, request.FILES)
         mypath = "../../src/uploads/images"
         for root, dirs, files in os.walk(mypath):
+
             for file in files:
-                if file.endswith('jpg'):
+                if file.endswith('jpg') or file.endswith('png') or file.endswith('gif'):
                     os.remove(os.path.join(root, file))
         if form.is_valid():
             form.save()
@@ -214,20 +215,29 @@ def read_barcode(request):
 
             image_path_2 = os.path.join("../../src/uploads/images", img_path)
             img_barcode = Barcoder().scanBarcode(img_obj.image.url)
-            barcode_parts = img_barcode.split("-")
-            id = 0
-            if barcode_parts[0] == "S":
-                id = barcode_parts[2]
-                if len(barcode_parts) == 3:
-                    # this is a sample
-                    # order_id = barcode_parts[1]
-                    type = "sample"
-                elif len(barcode_parts) == 4:
-                    # this is a lab sample
-                    type = "lab_sample"
-                else:
-                    # this is a test sample
-                    type = "test_sample"
+            if isinstance(img_barcode, str):
+                barcode_parts = img_barcode.split("-")
+                id = 0
+                print("----------")
+                print(barcode_parts)
+                if barcode_parts[0] == "S":
+                    if len(barcode_parts) < 3:
+                        type = "invalid"
+                        # not valid
+                    elif len(barcode_parts) == 3:
+                        id = barcode_parts[2]
+                        # this is a sample
+                        # order_id = barcode_parts[1]
+                        type = "sample"
+                    elif len(barcode_parts) == 4:
+                        # this is a lab sample
+                        type = "lab_sample"
+                    else:
+                        # this is a test sample
+                        type = "test_sample"
+            else:
+                type = "error"
+                id = 0
             context = {'form': form, 'img_obj': img_obj, 'img_url': image_path_2,
                        'img_barcode': img_barcode, 'type': type, 'id': id}
             return render(request, 'laboratory/read_barcode.html', context)
