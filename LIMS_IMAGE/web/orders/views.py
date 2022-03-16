@@ -67,34 +67,6 @@ def shopping(request):
         return redirect("/")
     if not Client.objects.filter(user=request.user):
         return redirect("accounts:employee_home_page")
-    context = RequestContext(request)
-    account_list=Client.objects.all()
-    #  number to varify user has created profile 
-    account_num = Client.objects.filter(user=request.user)
-    # the list of sample types for user to choose from
-    sample_types = []
-    for type in Test.objects.all():
-        sample_types.append(type.get_sample_type())
-    # the list of tests and packages for user to place order
-    names =[]
-    package_list = Package.objects.all()
-    for package in package_list:
-        names.append(package.name)
-    tests_list = Test.objects.all()
-    for test in tests_list:
-        names.append(test.name)
-    sample = list(dict.fromkeys(sample_types))
-    # if request.method == 'POST':
-    #     form = OrderForm(request.POST)
-    #context_dict = {'form': form, 'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
-    context_dict = {'account': account_num,"sample": sample,'all_list': names,'package':package_list,'tests':tests_list}
-    return render(request, 'orders/shopping.html',context_dict)
-
-def shopping(request):
-    if not request.user.is_authenticated:
-        return redirect("/")
-    if not Client.objects.filter(user=request.user):
-        return redirect("accounts:employee_home_page")
     account = Client.objects.filter(user = request.user).first()
     date = datetime.datetime.now()
     order_number = Order.next_order_number(account)
