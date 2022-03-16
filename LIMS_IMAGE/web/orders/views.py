@@ -1,11 +1,11 @@
 from random import sample
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from orders.models import Order, Package
 from laboratoryOrders.models import *
 from accounts.models import Client
 import datetime
-#from .forms import OrderForm
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -122,6 +122,7 @@ def shopping(request):
         print(request.POST)
         order = Order(order_number= order_number, account_number=account, submission_date=date)
         order.save()
+
         for sample_type, tests in tests_by_type.items():
             if request.POST.get(sample_type + "_check") and request.POST.get("tests_" + sample_type):
                 quantity = request.POST.get("quantity_" + sample_type)
@@ -148,6 +149,21 @@ def shopping(request):
                     sample.save()
                     ordersample = OrderSample(order=order, sample = sample)
                     ordersample.save()
+
+        # Notify lab of new order
+        send_mail(
+            f'New Order Request: {order.order_number}', # Subject
+            f"""
+            A new order has been created:
+                {}
+
+            Please do not reply to this email.
+            """, # Body
+            'lims0.system@gmail.com', # From
+            [sample.lab_personel.email], # To
+            fail_silently=False, # Raise exception if failure
+        )
+
 
         return redirect('orders:order_history')
 
