@@ -1,19 +1,35 @@
 {% extends 'base.html' %}
+{% load static %} 
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Laboratory Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block additionalStyles %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/> 
+    {% endblock %}
+  </head>
 <body>
   {% block content%}
   <div class="container">
     <h1>Employee Home</h1>
-    <p>Welcome to the LIMS home page.</p>
     {% if user.is_authenticated %} Hi {{ user.first_name }}!
     <p><a href="{% url 'logout' %}">Log Out</a></p>
+    <section id ="main">
+      <div class ="container">
+          <img src ="{% static 'image/employee-homepage_image.webp' %}" alt ="Background image with Laboraroty theme" height = 400px>
+      </div>
+    </section>
     {% else %}
     <p>You are not logged in</p>
     <a href="{% url 'login' %}">Log In</a>
     or
-    <a href="{% url 'accounts:registration' %}">Sign Up</a>
-    {% endif %} {% endblock %}
+    <a href="{% url 'accounts:registration' %}">Sign Up</a>  
+    {% endif %}
+     {% endblock %}
   </div>
 </body>
