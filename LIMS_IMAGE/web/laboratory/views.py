@@ -112,6 +112,20 @@ def create_lab_sample(request, sample_id):
             print('Message: ' + message, flush=True)
             context = {'sample': sample,
                        'locations': locations, 'message': message}
+            # Email client about update to their sample
+            print("Sending email to: "+OrderSample.objects.filter(sample=ls.sample).first().order.account_number.user.email, flush=True)
+            send_mail(
+                f'New lab sample created from your order', # Subject
+                f"""
+Your sample has been assigned and distributed to the {ls.location}
+
+Please do not reply to this email.
+                """, # Body
+                'lims0.system@gmail.com', # From
+                [OrderSample.objects.filter(sample=ls.sample).first().order.account_number.user.email], # To
+                fail_silently=False, # Raise exception if failure
+            )
+
             return view_sample(request, sample_id)
 
     context = {'sample': sample, 'locations': locations, 'message': message}
