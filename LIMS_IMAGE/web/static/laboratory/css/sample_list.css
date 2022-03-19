@@ -7,10 +7,13 @@
 
 .list-group-item {
   padding: 0.5rem;
+  transition: all 0.2s ease;
 }
 
-.list-group-item a {
-  color: green;
+.list-group-item:hover {
+  transform: scale(1.2);
+  z-index: 1;
+  color: black;
 }
 
 .list-group-item small {

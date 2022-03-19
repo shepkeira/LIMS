@@ -25,6 +25,12 @@
         {% endif %}
         {% if type == 'test_sample' %}
         <p><a href="{% url 'laboratory:view_test_sample' id %}" >Barcode: {{ img_barcode }}</a></p>
+        {% endif %}
+        {% if type == 'error' %}
+        <p>A barcode could not be read in the image you uploaded</p>
+        {% endif %}
+        {% if type == 'invalid' %}
+        <p>The barcode you uploaded is invalid</p>
     {% endif %}
       {% endif %}
   {% endblock %}

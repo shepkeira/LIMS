@@ -21,18 +21,16 @@
         {% for sample in samples %}
         {% comment %} samples = context = {'samples': sample_list} {% endcomment %}
           <ul class="list-group">
-              <li class="list-group-item bg-light">
-                  <div class="d-flex justify-content-between">
-                      <h5 class="mb-1">Sample: {{ sample }}</h5>
-                      
-                    </div>
-                    <p class="mb-1">Sample Type: {{ sample.sample_type }}</p>
-                    <p class="mb-1">Sample Form: {{ sample.sample_form }}</p>
-                    <p class="mb-1">SOP number: {{ sample.sop_number }}</p>
-                    <small>Assigned worker: {{ sample.lab_personel }}</small><br>
-                    <small>Last updated: {{ sample.updated_at }}</small><br>
-                    <a href="{% url 'laboratory:view_sample' sample.id %}">Get sample info here</a>
-              </li>
+            <a href="{% url 'laboratory:view_sample' sample.id %}" class="list-group-item bg-light">
+              <div class="d-flex justify-content-between">
+                  <h5 class="mb-1">Sample: <b>{{ sample }}</b></h5>
+                </div>
+                <p class="mb-1">Sample Type: <b>{{ sample.sample_type }}</b></p>
+                <p class="mb-1">Sample Form: <b>{{ sample.sample_form }}</b></p>
+                <p class="mb-1">SOP number: <b>{{ sample.sop_number }}</b></p>
+                <small>Assigned worker: <b>{{ sample.lab_personel }}</b></small><br>
+                <small>Last updated: <b>{{ sample.updated_at }}</b></small><br>
+              </a>
           </ul>
         {% endfor %}
       </div>

@@ -1,3 +1,13 @@
+/*links states to improve accesibility*/
+a:visited{
+  color: #1E3E42;
+}
+a:hover{
+  color: #5C604E;
+}
+a:active {
+  color: #8DB1AE
+}
 .search-wrapper {
   display: flex;
   flex-direction: column;
