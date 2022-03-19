@@ -17,10 +17,9 @@
   {% block content%}
   <div class="container">
     <h1>Employee Home</h1>
-    {% if user.is_authenticated %} Hi {{ user.first_name }}!
-    <p><a href="{% url 'logout' %}">Log Out</a></p>
+    {% if user.is_authenticated %}
     <section id ="main">
-      <div class ="container">
+      <div class ="container my-5">
           <img src ="{% static 'image/employee-homepage_image.webp' %}" alt ="Background image with Laboraroty theme" height = 400px>
       </div>
     </section>
