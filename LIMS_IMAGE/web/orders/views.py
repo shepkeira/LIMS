@@ -150,19 +150,23 @@ def shopping(request):
                     ordersample = OrderSample(order=order, sample = sample)
                     ordersample.save()
 
-        # Notify lab of new order
-        send_mail(
-            f'New Order Request: {order.order_number}', # Subject
+        # Notify lab admins of new order - Can change this to all employees if desired
+        # TODO - Add info about tests requested
+        for la in LabAdmin.objects.all():
+            send_mail(
+                f'New Order Received: {order.order_number}', # Subject
             f"""
-            A new order has been created:
-                {}
+A new order has been received:
+    Order number: {order.order_number}
+    Account Number: {order.account_number}
+    Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
 
-            Please do not reply to this email.
-            """, # Body
-            'lims0.system@gmail.com', # From
-            [sample.lab_personel.email], # To
-            fail_silently=False, # Raise exception if failure
-        )
+Please do not reply to this email.
+                """, # Body
+                'lims0.system@gmail.com', # From
+                [la.user.email], # To
+                fail_silently=False, # Raise exception if failure
+            )
 
 
         return redirect('orders:order_history')
