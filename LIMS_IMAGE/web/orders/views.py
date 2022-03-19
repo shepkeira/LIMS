@@ -1,11 +1,11 @@
 from random import sample
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from orders.models import Order, Package
 from laboratoryOrders.models import *
 from accounts.models import Client
 import datetime
-#from .forms import OrderForm
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -90,10 +90,12 @@ def shopping(request):
             tests.append(test)
         tests_by_package[package.name] = tests
 
+    new_ordertests = []
     if request.method == "POST":
         print(request.POST)
         order = Order(order_number= order_number, account_number=account, submission_date=date)
         order.save()
+
         for sample_type, tests in tests_by_type.items():
             if request.POST.get(sample_type + "_check") and request.POST.get("tests_" + sample_type):
                 quantity = request.POST.get("quantity_" + sample_type)
@@ -106,6 +108,7 @@ def shopping(request):
                 test = Test.objects.filter(name=test_name).first()
                 ordertest = OrderTest(order_number=order, test_id=test)
                 ordertest.save()
+                new_ordertests.append(ordertest)
 
         if request.POST.get("packages_check"):
             quantity = request.POST.get("quantity_packages")
@@ -120,6 +123,26 @@ def shopping(request):
                     sample.save()
                     ordersample = OrderSample(order=order, sample = sample)
                     ordersample.save()
+
+        # Notify lab admins of new order - Can change this to all employees if desired
+        for la in LabAdmin.objects.all():
+            send_mail(
+                f'New Order Received: {order.order_number}', # Subject
+                f"""
+A new order has been received:
+    Order number: {order.order_number}
+    Account Number: {order.account_number}
+    Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
+Tests Ordered:
+    { {f'{ot.test_id}' for ot in new_ordertests} }
+
+Please do not reply to this email.
+                """, # Body
+                'lims0.system@gmail.com', # From
+                [la.user.email], # To
+                fail_silently=False, # Raise exception if failure
+            )
+
 
         return redirect('orders:order_history')
 
