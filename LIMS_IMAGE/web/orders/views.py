@@ -118,6 +118,7 @@ def shopping(request):
             tests.append(test)
         tests_by_package[package.name] = tests
 
+    new_ordertests = []
     if request.method == "POST":
         print(request.POST)
         order = Order(order_number= order_number, account_number=account, submission_date=date)
@@ -135,6 +136,7 @@ def shopping(request):
                 test = Test.objects.filter(name=test_name).first()
                 ordertest = OrderTest(order_number=order, test_id=test)
                 ordertest.save()
+                new_ordertests.append(ordertest)
 
         if request.POST.get("packages_check"):
             quantity = request.POST.get("quantity_packages")
@@ -151,22 +153,23 @@ def shopping(request):
                     ordersample.save()
 
         # Notify lab admins of new order - Can change this to all employees if desired
-        # TODO - Add info about tests requested
         for la in LabAdmin.objects.all():
-            send_mail(
-                f'New Order Received: {order.order_number}', # Subject
-            f"""
+            #send_mail(
+             #   f'New Order Received: {order.order_number}', # Subject
+            print(f"""
 A new order has been received:
     Order number: {order.order_number}
     Account Number: {order.account_number}
     Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
+Tests Ordered:
+    { {f'{ot.test_id}' for ot in new_ordertests} }
 
 Please do not reply to this email.
-                """, # Body
-                'lims0.system@gmail.com', # From
-                [la.user.email], # To
-                fail_silently=False, # Raise exception if failure
-            )
+                """, flush=True) # Body
+                #'lims0.system@gmail.com', # From
+                #[la.user.email], # To
+                #fail_silently=False, # Raise exception if failure
+            #)
 
 
         return redirect('orders:order_history')
