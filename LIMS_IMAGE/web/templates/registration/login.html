@@ -10,7 +10,7 @@
     <h2>Log In</h2>
     <form method="post" class="w-50">
       <!-- Init bootstrap form -->
-      {% bootstrap_form form %}
+      {{ form.as_p }}
       <!-- Init bootstrap buttons -->
       {% buttons %}
       <button type="submit" class="btn btn-primary">Log In</button>
