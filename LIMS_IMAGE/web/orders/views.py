@@ -126,6 +126,7 @@ def shopping(request):
                     test = Test.objects.filter(name=test_name).first()
                     ordertest = OrderTest(order_number=order, test_id=test)
                     ordertest.save()
+                    new_ordertests.append(ordertest)
                     sample = Sample(sample_type=test.sample_type)
                     sample.save()
                     ordersample = OrderSample(order=order, sample = sample)
@@ -135,6 +136,9 @@ def shopping(request):
             context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
             return render(request,'orders/shopping.html',context_dict)
         # Notify lab admins of new order - Can change this to all employees if desired
+        ordertests = ""
+        for ot in new_ordertests:
+            ordertests += str(ot.test_id) + "\n"
         for la in LabAdmin.objects.all():
             send_mail(
                 f'New Order Received: {order.order_number}', # Subject
@@ -144,7 +148,7 @@ A new order has been received:
     Account Number: {order.account_number}
     Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
 Tests Ordered:
-    { {f'{ot.test_id}' for ot in new_ordertests} }
+    { ordertests }
 
 Please do not reply to this email.
                 """, # Body
