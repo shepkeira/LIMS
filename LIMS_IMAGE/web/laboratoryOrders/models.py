@@ -216,7 +216,7 @@ class TestPackage(models.Model):
             test_packages = TestPackage.objects.filter(package=package)
             tests = []
             for test_package in test_packages:
-                test = test_package.test
+                test = test_package.test.name
                 tests.append(test)
             tests_by_package[package.name] = tests
         return tests_by_package
