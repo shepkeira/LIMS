@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Sample Page{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Sample Page</h1>
+    <p>Welcome to the sample page!</p>
+    <p>ID: {{ sample.user_side_id }}</p>
+    <p>Order: <a href = "{% url 'orders:order_page' order.order_number %}">{{ order.user_side_id }}</a></p>
+    <p>Valid? {{ inspection }}</p>
+    <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px">
+
+    {% if test_samples %}
+    <h2>Test Samples</h2>
+    <ul>
+    {% for test_sample in test_samples %}
+        <li><a href = "{% url 'orders:view_test_sample' test_sample.id %}">{{ test_sample.user_side_id }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+  {% endblock %}
+  </div>
+</body>

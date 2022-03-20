@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Test Sample Page{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Test Sample Page</h1>
+    <p>Welcome to the test sample page!</p>
+    <p>Test Sample ID: {{ test_sample.user_side_id }}</p>
+    <p>Test: {{ test_sample.test }}</p>
+    {% if test_result.status == 'completed' %}
+        <p>Result: {{ test_result.result }}</p>
+    {% endif %}
+    <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px"><br>
+    <a href="{% url 'orders:view_sample' sample.id %}">Sample Page</a> <br>
+
+  {% endblock %}
+  </div>
+</body>
