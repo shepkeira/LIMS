@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %} 
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Admin Home{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block additionalStyles %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/> 
+    {% endblock %}
+  </head>
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Admin Home</h1>
+    {% if user.is_authenticated %}
+    <section id ="main">
+      <h2>Admin Only Actions</h2>
+      <p><a href="{% url 'accounts:admin_registration' %}">Create a New Admin</a></p>
+      <p><a href="{% url 'accounts:employee_registration' %}">Create a New Employee</a></p>
+      <p><a href="{% url 'laboratory:create_test' %}">Create a New Test</a></p>
+      <p><a href="{% url 'laboratory:create_location' %}">Create a New Location</a></p>
+    </section>
+    {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+    or
+    <a href="{% url 'accounts:registration' %}">Sign Up</a>  
+    {% endif %}
+     {% endblock %}
+  </div>
+</body>

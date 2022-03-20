@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Create Location{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Create Location</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+         {{ form.as_p }}
+        <button type="submit">Create</button>
+      </form>
+      
+      {% if complete and message %}
+        <h3>{{ message }}</h3>
+      {% endif %}
+      {% if complete and not message %}
+        <h3>Succesfully Updated</h3>
+      {% endif %}
+  {% endblock %}
+  </div>
+</body>
