@@ -6,6 +6,7 @@ from orders.models import Order, Package
 from laboratoryOrders.models import *
 from accounts.models import Client
 import datetime
+from django.contrib import messages
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -67,52 +68,58 @@ def shopping(request):
         return redirect("/")
     if not Client.objects.filter(user=request.user):
         return redirect("accounts:employee_home_page")
+
     account = Client.objects.filter(user = request.user).first()
     date = datetime.datetime.now()
     order_number = Order.next_order_number(account)
-
-    tests_by_type ={}
-    tests = Test.objects.all()
-    for test in tests:
-        sample_type = test.sample_type
-        if sample_type in tests_by_type:
-            tests_by_type[sample_type].append(test)
-        else:
-         tests_by_type[sample_type] = [test]
-
-    tests_by_package = {}
-    packages = Package.objects.all()
-    for package in packages:
-        test_packages = TestPackage.objects.filter(package=package)
-        tests = []
-        for test_package in test_packages:
-            test = test_package.test
-            tests.append(test)
-        tests_by_package[package.name] = tests
+    tests_by_type = Test.get_test_by_type()
+    tests_by_package = TestPackage.tests_by_package()
 
     new_ordertests = []
     if request.method == "POST":
         print(request.POST)
         order = Order(order_number= order_number, account_number=account, submission_date=date)
-        order.save()
+        no_items_in_order = True # check to make sure we add items to this order
 
         for sample_type, tests in tests_by_type.items():
-            if request.POST.get(sample_type + "_check") and request.POST.get("tests_" + sample_type):
+            if request.POST.get(sample_type + "_check"):
+                if not request.POST.get("tests_" + sample_type):
+                    messages.error(request, "Please select a test to order")
+                    context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
+                    return render(request,'orders/shopping.html',context_dict)
                 quantity = request.POST.get("quantity_" + sample_type)
+                if int(quantity) <= 0:
+                    messages.error(request, "Your quantity must be greater than or equal to 1. If you don't wish to include this item, uncheck the box")
+                    context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
+                    return render(request,'orders/shopping.html',context_dict)
+                test_name = request.POST.get("tests_" + sample_type)
+                test = Test.objects.filter(name=test_name).first()
+                if not test:
+                    messages.error(request, "Please select a test to order")
+                    context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
+                    return render(request,'orders/shopping.html',context_dict)
+                order.save() # error above redirect so if we got here, the order is valid and we can save
                 for count in range(0, int(quantity)):
                     sample = Sample(sample_type=sample_type)
                     sample.save()
                     ordersample = OrderSample(order=order, sample = sample)
                     ordersample.save()
-                test_name = request.POST.get("tests_" + sample_type)
-                test = Test.objects.filter(name=test_name).first()
                 ordertest = OrderTest(order_number=order, test_id=test)
                 ordertest.save()
                 new_ordertests.append(ordertest)
+                no_items_in_order = False
 
         if request.POST.get("packages_check"):
             quantity = request.POST.get("quantity_packages")
+            if int(quantity) <= 0:
+                    messages.error(request, "Your quantity must be greater than or equal to 1. If you don't wish to include this item, uncheck the box")
+                    context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
+                    return render(request,'orders/shopping.html',context_dict)
             package_name = request.POST.get("package_name")
+            if not package_name:
+                    messages.error(request, "Please select a package to order")
+            no_items_in_order = False
+            order.save() # error above redirect so if we got here, the order is valid and we can save
             for count in range(0, int(quantity)):
                 tests = tests_by_package[package_name]
                 for test_name in tests:
@@ -123,7 +130,10 @@ def shopping(request):
                     sample.save()
                     ordersample = OrderSample(order=order, sample = sample)
                     ordersample.save()
-
+        if no_items_in_order:
+            messages.error(request, "You must include items in your order, make sure you have checkmarked the items to be included")
+            context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
+            return render(request,'orders/shopping.html',context_dict)
         # Notify lab admins of new order - Can change this to all employees if desired
         for la in LabAdmin.objects.all():
             send_mail(
