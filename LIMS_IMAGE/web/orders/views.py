@@ -134,7 +134,7 @@ A new order has been received:
     Account Number: {order.account_number}
     Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
 Tests Ordered:
-    { {f'{ot.test_id}' for ot in new_ordertests} }
+    { ''.join(map(str,[ f'{ot.test_id}, ' for ot in new_ordertests ])) }
 
 Please do not reply to this email.
                 """, # Body
