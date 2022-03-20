@@ -226,21 +226,40 @@ def read_barcode(request):
                 id = 0
                 print("----------")
                 print(barcode_parts)
-                if barcode_parts[0] == "S":
+                # check which barcode type you are using by prefix S=sample; I=inventory; E=equipment
+                if barcode_parts[0] == "S": # right now we only have barcodes implemented for samples (using the S prefix)
                     if len(barcode_parts) < 3:
                         type = "invalid"
                         # not valid
                     elif len(barcode_parts) == 3:
+                        # Sample barcode S-1-61
+                        order_id = barcode_parts[1]
                         id = barcode_parts[2]
-                        # this is a sample
-                        # order_id = barcode_parts[1]
                         type = "sample"
                     elif len(barcode_parts) == 4:
-                        # this is a lab sample
+                        # Lab Sample S-1-61-A
+                        order_id = barcode_parts[1]
+                        sample_id = barcode_parts[2]
+                        lab_code = barcode_parts[3]
+                        sample = Sample.objects.filter(id = sample_id).first()
+                        lab = Location.objects.filter(code = lab_code).first()
+                        id = LabSample.objects.filter(location = lab, sample = sample).first().id
                         type = "lab_sample"
-                    else:
-                        # this is a test sample
+                    elif len(barcode_parts) == 5:
+                        # Test Sample S-24-22-M-10
+                        order_id = barcode_parts[1]
+                        sample_id = barcode_parts[2]
+                        lab_code = barcode_parts[3]
+                        test_id = barcode_parts[4]
+                        sample = Sample.objects.filter(id = sample_id).first()
+                        lab = Location.objects.filter(code = lab_code).first()
+                        lab_sample_id = LabSample.objects.filter(location = lab, sample = sample).first()
+                        test = Test.objects.filter(id = test_id).first()
+                        id = TestSample.objects.filter(lab_sample_id = lab_sample_id, test = test).first().id
                         type = "test_sample"
+                    else:
+                        type = "error"
+                        id = 0
             else:
                 type = "error"
                 id = 0
