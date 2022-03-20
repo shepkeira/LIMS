@@ -218,22 +218,13 @@ def view_test_sample(request, test_sample_id):
         return redirect("/")
     if not Client.objects.filter(user=request.user):
         return redirect("accounts:employee_home_page")
-    # delete old files so we don't end up with a bunch in memory
-    mypath = os.path.join(os.getcwd(), "static/barcodes")
-    for root, dirs, files in os.walk(mypath):
-        for file in files:
-            if file.endswith('jpg'):
-                os.remove(os.path.join(root, file))
 
     test_sample = TestSample.objects.filter(id=test_sample_id).first()
-
-    barcode_file_path = test_sample.barcode()
-    barcode_file_path = os.path.join("../../../", barcode_file_path)
 
     lab_sample = test_sample.lab_sample_id
     sample = lab_sample.sample
     test_result = TestResult.objects.filter(test_id=test_sample).first()
     print(test_result.status)
-    context = {'barcode_file_path': barcode_file_path,
+    context = {
                'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample, 'test_result': test_result}
     return render(request, 'orders/view_test_sample.html', context)
