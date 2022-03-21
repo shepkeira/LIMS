@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from laboratoryOrders.models import SampleInspection
 from laboratoryOrders.forms import InspectionForm, TestResultForm, SampleForm
-from accounts.models import Client, LabWorker
-from .forms import ImageForm
+from accounts.models import Client, LabWorker, LabAdmin
+from .forms import ImageForm, LocationForm, TestForm
 from src.barcoder import Barcoder
 import os
 from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest, TestResult
@@ -37,7 +37,6 @@ def ready_for_distribution(request):
 
     context = {'samples': samples}
     return render(request, 'laboratory/distribution.html', context)
-
 
 def create_test_sample(request, sample_id):
     if not request.user.is_authenticated:
@@ -156,6 +155,44 @@ def order_list(request):
     context = {'samples': sample_list}
     return render(request, 'laboratory/order_list.html', context)
 
+def create_test(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not LabAdmin.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    if request.method == 'POST':
+        form = TestForm(request.POST)
+        message = ""
+        if form.is_valid():
+            test = form.save(commit=False)
+            test.rush = False
+            test.save()
+        return redirect("laboratory:admin_home_page")
+    else:
+        form = TestForm()
+        return render(request, 'laboratory/test_create.html', {'form': form})
+
+def create_location(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not LabAdmin.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        message = ""
+        if form.is_valid():
+            test = form.save()
+        return redirect("laboratory:admin_home_page")
+    else:
+        form = LocationForm()
+        return render(request, 'laboratory/lab_create.html', {'form': form})
+
+def admin_page(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not LabAdmin.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    return render(request, 'laboratory/admin_home_page.html')
 
 def validate_sample(request, sample_id):
     if not request.user.is_authenticated:
