@@ -49,7 +49,9 @@ def create_test_sample(request, sample_id):
     order_tests = OrderTest.objects.filter(order_number=sample_order.order)
     tests = []
     for order_test in order_tests:
-        tests.append(order_test.test_id)
+        test = order_test.test_id
+        if test not in tests:
+            tests.append(test)
 
     # Form
     message = ''

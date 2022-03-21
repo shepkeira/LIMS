@@ -51,6 +51,17 @@ class Test(models.Model):
     def get_sample_type(self):
         return str(self.sample_type)
 
+    def get_test_by_type():
+        tests_by_type ={}
+        tests = Test.objects.all()
+        for test in tests:
+            sample_type = test.sample_type
+            if sample_type in tests_by_type:
+                tests_by_type[sample_type].append(test)
+            else:
+                tests_by_type[sample_type] = [test]
+        return tests_by_type
+
 # What instruments are used by different tests (many to many)
 
 

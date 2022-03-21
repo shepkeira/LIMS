@@ -26,14 +26,14 @@
             <select name = "tests_{{sample_type}}" id= "tests">
                 <option value = "" disabled selected> choose your test</option> 
                 {% for item in tests %}
-                    <option value={{item}}> {{item}}</option>
+                    <option value="{{item}}"> {{item}}</option>
                 {% endfor %}
             </select>
             <br>
         {% endfor %}
 
-        <input type = "checkbox" name= "packages" id="packages" >
-        <label for ="packages"> Package </label>
+        <input type = "checkbox" name= "packages_check" id="packages" >
+        <label for ="packages_check"> Package </label>
         
         <label for="quantity"></label>
         <input type="number" id="quantity" name="quantity_packages" min="1" placeholder = "Number of Package">
