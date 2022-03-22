@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
+{% load static %} 
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Client Home{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block additionalStyles %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
+    {% endblock %}
+  </head>
 <body>
   {% block content%}
   <div class="container">
     <h1>Client Home</h1>
+    <section id ="main">
+      <div class ="container my-5">
+          <img src ="{% static 'image/client-homepage.jpg' %}" alt="Background image with Laboraroty theme" height=400px>
+      </div>
+    </section>
     {% if user.is_authenticated %} {% comment %}
     <ul class="list-group w-25">
       <li class="list-group-item">
