@@ -209,6 +209,18 @@ class TestPackage(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
 
+    def tests_by_package():
+        tests_by_package = {}
+        packages = Package.objects.all()
+        for package in packages:
+            test_packages = TestPackage.objects.filter(package=package)
+            tests = []
+            for test_package in test_packages:
+                test = test_package.test.name
+                tests.append(test)
+            tests_by_package[package.name] = tests
+        return tests_by_package
+
 class InternalReport(models.Model):
     TYPE = (
        ('lab', ('Lab Report')),

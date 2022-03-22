@@ -33,4 +33,7 @@ urlpatterns = [
     path('analysis/', views.analysis, name='analysis'),
     path('update_test_result/<sample_id>/',
          views.update_test_result, name='update_test_result'),
+     path('create_test/', views.create_test, name='create_test'),
+     path('create_location/', views.create_location, name='create_location'),
+     path('admin_home_page/', views.admin_page, name="admin_home_page"),
 ]

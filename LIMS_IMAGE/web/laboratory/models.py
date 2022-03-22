@@ -11,9 +11,9 @@ class Location(models.Model):
     def __str__(self):
         return self.name  # locations are referenced by the name of the location
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     # code is used for lab specific sample numbers (examples, A or M)
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
 
 # These are instruments found in a specific locaiton at a lab
 
@@ -36,7 +36,7 @@ class Test(models.Model):
     # sample-type for the test (example, Daily or Environment)
     sample_type = models.CharField(max_length=100, null=True)
     # test code for internal referencing
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
     cost = models.FloatField()  # cost of running this test (for the client)
     rush = models.BooleanField()  # if there is a rush on the test
     time_taken = models.IntegerField()  # time this test takes
@@ -50,6 +50,17 @@ class Test(models.Model):
     # this function returns the sample types such as Daily and Cosmetics
     def get_sample_type(self):
         return str(self.sample_type)
+
+    def get_test_by_type():
+        tests_by_type ={}
+        tests = Test.objects.all()
+        for test in tests:
+            sample_type = test.sample_type
+            if sample_type in tests_by_type:
+                tests_by_type[sample_type].append(test)
+            else:
+                tests_by_type[sample_type] = [test]
+        return tests_by_type
 
 # What instruments are used by different tests (many to many)
 
