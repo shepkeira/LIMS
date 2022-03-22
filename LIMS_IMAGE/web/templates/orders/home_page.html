@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block additionalStyles %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}"/> 
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
     {% endblock %}
   </head>
 <body>
@@ -18,7 +18,7 @@
     <h1>Client Home</h1>
     <section id ="main">
       <div class ="container my-5">
-          <img src ="{% static 'image/client_page_image.jpg' %}" alt ="Background image with Laboraroty theme" height = 400px>
+          <img src ="{% static 'image/client-homepage.jpg' %}" alt="Background image with Laboraroty theme" height=400px>
       </div>
     </section>
     {% if user.is_authenticated %} {% comment %}
@@ -39,7 +39,7 @@
     <p>You are not logged in</p>
     <a href="{% url 'login' %}">Log In</a>
     or
-    <a href="{% url 'accounts:registration' %}">Sign Up</a>    
+    <a href="{% url 'accounts:registration' %}">Sign Up</a>
     {% endif %} {% endblock %}
   </div>
 </body>
