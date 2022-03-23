@@ -7,6 +7,7 @@ from laboratoryOrders.models import *
 from accounts.models import Client
 import datetime
 from django.contrib import messages
+import os
 
 # the client home page where they can access the different tabs avalible to them
 def home_page(request):
@@ -126,6 +127,7 @@ def shopping(request):
                     test = Test.objects.filter(name=test_name).first()
                     ordertest = OrderTest(order_number=order, test_id=test)
                     ordertest.save()
+                    new_ordertests.append(ordertest)
                     sample = Sample(sample_type=test.sample_type)
                     sample.save()
                     ordersample = OrderSample(order=order, sample = sample)
@@ -135,6 +137,9 @@ def shopping(request):
             context_dict = {'tests_by_type': tests_by_type, 'packages': tests_by_package.keys()}
             return render(request,'orders/shopping.html',context_dict)
         # Notify lab admins of new order - Can change this to all employees if desired
+        ordertests = ""
+        for ot in new_ordertests:
+            ordertests += str(ot.test_id) + "\n"
         for la in LabAdmin.objects.all():
             send_mail(
                 f'New Order Received: {order.order_number}', # Subject
@@ -173,3 +178,67 @@ def appendix_b(request):
     sample = list(sample_no_duplicate)
     context_dict = {'sample': sample,'package':package,'tests':tests}
     return render(request, 'orders/appendix_b.html',context_dict)
+
+def order_page(request, order_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
+    client = Client.objects.filter(user=request.user).first()
+    print(client) # the brain
+    account_number = client.account_number
+    order = Order.objects.filter(order_number=order_id, account_number=client).first()
+    print(account_number) # 0
+    print(order_id) # 34
+
+    samples = OrderSample.samples_for_order(order)
+
+    order_inspected = True
+    for sample in samples:
+        order_inspected = order_inspected and sample.insepcted()
+
+    context = {'order': order, 'samples': samples,
+               'order_inspected': order_inspected}
+    return render(request, 'orders/order_page.html',context)
+
+def view_sample(request, sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
+    # delete old files so we don't end up with a bunch in memory
+    mypath = os.path.join(os.getcwd(), "static/barcodes")
+    for root, dirs, files in os.walk(mypath):
+        for file in files:
+            if file.endswith('jpg'):
+                os.remove(os.path.join(root, file))
+    sample = Sample.objects.filter(id=sample_id).first()
+    inspection = sample.inspection_results()
+
+    barcode_file_path = sample.barcode()
+    barcode_file_path = os.path.join("../../../", barcode_file_path)
+
+    lab_samples = sample.lab_samples()
+    test_samples = sample.test_samples()
+
+    order = sample.order()
+
+    context = {'barcode_file_path': barcode_file_path, 'sample': sample, 'lab_samples': lab_samples,
+               'test_samples': test_samples, 'inspection': inspection, 'order': order}
+    return render(request, 'orders/view_sample.html', context)
+
+def view_test_sample(request, test_sample_id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not Client.objects.filter(user=request.user):
+        return redirect("accounts:employee_home_page")
+
+    test_sample = TestSample.objects.filter(id=test_sample_id).first()
+
+    lab_sample = test_sample.lab_sample_id
+    sample = lab_sample.sample
+    test_result = TestResult.objects.filter(test_id=test_sample).first()
+    print(test_result.status)
+    context = {
+               'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample, 'test_result': test_result}
+    return render(request, 'orders/view_test_sample.html', context)

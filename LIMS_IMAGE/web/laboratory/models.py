@@ -11,9 +11,9 @@ class Location(models.Model):
     def __str__(self):
         return self.name  # locations are referenced by the name of the location
     # By default, Django gives each model an auto-incrementing primary key with the type specified per app
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     # code is used for lab specific sample numbers (examples, A or M)
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
 
 # These are instruments found in a specific locaiton at a lab
 
@@ -36,7 +36,7 @@ class Test(models.Model):
     # sample-type for the test (example, Daily or Environment)
     sample_type = models.CharField(max_length=100, null=True)
     # test code for internal referencing
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
     cost = models.FloatField()  # cost of running this test (for the client)
     rush = models.BooleanField()  # if there is a rush on the test
     time_taken = models.IntegerField()  # time this test takes

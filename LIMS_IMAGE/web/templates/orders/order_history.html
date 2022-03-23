@@ -14,7 +14,7 @@
             </tr>
                 {% for order in orders %}
                 <tr>
-                    <td>{{order.order_number}}</td>
+                    <td><a href="{% url 'orders:order_page' order.order_number %}">{{order.order_number}}</a></td>
                     <td>{{order.submission_date}}</td>                
                 </tr>
                 {% endfor %}
