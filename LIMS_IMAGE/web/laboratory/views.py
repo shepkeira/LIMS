@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from laboratoryOrders.models import SampleInspection
 from laboratoryOrders.forms import InspectionForm, TestResultForm, SampleForm
-from accounts.models import Client, LabWorker
-from .forms import ImageForm
+from accounts.models import Client, LabWorker, LabAdmin
+from .forms import ImageForm, LocationForm, TestForm
 from src.barcoder import Barcoder
 import os
 from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest, TestResult
@@ -38,7 +38,6 @@ def ready_for_distribution(request):
     context = {'samples': samples}
     return render(request, 'laboratory/distribution.html', context)
 
-
 def create_test_sample(request, sample_id):
     if not request.user.is_authenticated:
         return redirect("/")
@@ -50,7 +49,9 @@ def create_test_sample(request, sample_id):
     order_tests = OrderTest.objects.filter(order_number=sample_order.order)
     tests = []
     for order_test in order_tests:
-        tests.append(order_test.test_id)
+        test = order_test.test_id
+        if test not in tests:
+            tests.append(test)
 
     # Form
     message = ''
@@ -112,6 +113,20 @@ def create_lab_sample(request, sample_id):
             print('Message: ' + message, flush=True)
             context = {'sample': sample,
                        'locations': locations, 'message': message}
+            # Email client about update to their sample
+            print("Sending email to: "+OrderSample.objects.filter(sample=ls.sample).first().order.account_number.user.email, flush=True)
+            send_mail(
+                f'New lab sample created from your order', # Subject
+                f"""
+Your sample has been assigned and distributed to the {ls.location}
+
+Please do not reply to this email.
+                """, # Body
+                'lims0.system@gmail.com', # From
+                [OrderSample.objects.filter(sample=ls.sample).first().order.account_number.user.email], # To
+                fail_silently=False, # Raise exception if failure
+            )
+
             return view_sample(request, sample_id)
 
     context = {'sample': sample, 'locations': locations, 'message': message}
@@ -142,6 +157,44 @@ def order_list(request):
     context = {'samples': sample_list}
     return render(request, 'laboratory/order_list.html', context)
 
+def create_test(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not LabAdmin.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    if request.method == 'POST':
+        form = TestForm(request.POST)
+        message = ""
+        if form.is_valid():
+            test = form.save(commit=False)
+            test.rush = False
+            test.save()
+        return redirect("laboratory:admin_home_page")
+    else:
+        form = TestForm()
+        return render(request, 'laboratory/test_create.html', {'form': form})
+
+def create_location(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not LabAdmin.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        message = ""
+        if form.is_valid():
+            test = form.save()
+        return redirect("laboratory:admin_home_page")
+    else:
+        form = LocationForm()
+        return render(request, 'laboratory/lab_create.html', {'form': form})
+
+def admin_page(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    if not LabAdmin.objects.filter(user=request.user):
+        return redirect("accounts:customer_home_page")
+    return render(request, 'laboratory/admin_home_page.html')
 
 def validate_sample(request, sample_id):
     if not request.user.is_authenticated:
@@ -212,21 +265,40 @@ def read_barcode(request):
                 id = 0
                 print("----------")
                 print(barcode_parts)
-                if barcode_parts[0] == "S":
+                # check which barcode type you are using by prefix S=sample; I=inventory; E=equipment
+                if barcode_parts[0] == "S": # right now we only have barcodes implemented for samples (using the S prefix)
                     if len(barcode_parts) < 3:
                         type = "invalid"
                         # not valid
                     elif len(barcode_parts) == 3:
+                        # Sample barcode S-1-61
+                        order_id = barcode_parts[1]
                         id = barcode_parts[2]
-                        # this is a sample
-                        # order_id = barcode_parts[1]
                         type = "sample"
                     elif len(barcode_parts) == 4:
-                        # this is a lab sample
+                        # Lab Sample S-1-61-A
+                        order_id = barcode_parts[1]
+                        sample_id = barcode_parts[2]
+                        lab_code = barcode_parts[3]
+                        sample = Sample.objects.filter(id = sample_id).first()
+                        lab = Location.objects.filter(code = lab_code).first()
+                        id = LabSample.objects.filter(location = lab, sample = sample).first().id
                         type = "lab_sample"
-                    else:
-                        # this is a test sample
+                    elif len(barcode_parts) == 5:
+                        # Test Sample S-24-22-M-10
+                        order_id = barcode_parts[1]
+                        sample_id = barcode_parts[2]
+                        lab_code = barcode_parts[3]
+                        test_id = barcode_parts[4]
+                        sample = Sample.objects.filter(id = sample_id).first()
+                        lab = Location.objects.filter(code = lab_code).first()
+                        lab_sample_id = LabSample.objects.filter(location = lab, sample = sample).first()
+                        test = Test.objects.filter(id = test_id).first()
+                        id = TestSample.objects.filter(lab_sample_id = lab_sample_id, test = test).first().id
                         type = "test_sample"
+                    else:
+                        type = "error"
+                        id = 0
             else:
                 type = "error"
                 id = 0
