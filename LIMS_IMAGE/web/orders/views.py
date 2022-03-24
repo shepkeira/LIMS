@@ -139,23 +139,22 @@ def shopping(request):
         ordertests = ""
         for ot in new_ordertests:
             ordertests += str(ot.test_id) + "\n"
-        for la in LabAdmin.objects.all():
-            send_mail(
-                f'New Order Received: {order.order_number}', # Subject
-                f"""
+        send_mail(
+            f'New Order Received: {order.order_number}', # Subject
+            f"""
 A new order has been received:
-    Order number: {order.order_number}
-    Account Number: {order.account_number}
-    Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
+Order number: {order.order_number}
+Account Number: {order.account_number}
+Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
 Tests Ordered:
-    { ''.join(map(str,[ f'{ot.test_id}, ' for ot in new_ordertests ]))[:-1] }
+{ ''.join(map(str,[ f'{ot.test_id}, ' for ot in new_ordertests ]))[:-1] }
 
 Please do not reply to this email.
-                """, # Body
-                'lims0.system@gmail.com', # From
-                [la.user.email], # To
-                fail_silently=False, # Raise exception if failure
-            )
+            """, # Body
+            'lims0.system@gmail.com', # From
+            [la.user.email for la in LabAdmin.objects.all()], # To
+            fail_silently=False, # Raise exception if failure
+        )
 
         # Notify client that their new order is received
         send_mail(
