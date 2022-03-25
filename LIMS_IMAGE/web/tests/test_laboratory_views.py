@@ -47,6 +47,7 @@ class laboratoryViewsTestCase(TestCase):
         self.order_sample = baker.make(OrderSample, order = self.order, sample = self.sample)
         self.lab_sample = baker.make(LabSample, sample = self.sample)
         self.test_sample = baker.make(TestSample, lab_sample_id = self.lab_sample)
+        self.test_lab = baker.make(Location)
 
     def test_lab_home_page_unauth(self):
         # Unauthenticated user
@@ -317,14 +318,78 @@ class laboratoryViewsTestCase(TestCase):
     def test_lab_analysis(self):
         # Authenticated employee
         self.client.login(username='testuser_e', password='asdf')
-        response = self.client.get('/laboratory/analyisis/')
+        response = self.client.get('/laboratory/analysis/'+str(self.test_lab.id))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'laboratory/inventory.html')
+        self.assertTemplateUsed(response, 'laboratory/lab_analysis.html')
 
         # Unauthenticaed user or authenticated client
         self.client.logout()
-        response = self.client.get('/laboratory/inventory/')
+        response = self.client.get('/laboratory/analysis/'+str(self.test_lab.id))
         self.assertRedirects(response, '/')
         self.client.login(username='testuser_c', password='asdf')
-        response = self.client.get('/laboratory/inventory/')
+        response = self.client.get('/laboratory/analysis/'+str(self.test_lab.id))
+        self.assertEqual(response.status_code, 302)
+    
+
+    def test_analysis(self):
+        # Authenticated employee
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/laboratory/analysis/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'laboratory/analysis.html')
+
+        # Unauthenticaed user or authenticated client
+        self.client.logout()
+        response = self.client.get('/laboratory/analysis/'+str(self.test_lab.id))
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/laboratory/analysis/'+str(self.test_lab.id))
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_sample_analysis(self):
+        # Authenticated employee
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/laboratory/sample_analysis/'+str(self.test_sample.id))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'laboratory/test_analysis.html')
+
+        # Unauthenticaed user or authenticated client
+        self.client.logout()
+        response = self.client.get('/laboratory/sample_analysis/'+str(self.test_sample.id))
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/laboratory/sample_analysis/'+str(self.test_sample.id))
+        self.assertEqual(response.status_code, 302)
+    
+
+    def test_update_test_result(self):
+        # Authenticated employee
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/laboratory/update_test_result/'+str(self.test_sample.id)+'/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'laboratory/update_results.html')
+
+        # Unauthenticaed user or authenticated client
+        self.client.logout()
+        response = self.client.get('/laboratory/update_test_result/'+str(self.test_sample.id)+'/')
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/laboratory/update_test_result/'+str(self.test_sample.id)+'/')
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_update_sample(self):
+        # Authenticated employee
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/laboratory/update_sample/'+str(self.test_sample.id))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'laboratory/update_sample.html')
+
+        # Unauthenticaed user or authenticated client
+        self.client.logout()
+        response = self.client.get('/laboratory/update_sample/'+str(self.test_sample.id))
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/laboratory/update_sample/'+str(self.test_sample.id))
         self.assertEqual(response.status_code, 302)
