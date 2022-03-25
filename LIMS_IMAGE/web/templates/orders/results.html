@@ -22,7 +22,7 @@
         </tr>
         {% for order_num, samples in results.items %}
           <tr>
-            <td>{ {order_num }}</td>
+            <td>{{ order_num }}</td>
               {% for sample_test_id, test_result in samples.items %}
                 {% for test_sample_id, sample in samples.items %}
             <td>{{ sample_test_id }}</td>
