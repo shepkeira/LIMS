@@ -59,8 +59,11 @@ def results(request):
                 result_dict['order_number'] = order_number
                 sample_dict[result_dict['test']] = result_dict
             render_results[order_number] = sample_dict
-
-    context_dict = {'user': request.user, 'results': render_results}
+            #client = Client.objects.filter(user=request.user).first()
+            #order = Order.objects.filter(account_number=client).first()
+           # order = Order.objects.filter(order_number=order.id, account_number=client).first()
+    #samps = OrderSample.samples_for_order(order)
+    context_dict = {'user': request.user, 'results': render_results}#,'test_ids':test_ids,'order':order,'samps':samps}
     return render(request, 'orders/results.html', context_dict)
 
 # shopping page, this page is used to order new test for the client
