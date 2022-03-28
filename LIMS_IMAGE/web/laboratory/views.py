@@ -59,8 +59,6 @@ def create_test_sample(request, sample_id):
         results = request.POST.items()
         added = ''
         for result in results:
-            print('Result: ' + str(result[1]), flush=True)
-            print('Result: ' + str(result), flush=True)
             test = Test.objects.filter(name=result[0]).first()
             if result[0] != 'csrfmiddlewaretoken' and not TestSample.objects.filter(lab_sample_id=sample_id, test=test):
                 ts = TestSample(
@@ -75,6 +73,22 @@ def create_test_sample(request, sample_id):
                     test_id=ts,
                 )
                 tr.save()
+
+                # Notify client and lab admins that new test sample is created
+                to = [la.user.email for la in LabAdmin.objects.all()]
+                to.append(ts.lab_sample_id.sample.order().account_number.user.email)
+                send_mail(
+                f'New test sample created from order {ts.lab_sample_id.sample.order().order_number}', # Subject
+                f"""
+A new test sample for {ts.test} has been created from sample {ts.lab_sample_id.sample.id} in {ts.lab_sample_id.location}.
+
+Please do not reply to this email.
+                """, # Body
+                'lims0.system@gmail.com', # From
+                to, # To
+                fail_silently=False, # Raise exception if failure
+            )
+
         if added != '':
             message = 'Added test samples: ' + added[:-2]
             print('Message: ' + message, flush=True)
@@ -110,7 +124,6 @@ def create_lab_sample(request, sample_id):
                 ls.save()
         if added != '':
             message = 'Added lab samples: ' + added[:-2]
-            print('Message: ' + message, flush=True)
             context = {'sample': sample,
                        'locations': locations, 'message': message}
             # Email client about update to their sample
@@ -487,6 +500,24 @@ def update_test_result(request, sample_id):
             result = form.save(commit=False)
             result.test_id = sample
             result.save()
+            # Notify client of new test results
+            send_mail(
+               f'New test results on {sample.lab_sample_id.sample.sample_type} {sample.lab_sample_id.sample.id}',  # Subject
+                f"""
+Dear {sample.lab_sample_id.sample.order().account_number.user.first_name},
+
+New test results for {sample.lab_sample_id}.
+Status: {result.status}
+Result: {result.result}
+Test pass: {result.test_pass}
+
+Please do not reply to this email.
+                """,  # Body
+                'lims0.system@gmail.com',  # From
+                [sample.lab_sample_id.sample.order().account_number.user.email],  # To
+                fail_silently=False,  # Raise exception if failure
+            )
+
         return sample_analysis(request, sample_id)
     else:
         form = TestResultForm(instance=result)
