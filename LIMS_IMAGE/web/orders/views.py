@@ -81,7 +81,6 @@ def shopping(request):
 
     new_ordertests = []
     if request.method == "POST":
-        print(request.POST)
         order = Order(order_number= order_number, account_number=account, submission_date=date)
         no_items_in_order = True # check to make sure we add items to this order
 
@@ -143,24 +142,37 @@ def shopping(request):
         ordertests = ""
         for ot in new_ordertests:
             ordertests += str(ot.test_id) + "\n"
-        for la in LabAdmin.objects.all():
-            send_mail(
-                f'New Order Received: {order.order_number}', # Subject
-                f"""
+        send_mail(
+            f'New Order Received: {order.order_number}', # Subject
+            f"""
 A new order has been received:
-    Order number: {order.order_number}
-    Account Number: {order.account_number}
-    Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
+Order number: {order.order_number}
+Account Number: {order.account_number}
+Submission Date: {order.submission_date:%Y-%m-%d %H:%M}
 Tests Ordered:
-    { ordertests }
+{ ''.join(map(str,[ f'{ot.test_id}, ' for ot in new_ordertests ]))[:-1] }
 
 Please do not reply to this email.
-                """, # Body
-                'lims0.system@gmail.com', # From
-                [la.user.email], # To
-                fail_silently=False, # Raise exception if failure
-            )
+            """, # Body
+            'lims0.system@gmail.com', # From
+            [la.user.email for la in LabAdmin.objects.all()], # To
+            fail_silently=False, # Raise exception if failure
+        )
 
+        # Notify client that their new order is received
+        send_mail(
+            f'Order received: {order.order_number}', #subject
+            f"""
+Your order number {order.order_number} has been received and is currently being processed.
+You can review your order and see updates here: http://localhost:8000/orders/order_page/{order.order_number}.
+Further information will be available soon.
+
+Please do not reply to this email.
+            """, # Body
+            'lims0.system@gmail.com', # From
+            [order.account_number.user.email], # TO
+            fail_silently=False, # Raise exception if failure
+        )
 
         return redirect('orders:order_history')
 
@@ -188,11 +200,8 @@ def order_page(request, order_id):
     if not Client.objects.filter(user=request.user):
         return redirect("accounts:employee_home_page")
     client = Client.objects.filter(user=request.user).first()
-    print(client) # the brain
     account_number = client.account_number
     order = Order.objects.filter(order_number=order_id, account_number=client).first()
-    print(account_number) # 0
-    print(order_id) # 34
 
     samples = OrderSample.samples_for_order(order)
 
@@ -241,7 +250,6 @@ def view_test_sample(request, test_sample_id):
     lab_sample = test_sample.lab_sample_id
     sample = lab_sample.sample
     test_result = TestResult.objects.filter(test_id=test_sample).first()
-    print(test_result.status)
     context = {
                'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample, 'test_result': test_result}
     return render(request, 'orders/view_test_sample.html', context)
