@@ -85,3 +85,43 @@ class accountsViewsTestCase(TestCase):
         self.client.login(username='testuser_c', password='asdf')
         response = self.client.get('/accounts/home_page/')
         self.assertEqual(response.status_code, 302)
+
+
+    def test_admin_registration(self):
+        # Authenticated labadmin
+        self.client.login(username='testuser_a', password='asdf')
+        response = self.client.get('/accounts/admin_registration/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/registration.html')
+
+        # Unauthenticaed user or authenticated client
+        self.client.logout()
+        response = self.client.get('/accounts/admin_registration/')
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/accounts/admin_registration/')
+        self.assertEqual(response.status_code, 302)
+    
+
+    def test_employee_registration(self):
+        # Authenticated labadmin
+        self.client.login(username='testuser_a', password='asdf')
+        response = self.client.get('/accounts/employee_registration/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/registration.html')
+
+        # Unauthenticaed user or authenticated client
+        self.client.logout()
+        response = self.client.get('/accounts/employee_registration/')
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/accounts/employee_registration/')
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_registration(self):
+        # Authenticated labadmin
+        self.client.login(username='testuser_a', password='asdf')
+        response = self.client.get('/accounts/registration/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/registration.html')
