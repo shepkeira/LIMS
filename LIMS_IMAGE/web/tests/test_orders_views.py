@@ -147,3 +147,57 @@ class modelTestCase(TestCase):
         self.client.login(username='testuser_e', password='asdf')
         response = self.client.get('/orders/shopping/')
         self.assertEqual(response.status_code, 302)
+
+
+    def test_appendix_b(self):
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/appendix_b/')
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_order_page(self):
+        # Authenticated client
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/orders/order_page/'+str(self.test_order.id))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/order_page.html')
+
+        # Unauthenticaed user or authenticated employee
+        self.client.logout()
+        response = self.client.get('/orders/order_page/'+str(self.test_order.id))
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/order_page/'+str(self.test_order.id))
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_view_sample(self):
+        # Authenticated client
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/orders/sample/'+str(self.test_sample.id))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/view_sample.html')
+
+        # Unauthenticaed user or authenticated employee
+        self.client.logout()
+        response = self.client.get('/orders/sample/'+str(self.test_sample.id))
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/sample/'+str(self.test_sample.id))
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_view_test_sample(self):
+        # Authenticated client
+        self.client.login(username='testuser_c', password='asdf')
+        response = self.client.get('/orders/test_sample/'+str(self.test_testsample.id))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/view_test_sample.html')
+
+        # Unauthenticaed user or authenticated employee
+        self.client.logout()
+        response = self.client.get('/orders/test_sample/'+str(self.test_testsample.id))
+        self.assertRedirects(response, '/')
+        self.client.login(username='testuser_e', password='asdf')
+        response = self.client.get('/orders/test_sample/'+str(self.test_testsample.id))
+        self.assertEqual(response.status_code, 302)
