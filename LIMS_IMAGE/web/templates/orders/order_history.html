@@ -10,7 +10,7 @@
 <body>
     {% block content %}
     <h1>Order Hisotry</h1>
-    <div class="container">  
+    <div class="container">
         {% if orders %}
             <table>
                 <tr>
@@ -20,7 +20,7 @@
             </tr>
                 {% for order in orders %}
                 <tr>
-                    <td>{{order.submission_date}}</td>                
+                    <td>{{order.submission_date}}</td>
                     <td><a href="{% url 'orders:order_page' order.order_number %}">{{order.order_number}}</a></td>
                     <td>{{ order.arrival_date }}</td>
                 </tr>
