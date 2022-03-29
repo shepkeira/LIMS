@@ -26,6 +26,9 @@ class Order(models.Model):
     submission_date = models.DateField() #date the order was sent
     arrival_date = models.DateField(null=True) #date the order was recieved // null until recieved
 
+    # sorting order by submission date by latest order on top
+    class Meta:
+        ordering = ['-submission_date']
     # this funciton takes in an order and returns the user side order number
     # order number = account number - id e.g. 0001-0001
     def user_side_id(self):
