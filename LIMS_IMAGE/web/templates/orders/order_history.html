@@ -1,24 +1,31 @@
 {% extends 'base.html' %}
+{% load static %}
 <!-- Not having this here makes the interpreter mad -->
-{% block title %}Client Home{% endblock %}
+{% block title %}Order History{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
+{% block additionalStyles %}
+<link rel="stylesheet" href="{% static 'orders/css/order_history.css' %}" />
+<script src="{% static 'laboratory/js/sample_list_search.js' %}" defer></script>
+{% endblock %}
 <body>
-    <h1>Order Hisotry</h1>
     {% block content %}
-
-    {% if orders %}
-        <table>
-            <tr>
-                <th>Order Number</th>
-                <th>Submission Date</th>
+    <h1>Order Hisotry</h1>
+    <div class="container">
+        {% if orders %}
+            <table>
+                <tr>
+                    <th>Submission Date</th>
+                    <th>Order Number</th>
+                    <th>Arrival Date</th>
             </tr>
                 {% for order in orders %}
                 <tr>
+                    <td>{{order.submission_date}}</td>
                     <td><a href="{% url 'orders:order_page' order.order_number %}">{{order.order_number}}</a></td>
-                    <td>{{order.submission_date}}</td>                
+                    <td>{{ order.arrival_date }}</td>
                 </tr>
                 {% endfor %}
-        </table>
+            </table>
     {% else %}
         <strong>There are no orders to show</strong>
     {% endif %}
