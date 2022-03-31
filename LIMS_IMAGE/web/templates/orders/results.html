@@ -24,24 +24,22 @@
       </thead>
       <tbody>
         {% for order_num, samples in results.items %}
-        {% for sample_test_id ,test_result in samples.items %}
-            <tr>
-              <td rowspan={{samples|length}}>{{order_num}}</td>       
-              <td> {{ sample_test_id }}</td>
-                <td> {{ test_result.status }}</td>
-                <td> {{ test_result.result }}</td>
+          {% if samples|length > 0 %}
+            <tr>          
+              <td rowspan="{{samples|length}}">{{ order_num }}</td>
+              <td colspan="3">{{samples|length}} sample(s)</td>
             </tr>
-            {% if samples|length > 1 %}
+            {% for sample_test_id ,test_result in samples.items %}
               {% for sample in samples %}
-              <tr>
-                <td>{{order_num}} </td>
-                <td> {{ sample_test_id }}</td> 
+              <tr>     
+                <td> --</td>
+                <td> {{ sample_test_id }}</td>
                 <td> {{ test_result.status }}</td>
                 <td> {{ test_result.result }}</td>
               </tr>
               {% endfor %}
-            {% endif %}
-          {% endfor %}
+            {% endfor %}
+          {% endif %}
         {% endfor %}
       </tbody>
     </table>
