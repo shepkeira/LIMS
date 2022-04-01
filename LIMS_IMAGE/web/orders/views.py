@@ -55,11 +55,18 @@ def results(request):
             for test_sample in test_samples:
                 testresult = test_sample.test_result()
                 result_dict = {}
-                result_dict['status'] = testresult.status
-                result_dict['result'] = testresult.result
-                result_dict['test'] = test_sample.user_side_id()
-                result_dict['order_number'] = order_number.order_number
-                sample_dict[result_dict['test']] = result_dict
+                if testresult:
+                    result_dict['status'] = testresult.status
+                    result_dict['result'] = testresult.result
+                    result_dict['test'] = test_sample.user_side_id()
+                    result_dict['order_number'] = order_number.order_number
+                    sample_dict[result_dict['test']] = result_dict
+                else:
+                    result_dict['status'] = "not recieved"
+                    result_dict['result'] = "--"
+                    result_dict['test'] = "--"
+                    result_dict['order_number'] = order_number.order_number
+                    sample_dict[result_dict['test']] = result_dict
                 render_results[order_number] = sample_dict
         else:
             sample_dict = {}
