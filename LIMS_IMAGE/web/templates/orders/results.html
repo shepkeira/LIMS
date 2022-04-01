@@ -20,21 +20,14 @@
           <th>Status</th>
           <th>Result</th>     
         </tr>
-        {% for order_num, samples in results.items %}
-          {% for sample_test_id ,test_result in samples.items %}
-          <tr>          
-            <td rowspan="{{samples|length}}">{{order_num}}</td> 
-            <td> {{ sample_test_id }}</td> 
-            <td> {{ test_result.status }}</td>
-            <td> {{ test_result.result }}</td>
-          </tr>   
-            {% for sample in samples %}
-            <tr>        
-              <td> {{ sample.sample_test_id }}</td> 
-              <td> {{ sample.test_result.status }}</td>
-              <td> {{ sample.test_result.result }}</td>
-            </tr>           
-            {% endfor %}
+        {% for order_num, test_result in results.items %}
+          {% for test_id, result in test_result.items %}
+            <tr>
+              <td>{{ result.order_number }}</td>  
+              <td> {{ result.test }}</td> 
+              <td> {{ result.status }}</td>
+              <td> {{ result.result }}</td>
+            </tr>
           {% endfor %}
         {% endfor %}
       </table>
