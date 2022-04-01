@@ -11,41 +11,36 @@
   {% block content %}
   <div class="container">
     <h1>Results</h1>
-    {% if results %}
+      {% if results %}
     <!-- results = {order_num: {test_sample_id: {status: string, result: string}}}} -->
-    <table>
-      <thead>
+      <table>
         <tr>
           <th>Order Number</th>
           <th>Sample ID</th>
           <th>Status</th>
-          <th>Result</th>
+          <th>Result</th>     
         </tr>
-      </thead>
-      <tbody>
         {% for order_num, samples in results.items %}
-          {% if samples|length > 0 %}
-            <tr>          
-              <td rowspan="{{samples|length}}">{{ order_num }}</td>
-              <td colspan="3">{{samples|length}} sample(s)</td>
-            </tr>
-            {% for sample_test_id ,test_result in samples.items %}
-              {% for sample in samples %}
-              <tr>     
-                <td> --</td>
-                <td> {{ sample_test_id }}</td>
-                <td> {{ test_result.status }}</td>
-                <td> {{ test_result.result }}</td>
-              </tr>
-              {% endfor %}
-            {% endfor %}
-          {% endif %}
+          {% for sample_test_id, test_result in samples.items %}
+          <tr>          
+            <td>{{ order_num }} </td>
+              <td>
+                <table>
+                  {% for sample in samples %}
+                  <tr>
+                    <td>{{ sample_test_id }}</td>
+                    <td>{{ test_result.status }}</td>
+                    <td>{{ test_result.result }}</td> 
+                  </tr>
+                  {% endfor %}
+                </table>
+              </td>
+          </tr>
+          {% endfor %}
         {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
+      </table>
+      {% else %}
       <strong>You have no results</strong>
-    {% endif %}
+      {% endif %}
   </div>
   {% endblock %}
-</body>
