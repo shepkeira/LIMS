@@ -1,37 +1,38 @@
 {% extends 'base.html' %}
 <!-- Not having this here makes the interpreter mad -->
+{% load static %}
 {% block title %}LIMS Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
+{% block additionalStyles %}
+<link rel="stylesheet" href="{% static 'orders/css/results.css' %}" />
+<script src="{% static 'laboratory/js/sample_list_search.js' %}" defer></script>
+{% endblock %}
 <body>
-  {% block content%}
+  {% block content %}
   <div class="container">
     <h1>Results</h1>
-    <p>Your results are: </p>
-    
-    {% if results %}
+      {% if results %}
     <!-- results = {order_num: {test_sample_id: {status: string, result: string}}}} -->
-        <ul>
-            {% for order_num, samples in results.items %}
-            <li>Order Number: {{ order_num }}</li>
-            <ul>
-                {% for sample_test_id, test_result in samples.items %}
-                <li>Sample Id: {{ sample_test_id }}</li>
-                <ul>
-                    <li>Status: {{ test_result.status }}</li>
-                    {% if test_result.status == 'Completed' %}
-                    <li>Result: {{ test_result.result }}</li>
-                    {% endif %}
-                </ul>
-                {% endfor %}
-            </ul>
-            {% endfor %}
-        </ul>
-        {% else %}
-         <strong>You have no results</strong>
-        {% endif %}
-
-    <p><a href="{% url 'logout' %}">Log Out</a></p>
-
-    {% endblock %}
+      <table>
+        <tr>
+          <th>Order Number</th>
+          <th>Sample ID</th>
+          <th>Status</th>
+          <th>Result</th>     
+        </tr>
+        {% for order_num, test_result in results.items %}
+          {% for test_id, result in test_result.items %}
+            <tr>
+              <td>{{ result.order_number }}</td>  
+              <td> {{ result.test }}</td> 
+              <td> {{ result.status }}</td>
+              <td> {{ result.result }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </table>
+      {% else %}
+      <strong>You have no results</strong>
+      {% endif %}
   </div>
-</body>
+  {% endblock %}

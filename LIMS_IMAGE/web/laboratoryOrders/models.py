@@ -139,6 +139,9 @@ class TestSample(models.Model):
     def barcode(self):
         return Barcoder().createBarcode("S-" + self.user_side_id())
 
+    def test_result(self):
+        return TestResult.objects.filter(test_id = self).first()
+
 
 # Result for a given instance of a test for a sample
 class TestResult(models.Model):

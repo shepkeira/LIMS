@@ -22,6 +22,7 @@
         <p>No Information Recorded About Sample</p>
     {% endif %}
     <p><a href = "{% url 'laboratory:update_test_result' test_sample.id %}">Update Results</a></p>
+    <p><a href = "{% url 'laboratory:view_test_sample' test_sample.id %}">Return to Test Sample Page</a></p>
 
   {% endblock %}
   </div>
