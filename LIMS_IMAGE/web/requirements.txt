@@ -11,3 +11,4 @@ pyzbar[scripts]
 numpy<=1.22.1
 Pillow
 importlib-metadata
+django-crispy-forms

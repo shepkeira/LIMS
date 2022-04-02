@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'orders',
     'training',
     'laboratoryOrders',
+    'crispy_forms'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
