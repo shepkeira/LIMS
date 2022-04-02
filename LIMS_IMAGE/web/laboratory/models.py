@@ -160,7 +160,6 @@ class InventoryItem(models.Model):
         default=False)  # if this item is discontinued
     notes = models.TextField(default="No notes")  # notes about this item
 
-
 class Image(models.Model):
     """
     class for images being uploaded (used as part of barcodes)

@@ -13,10 +13,6 @@ from orders.models import Order
 from laboratory.models import InventoryItem, Location, Test
 from .forms import ImageForm, LocationForm, TestForm
 
-
-# home page for laboratory workers
-
-
 def home_page(request):
     """
     home page for employees of the laboratory
@@ -99,7 +95,6 @@ def create_test_sample(request, sample_id):
     context = {'sample': lab_sample, 'tests': tests, 'message': message}
     return render(request, 'laboratory/analysis_sample.html', context)
 
-
 def create_lab_sample(request, sample_id):
     """
     create lab_samples from samples
@@ -139,10 +134,6 @@ def create_lab_sample(request, sample_id):
     context = {'sample': sample, 'locations': locations, 'message': message}
     return render(request, 'laboratory/distribute_sample.html', context)
 
-
-# page listing all samples for laboratory workers
-
-
 def sample_list(request):
     """
     list all samples (not lab or test samples)
@@ -156,9 +147,6 @@ def sample_list(request):
     list_of_samples = Sample.all_samples()
     context = {'samples': list_of_samples}
     return render(request, 'laboratory/sample_list.html', context)
-
-# page listing all samples for laboratory workers
-
 
 def order_list(request):
     """
@@ -256,7 +244,6 @@ def validate_sample(request, sample_id):
         form = InspectionForm(instance=inspection)
         return render(request, 'laboratory/validate.html', {'sample': sample, 'form': form})
 
-
 def read_barcode(request):
     """
     read a barcode uploaded
@@ -336,9 +323,6 @@ def read_barcode(request):
         form = ImageForm()
     return render(request, 'laboratory/read_barcode.html', {'form': form})
 
-# page listing all samples for laboratory workers
-
-
 def view_barcode(request, sample_id):
     """
     view a sample barcode for a specific sample_id
@@ -359,7 +343,6 @@ def view_barcode(request, sample_id):
     context = {'barcode_file_path': barcode_file_path, "sample_id": sample_id}
     return render(request, 'laboratory/view_barcode.html', context)
 
-
 def view_order(request, order_id):
     """
     view a single order
@@ -378,7 +361,6 @@ def view_order(request, order_id):
     context = {'order': order, 'samples': samples,
                'order_inspected': order_inspected}
     return render(request, 'laboratory/view_order.html', context)
-
 
 def view_sample(request, sample_id):
     """
@@ -409,7 +391,6 @@ def view_sample(request, sample_id):
                'test_samples': test_samples, 'inspection': inspection, 'order': order}
     return render(request, 'laboratory/view_sample.html', context)
 
-
 def view_lab_sample(request, lab_sample_id):
     """
     view a specific lab sample
@@ -436,7 +417,6 @@ def view_lab_sample(request, lab_sample_id):
     context = {'barcode_file_path': barcode_file_path,
                'lab_sample': lab_sample, 'test_samples': test_samples, 'sample': sample}
     return render(request, 'laboratory/view_lab_sample.html', context)
-
 
 def view_test_sample(request, test_sample_id):
     """
@@ -465,7 +445,6 @@ def view_test_sample(request, test_sample_id):
                'lab_sample': lab_sample, 'test_sample': test_sample, 'sample': sample}
     return render(request, 'laboratory/view_test_sample.html', context)
 
-
 def inventory(request):
     """
     view inventory items
@@ -477,7 +456,6 @@ def inventory(request):
     inventory_list = InventoryItem.objects.all()
     context = {'inventory_list': inventory_list}
     return render(request, 'laboratory/inventory.html', context)
-
 
 def lab_analysis(request, lab_id):
     """
@@ -493,7 +471,6 @@ def lab_analysis(request, lab_id):
     context = {'lab': lab, 'samples': lab_samples}
     return render(request, 'laboratory/lab_analysis.html', context)
 
-
 def analysis(request):
     """
     view all laboratories for which you can see analysis
@@ -506,7 +483,6 @@ def analysis(request):
     labs = Location.objects.all()
     context = {'labs': labs}
     return render(request, 'laboratory/analysis.html', context)
-
 
 def sample_analysis(request, sample_id):
     """
@@ -526,7 +502,6 @@ def sample_analysis(request, sample_id):
     context = {'lab_sample': lab_sample, 'test_sample': test_sample,
                'sample': sample, 'result': test_result}
     return render(request, 'laboratory/test_analysis.html', context)
-
 
 def update_test_result(request, sample_id):
     """
@@ -552,7 +527,6 @@ def update_test_result(request, sample_id):
     else:
         form = TestResultForm(instance=result)
         return render(request, 'laboratory/update_results.html', {'sample': sample, 'form': form})
-
 
 def update_sample(request, sample_id):
     """

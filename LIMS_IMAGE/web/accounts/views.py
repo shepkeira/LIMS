@@ -61,7 +61,6 @@ def employee_registration(request):
     context = {'form': form, 'profile_form': worker_form}
     return render(request, 'registration/registration.html', context)
 
-
 def registration(request):
     """
     register a new client
@@ -85,7 +84,6 @@ def registration(request):
     context = {'form': form, 'profile_form': profile_form}
     return render(request, 'registration/registration.html', context)
 
-# this function is used to rediect a user after login to the correct home_page
 def login_success(request):
     """
     If user is authenticated, redirect to their homepage
@@ -99,20 +97,17 @@ def login_success(request):
     else:
         return redirect("/")
 
-# this function is for the customer home page, which if found in the orders app
 def customer_home_page(_request):
     """
     Direct to customer home page, in orders app
     """
     return redirect("orders:home")
 
-# this function is for the employee home page, which is found in the laboratory app
 def employee_home_page(_request):
     """
     Direct to employee home page, in laboratory app
     """
     return redirect("laboratory:lab_home")
-
 
 def home_page(request):
     """

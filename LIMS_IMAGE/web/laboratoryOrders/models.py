@@ -25,7 +25,6 @@ class Sample(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True)  # when the sample was updated
 
-
     def user_side_id(self):
         """
         this function uses a sample, and returns the user side sample_number
@@ -42,13 +41,11 @@ class Sample(models.Model):
         """
         return Barcoder().create_barcode("S-" + self.user_side_id())
 
-    # this function returns a list of all samples
     def all_samples():
         """
         all the samples
         """
         return Sample.objects.all()
-
 
     def lab_samples(self):
         """
@@ -104,7 +101,6 @@ class Sample(models.Model):
         """
         return self.order().account_number.user
 
-
 class SampleInspection(models.Model):
     """
     Sample Inspection results
@@ -130,7 +126,6 @@ class OrderSample(models.Model):
     # By default, Django gives each model an auto-incrementing primary
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-
 
     def user_side_id(self):
         """
@@ -161,7 +156,6 @@ class LabSample(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
-
     def user_side_id(self):
         """
         this function takes in a lab sample, and returns the user side lab sample id
@@ -186,7 +180,6 @@ class LabSample(models.Model):
         """
         return OrderSample.objects.filter(sample=self.sample).first().order.account_number.user
 
-
 class TestSample(models.Model):
     """
     test sample, separates the lab sample into different sub-samples for each test
@@ -196,7 +189,6 @@ class TestSample(models.Model):
     # By default, Django gives each model an auto-incrementing primary key
     lab_sample_id = models.ForeignKey(LabSample, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
-
 
     def user_side_id(self):
         """
@@ -272,7 +264,6 @@ class OrderTest(models.Model):
     # By default, Django gives each model an auto-incrementing primary key
     order_number = models.ForeignKey(Order, on_delete=models.CASCADE)
     test_id = models.ForeignKey(Test, on_delete=models.CASCADE, null=True)
-
 
     def test_ids_for_user(user):
         """
