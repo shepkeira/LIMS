@@ -18,7 +18,8 @@
   <body>
     <main>
       <!-- TODO: Navbar content could be dynamic and pulled from database -->
-      <nav id = "navbar"
+      <nav
+        id="navbar"
         class="navbar navbar-expand-lg navbar-light"
         style="background-color: #f3f2f1"
       >
@@ -98,9 +99,9 @@
                   >Order Tests</a
                 >
               </li>
-              {% endif %} 
+              {% endif %}
               <!-- Register new workers + admins -->
-              {% if request.user|has_group:"Lab admins" or request.user.is_superuser %}
+              {%if request.user|has_group:"Lab admins" or request.user.is_superuser%}
               <li class="nav-link">
                 <a
                   class="nav-link"
@@ -119,7 +120,7 @@
             <a href="{% url 'accounts:registration' %}" class="btn btn-primary"
               >Sign Up</a
             >
-            <a href="{% url 'login' %}" class="btn btn-outline-primary ms-2"
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary ms-2"
               >Log In</a
             >
             {% endif %}

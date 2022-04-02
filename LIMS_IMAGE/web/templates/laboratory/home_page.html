@@ -1,34 +1,36 @@
-{% extends 'base.html' %}
-{% load static %} 
+{% extends 'base.html' %} {% load static %}
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Laboratory Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% block additionalStyles %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}"/> 
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
     {% endblock %}
   </head>
-<body>
-  {% block content%}
-  <div class="container">
-    <h1>Employee Home</h1>
-    {% if user.is_authenticated %}
-    <section id ="main">
-      <div class ="container my-5">
-          <img src ="{% static 'image/employee-homepage_image.webp' %}" alt ="Background image with Laboraroty theme" height = 400px>
+  <body>
+    {% block content%}
+    <div class="container">
+      <div class="px-4 pt-5 my-5 text-center">
+        <h1 class="display-4 fw-bold">Employee Home</h1>
+        <div class="overflow-hidden">
+          <div class="container px-5">
+            <img
+              src="{% static 'image/employee-homepage_image.webp' %}"
+              class="img-fluid border rounded-3 mb-4"
+              alt="Example image"
+              width="700"
+              height="500"
+              loading="lazy"
+            />
+          </div>
+        </div>
       </div>
-    </section>
-    {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
-    or
-    <a href="{% url 'accounts:registration' %}">Sign Up</a>  
-    {% endif %}
-     {% endblock %}
-  </div>
-</body>
+      {% endblock %}
+    </div>
+  </body>
+</html>
