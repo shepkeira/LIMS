@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-<!-- Required for each use of bootstrap in a template -->
-{% load bootstrap5 %}
+<!-- required to use crispy forms -->
+{% load crispy_forms_tags %}
 <!-- Sets title of the block -->
 {% block title %}Login{% endblock %}
 <!-- Denotes start of block content -->
@@ -9,12 +9,10 @@
   <div class="container">
     <h2>Log In</h2>
     <form method="post" class="w-50">
-      <!-- Init bootstrap form -->
-      {{ form.as_p }}
-      <!-- Init bootstrap buttons -->
-      {% buttons %}
-      <button type="submit" class="btn btn-primary">Log In</button>
-      {% endbuttons %} {% csrf_token %} 
+      <!-- Init crispy bootstrap form -->
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary my-2">Log In</button>
+      {% csrf_token %}
     </form>
   </div>
 </body>
