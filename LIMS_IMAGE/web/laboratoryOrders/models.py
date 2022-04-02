@@ -241,7 +241,7 @@ class TestResult(models.Model):
     date_entry = models.DateTimeField(
         auto_now_add=True) # entry of when the testResult was created
 
-    def get_test_results(self, tests):
+    def get_test_results(tests):
         """
         takes in a list of tests and returns a list of results for those tests
         """
