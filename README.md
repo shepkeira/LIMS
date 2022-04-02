@@ -135,3 +135,8 @@ The [testing README](LIMS_IMAGE/web/tests/README.md) is found in the testing fol
 This is required to persist data from the database in the repository. This will export the data as a backup file that will be used to initialize the database next time the container is built. **When pulling updates with a new database backup, you must rebuild the container.**
 
 To create a database backup, simply run the following command while the container is running: `docker exec -it lims_web_server python manage.py dumpdata -o datadump.json` (this command also assumes the current directory is /LIMS_IMAGE)
+
+## Linting and Comments
+
+We have done our best to leave explanitory comments throughout the code.
+We have linted the code to the best of our ability using pylint

@@ -1,29 +1,36 @@
+"""
+views for laboratory app
+"""
+import os
 from django.shortcuts import render, redirect
-from laboratoryOrders.models import SampleInspection
+from laboratoryOrders.models import Sample, LabSample, TestSample
+from laboratoryOrders.models import OrderSample, OrderTest, TestResult, SampleInspection
 from laboratoryOrders.forms import InspectionForm, TestResultForm, SampleForm
 from accounts.models import Client, LabWorker, LabAdmin
-from .forms import ImageForm, LocationForm, TestForm
 from src.barcoder import Barcoder
-import os
-from laboratoryOrders.models import Sample, LabSample, TestSample, OrderSample, OrderTest, TestResult
+from src.email_notification import EmailNotifications
 from orders.models import Order
 from laboratory.models import InventoryItem, Location, Test
-from django.core.mail import send_mail
+from .forms import ImageForm, LocationForm, TestForm
+
 
 # home page for laboratory workers
 
 
 def home_page(request):
+    """
+    home page for employees of the laboratory
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     return render(request, 'laboratory/home_page.html')
 
-# Show samples ready to be distributed
-
-
 def ready_for_distribution(request):
+    """
+    Show samples ready to be distributed
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -31,14 +38,17 @@ def ready_for_distribution(request):
     # Get samples that have passed inspection, but don't yet have a lab sample
     sample_results = Sample.objects.all()
     samples = []
-    for s in sample_results:
-        if not s.lab_samples() and s.inspection_results() == 'Valid':
-            samples.append([s, s.user_side_id()])
+    for sample_result in sample_results:
+        if not sample_result.lab_samples() and sample_result.inspection_results() == 'Valid':
+            samples.append([sample_result, sample_result.user_side_id()])
 
     context = {'samples': samples}
     return render(request, 'laboratory/distribution.html', context)
 
 def create_test_sample(request, sample_id):
+    """
+    create test_samples from lab_samples
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -60,34 +70,24 @@ def create_test_sample(request, sample_id):
         added = ''
         for result in results:
             test = Test.objects.filter(name=result[0]).first()
-            if result[0] != 'csrfmiddlewaretoken' and not TestSample.objects.filter(lab_sample_id=sample_id, test=test):
-                ts = TestSample(
+            if result[0] != 'csrfmiddlewaretoken' and not \
+               TestSample.objects.filter(lab_sample_id=sample_id, test=test):
+                test_sample = TestSample(
                     lab_sample_id=LabSample.objects.filter(
                         id=sample_id).first(),
                     test=Test.objects.filter(name=result[0]).first()
                 )
-                added += str(ts) + ', '
-                ts.save()
-                tr = TestResult(
+                added += str(test_sample) + ', '
+                test_sample.save()
+                test_result = TestResult(
                     status='Recieved',
-                    test_id=ts,
+                    test_id=test_sample,
                 )
-                tr.save()
+                test_result.save()
 
                 # Notify client and lab admins that new test sample is created
-                to = [la.user.email for la in LabAdmin.objects.all()]
-                to.append(ts.lab_sample_id.sample.order().account_number.user.email)
-                send_mail(
-                f'New test sample created from order {ts.lab_sample_id.sample.order().order_number}', # Subject
-                f"""
-A new test sample for {ts.test} has been created from sample {ts.lab_sample_id.sample.id} in {ts.lab_sample_id.location}.
-
-Please do not reply to this email.
-                """, # Body
-                'lims0.system@gmail.com', # From
-                to, # To
-                fail_silently=False, # Raise exception if failure
-            )
+                email_notification = EmailNotifications()
+                email_notification.test_sample_notif(test_sample)
 
         if added != '':
             message = 'Added test samples: ' + added[:-2]
@@ -101,6 +101,9 @@ Please do not reply to this email.
 
 
 def create_lab_sample(request, sample_id):
+    """
+    create lab_samples from samples
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -115,30 +118,21 @@ def create_lab_sample(request, sample_id):
         results = request.POST.items()
         added = ''
         for result in results:
-            if result[0] != 'csrfmiddlewaretoken' and not LabSample.objects.filter(sample=sample_id, location__code=result[1]):
-                ls = LabSample(
+            if result[0] != 'csrfmiddlewaretoken' and not \
+                LabSample.objects.filter(sample=sample_id, location__code=result[1]):
+                lab_sample = LabSample(
                     sample=Sample.objects.filter(id=sample_id).first(),
                     location=Location.objects.filter(code=result[1]).first()
                 )
-                added += str(ls) + ', '
-                ls.save()
+                added += str(lab_sample) + ', '
+                lab_sample.save()
         if added != '':
             message = 'Added lab samples: ' + added[:-2]
             context = {'sample': sample,
                        'locations': locations, 'message': message}
             # Email client about update to their sample
-            print("Sending email to: "+OrderSample.objects.filter(sample=ls.sample).first().order.account_number.user.email, flush=True)
-            send_mail(
-                f'New lab sample created from your order', # Subject
-                f"""
-Your sample has been assigned and distributed to the {ls.location}
-
-Please do not reply to this email.
-                """, # Body
-                'lims0.system@gmail.com', # From
-                [OrderSample.objects.filter(sample=ls.sample).first().order.account_number.user.email], # To
-                fail_silently=False, # Raise exception if failure
-            )
+            email_nofication = EmailNotifications()
+            email_nofication.sample_distributed(lab_sample)
 
             return view_sample(request, sample_id)
 
@@ -150,34 +144,47 @@ Please do not reply to this email.
 
 
 def sample_list(request):
+    """
+    list all samples (not lab or test samples)
+    currently unsorted
+    search by any visible field
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    sample_list = Sample.all_samples()
-    context = {'samples': sample_list}
+    list_of_samples = Sample.all_samples()
+    context = {'samples': list_of_samples}
     return render(request, 'laboratory/sample_list.html', context)
 
 # page listing all samples for laboratory workers
 
 
 def order_list(request):
+    """
+    list all orders
+    currently unsorted
+    search by any visible field
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
-    sample_list = Order.objects.all()
-    context = {'samples': sample_list}
+    list_of_samples = Order.objects.all()
+    context = {'samples': list_of_samples}
     return render(request, 'laboratory/order_list.html', context)
 
 def create_test(request):
+    """
+    create new tests to perform on a test_sample
+    needs unique code and name
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if not LabAdmin.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     if request.method == 'POST':
         form = TestForm(request.POST)
-        message = ""
         if form.is_valid():
             test = form.save(commit=False)
             test.rush = False
@@ -188,21 +195,32 @@ def create_test(request):
         return render(request, 'laboratory/test_create.html', {'form': form})
 
 def create_location(request):
+    """
+    create a new location (laboratory)
+    this is where lab_samples are distributed to
+    unique name and code
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if not LabAdmin.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     if request.method == 'POST':
         form = LocationForm(request.POST)
-        message = ""
         if form.is_valid():
-            test = form.save()
+            form.save() # test
         return redirect("laboratory:admin_home_page")
     else:
         form = LocationForm()
         return render(request, 'laboratory/lab_create.html', {'form': form})
 
 def admin_page(request):
+    """
+    admin page with features unique to admin
+    currently
+    - create new employees
+    - create new test
+    - creat new location
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if not LabAdmin.objects.filter(user=request.user):
@@ -210,6 +228,11 @@ def admin_page(request):
     return render(request, 'laboratory/admin_home_page.html')
 
 def validate_sample(request, sample_id):
+    """
+    validate a sample recieved in an order
+    to be valid must check "Inspection Pass" for it to be valid
+    recieved quantity must be filled in
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -218,32 +241,15 @@ def validate_sample(request, sample_id):
     inspection = SampleInspection.objects.filter(sample=sample).first()
     if request.method == 'POST':
         form = InspectionForm(request.POST, instance=inspection)
-        message = ""
         if form.is_valid():
             inspection = form.save(commit=False)
             inspection.sample = sample
             inspection.inspector = request.user
             inspection.save()
 
-            # Send email to client
-            send_mail(
-                'Inspection Received',  # Subject
-                f"""
-                Dear {inspection.sample.order().account_number.user.first_name},
-
-                Your {inspection.sample.sample_type} sample ID {inspection.sample.id} order #{inspection.sample.order().order_number} has been inspected by {inspection.inspector.first_name}.
-                Results:
-                    received quantity: {inspection.received_quantity}
-                    Package intact: {inspection.package_intact}
-                    Material intact: {inspection.material_intact}
-                    Inspection pass: {inspection.inspection_pass}
-
-                Please do not reply to this email.
-                """,  # Body
-                'lims0.system@gmail.com',  # From
-                [inspection.sample.order().account_number.user.email],  # To
-                fail_silently=False,  # Raise exception if failure
-            )
+            # Send email to client when sample validated
+            inspection_email_notification = EmailNotifications()
+            inspection_email_notification.sample_inspected(inspection)
 
         return view_sample(request, sample_id)
     else:
@@ -252,6 +258,10 @@ def validate_sample(request, sample_id):
 
 
 def read_barcode(request):
+    """
+    read a barcode uploaded
+    TODO figure out how to actually scan an image instead of upload
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -260,7 +270,7 @@ def read_barcode(request):
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
         mypath = "../../src/uploads/images"
-        for root, dirs, files in os.walk(mypath):
+        for root, _dirs, files in os.walk(mypath):
 
             for file in files:
                 if file.endswith('jpg') or file.endswith('png') or file.endswith('gif'):
@@ -272,51 +282,55 @@ def read_barcode(request):
             img_path = os.path.basename(img_obj.image.url)
 
             image_path_2 = os.path.join("../../src/uploads/images", img_path)
-            img_barcode = Barcoder().scanBarcode(img_obj.image.url)
+            img_barcode = Barcoder().scan_barcode(img_obj.image.url)
+            barcode_type = "invalid"
             if isinstance(img_barcode, str):
                 barcode_parts = img_barcode.split("-")
-                id = 0
+                id_from_barcode = 0
                 print("----------")
                 print(barcode_parts)
-                # check which barcode type you are using by prefix S=sample; I=inventory; E=equipment
-                if barcode_parts[0] == "S": # right now we only have barcodes implemented for samples (using the S prefix)
+                # check which barcode type you are using by prefix S=sample I=inventory E=equipment
+                if barcode_parts[0] == "S": # only barcodes for samples are implemented (S prefix)
                     if len(barcode_parts) < 3:
-                        type = "invalid"
+                        barcode_type = "invalid"
                         # not valid
                     elif len(barcode_parts) == 3:
                         # Sample barcode S-1-61
-                        order_id = barcode_parts[1]
-                        id = barcode_parts[2]
-                        type = "sample"
+                        _order_id = barcode_parts[1]
+                        id_from_barcode = barcode_parts[2]
+                        barcode_type = "sample"
                     elif len(barcode_parts) == 4:
                         # Lab Sample S-1-61-A
-                        order_id = barcode_parts[1]
+                        _order_id = barcode_parts[1]
                         sample_id = barcode_parts[2]
                         lab_code = barcode_parts[3]
                         sample = Sample.objects.filter(id = sample_id).first()
                         lab = Location.objects.filter(code = lab_code).first()
-                        id = LabSample.objects.filter(location = lab, sample = sample).first().id
-                        type = "lab_sample"
+                        id_from_barcode = LabSample.objects \
+                            .filter(location = lab, sample = sample).first().id
+                        barcode_type = "lab_sample"
                     elif len(barcode_parts) == 5:
                         # Test Sample S-24-22-M-10
-                        order_id = barcode_parts[1]
+                        _order_id = barcode_parts[1]
                         sample_id = barcode_parts[2]
                         lab_code = barcode_parts[3]
                         test_id = barcode_parts[4]
                         sample = Sample.objects.filter(id = sample_id).first()
                         lab = Location.objects.filter(code = lab_code).first()
-                        lab_sample_id = LabSample.objects.filter(location = lab, sample = sample).first()
+                        lab_sample_id = LabSample.objects \
+                            .filter(location = lab, sample = sample).first()
                         test = Test.objects.filter(id = test_id).first()
-                        id = TestSample.objects.filter(lab_sample_id = lab_sample_id, test = test).first().id
-                        type = "test_sample"
+                        id_from_barcode = TestSample.objects \
+                            .filter(lab_sample_id = lab_sample_id, test = test).first().id
+                        barcode_type = "test_sample"
                     else:
-                        type = "error"
-                        id = 0
+                        barcode_type = "error"
+                        id_from_barcode = 0
             else:
-                type = "error"
-                id = 0
+                barcode_type = "error"
+                id_from_barcode = 0
             context = {'form': form, 'img_obj': img_obj, 'img_url': image_path_2,
-                       'img_barcode': img_barcode, 'type': type, 'id': id}
+                       'img_barcode': img_barcode, 'type': barcode_type, 'id': id_from_barcode}
             return render(request, 'laboratory/read_barcode.html', context)
     else:
         form = ImageForm()
@@ -326,13 +340,16 @@ def read_barcode(request):
 
 
 def view_barcode(request, sample_id):
+    """
+    view a sample barcode for a specific sample_id
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     # delete old files so we don't end up with a bunch in memory
     mypath = os.path.join(os.getcwd(), "static/barcodes")
-    for root, dirs, files in os.walk(mypath):
+    for root, _dirs, files in os.walk(mypath):
         for file in files:
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
@@ -344,6 +361,9 @@ def view_barcode(request, sample_id):
 
 
 def view_order(request, order_id):
+    """
+    view a single order
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -361,13 +381,16 @@ def view_order(request, order_id):
 
 
 def view_sample(request, sample_id):
+    """
+    view a specific sample
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     # delete old files so we don't end up with a bunch in memory
     mypath = os.path.join(os.getcwd(), "static/barcodes")
-    for root, dirs, files in os.walk(mypath):
+    for root, _dirs, files in os.walk(mypath):
         for file in files:
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
@@ -388,13 +411,16 @@ def view_sample(request, sample_id):
 
 
 def view_lab_sample(request, lab_sample_id):
+    """
+    view a specific lab sample
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     # delete old files so we don't end up with a bunch in memory
     mypath = os.path.join(os.getcwd(), "static/barcodes")
-    for root, dirs, files in os.walk(mypath):
+    for root, _dirs, files in os.walk(mypath):
         for file in files:
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
@@ -413,13 +439,16 @@ def view_lab_sample(request, lab_sample_id):
 
 
 def view_test_sample(request, test_sample_id):
+    """
+    view a specific test sample
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
         return redirect("accounts:customer_home_page")
     # delete old files so we don't end up with a bunch in memory
     mypath = os.path.join(os.getcwd(), "static/barcodes")
-    for root, dirs, files in os.walk(mypath):
+    for root, _dirs, files in os.walk(mypath):
         for file in files:
             if file.endswith('jpg'):
                 os.remove(os.path.join(root, file))
@@ -438,6 +467,9 @@ def view_test_sample(request, test_sample_id):
 
 
 def inventory(request):
+    """
+    view inventory items
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -448,6 +480,9 @@ def inventory(request):
 
 
 def lab_analysis(request, lab_id):
+    """
+    view samples in a specific lab
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -460,6 +495,9 @@ def lab_analysis(request, lab_id):
 
 
 def analysis(request):
+    """
+    view all laboratories for which you can see analysis
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -471,6 +509,10 @@ def analysis(request):
 
 
 def sample_analysis(request, sample_id):
+    """
+    analysis of a test_sample
+    viewing the results of the test sample
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -487,6 +529,9 @@ def sample_analysis(request, sample_id):
 
 
 def update_test_result(request, sample_id):
+    """
+    update the results of a test_sample
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -495,28 +540,13 @@ def update_test_result(request, sample_id):
     result = TestResult.objects.filter(test_id=sample).first()
     if request.method == 'POST':
         form = TestResultForm(request.POST, instance=result)
-        message = ""
         if form.is_valid():
             result = form.save(commit=False)
             result.test_id = sample
             result.save()
             # Notify client of new test results
-            send_mail(
-               f'New test results on {sample.lab_sample_id.sample.sample_type} {sample.lab_sample_id.sample.id}',  # Subject
-                f"""
-Dear {sample.lab_sample_id.sample.order().account_number.user.first_name},
-
-New test results for {sample.lab_sample_id}.
-Status: {result.status}
-Result: {result.result}
-Test pass: {result.test_pass}
-
-Please do not reply to this email.
-                """,  # Body
-                'lims0.system@gmail.com',  # From
-                [sample.lab_sample_id.sample.order().account_number.user.email],  # To
-                fail_silently=False,  # Raise exception if failure
-            )
+            result_email_notification = EmailNotifications()
+            result_email_notification.test_result_notif(sample, result)
 
         return sample_analysis(request, sample_id)
     else:
@@ -525,6 +555,9 @@ Please do not reply to this email.
 
 
 def update_sample(request, sample_id):
+    """
+    update the details of a sample
+    """
     if not request.user.is_authenticated:
         return redirect("/")
     if Client.objects.filter(user=request.user):
@@ -533,7 +566,6 @@ def update_sample(request, sample_id):
     # result = TestResult.objects.filter(test_id = sample).first()
     if request.method == 'POST':
         form = SampleForm(request.POST, instance=sample)
-        message = ""
         if form.is_valid():
             sample = form.save(commit=False)
             sample.lab_personel = LabWorker.objects.filter(

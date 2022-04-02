@@ -1,5 +1,7 @@
+"""
+urls related to laboratory
+"""
 from django.urls import path
-
 from laboratory import views
 
 app_name = "laboratory"

@@ -1,19 +1,29 @@
+"""
+models related to training
+"""
 from django.db import models
-from accounts.models import *
+from accounts.models import LabWorker
 
-# Trainings avalible to a lab employee
 class Training(models.Model):
-    #By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    """
+    Trainings avalible to a lab employee
+    """
+    #By default, Django gives each model an auto-incrementing primary key
     name = models.CharField(max_length=100)
 
-# A schedule of when the next training are avalible
 class TrainingSchedule(models.Model):
-    #By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    """
+    A schedule of when the next training are avalible
+    """
+    #By default, Django gives each model an auto-incrementing primary key
     date_time = models.DateTimeField()
     training_type = models.ForeignKey(Training, on_delete=models.CASCADE)
 
-# a connection of lab employees who have attened different training sessions, via training schedule
 class TrainingAttendence(models.Model):
-    #By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    """
+    a connection of lab employees who have attened
+    different training sessions, via training schedule
+    """
+    #By default, Django gives each model an auto-incrementing primary key
     training_instance = models.ForeignKey(TrainingSchedule, on_delete=models.CASCADE)
     attendee = models.ForeignKey(LabWorker, on_delete=models.CASCADE)

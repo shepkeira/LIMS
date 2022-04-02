@@ -23,8 +23,8 @@
         {% for order_num, test_result in results.items %}
           {% for test_id, result in test_result.items %}
             <tr>
-              <td>{{ result.order_number }}</td>  
-              <td> {{ result.test }}</td> 
+              <td><a href="{% url 'orders:order_page' result.order_number %}">{{ result.order_number }}</a></td>  
+              <td> {% if result.test != "--" %}<a href = "{% url 'orders:view_test_sample' result.test_sample_id %}">{{ result.test }}</a>{% else %}{{ result.test }}{% endif %}</td> 
               <td> {{ result.status }}</td>
               <td> {{ result.result }}</td>
             </tr>
