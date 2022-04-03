@@ -83,9 +83,9 @@ def results(request):
             result_dict = {}
             result_dict['status'] = "not recieved"
             result_dict['result'] = "--"
-            result_dict['test'] = test_sample.user_side_id()
+            result_dict['test'] = "--"
             result_dict['order_number'] = order_number.order_number
-            result_dict['test_sample_id'] = test_sample.id
+            result_dict['test_sample_id'] = None
             sample_dict[result_dict['test']] = result_dict
             render_results[order_number] = sample_dict
 
