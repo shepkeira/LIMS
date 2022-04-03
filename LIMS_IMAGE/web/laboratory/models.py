@@ -1,37 +1,37 @@
-from django.db import models
-from accounts.models import *
+"""
+models realted to laboratory
+"""
 from datetime import datetime
-
-# Create your models here.
-
-# These are locations within a lab
-
+from django.db import models
 
 class Location(models.Model):
+    """
+    These are locations within a lab
+    """
     def __str__(self):
-        return self.name  # locations are referenced by the name of the location
-    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+        return str(self.name)  # locations are referenced by the name of the location
+    # By default, Django gives each model an auto-incrementing primary key
     name = models.CharField(max_length=100, unique=True)
     # code is used for lab specific sample numbers (examples, A or M)
     code = models.CharField(max_length=100, unique=True)
 
-# These are instruments found in a specific locaiton at a lab
-
-
 class Instrument(models.Model):
+    """
+    These are instruments found in a specific locaiton at a lab
+    """
     def __str__(self):
-        return self.type  # instruments are referenced by thier type
-    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+        return str(self.type)  # instruments are referenced by thier type
+    # By default, Django gives each model an auto-incrementing primary key
     type = models.CharField(max_length=100)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
-# Possible tests that can be done by this laboratoy
-
-
 class Test(models.Model):
+    """
+    Possible tests that can be done by this laboratoy
+    """
     def __str__(self):
-        return self.name  # tests are referenced by their name
-    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+        return str(self.name)  # tests are referenced by their name
+    # By default, Django gives each model an auto-incrementing primary key
     name = models.CharField(max_length=100, unique=True)  # name of the test
     # sample-type for the test (example, Daily or Environment)
     sample_type = models.CharField(max_length=100, null=True)
@@ -43,15 +43,24 @@ class Test(models.Model):
     # this limit is used to determine if a result passes or fails a test
     limit = models.CharField(max_length=100)
 
-    # this function returns the name for individual tests
-    def get_Test_name(self):
+    def get_test_name(self):
+        """
+        this function returns the name for individual tests
+        """
         return str(self.name)
 
-    # this function returns the sample types such as Daily and Cosmetics
     def get_sample_type(self):
+        """
+        this function returns the sample types such as Daily and Cosmetics
+        """
         return str(self.sample_type)
 
     def get_test_by_type():
+        """
+        get tests by type dictionary
+        key = sample_type
+        value = Tests
+        """
         tests_by_type ={}
         tests = Test.objects.all()
         for test in tests:
@@ -62,24 +71,24 @@ class Test(models.Model):
                 tests_by_type[sample_type] = [test]
         return tests_by_type
 
-# What instruments are used by different tests (many to many)
-
-
 class TestInstrument(models.Model):
+    """
+    What instruments are used by different tests (many to many)
+    """
     def __str__(self):
         return str(self.instrument.type) + " for " + str(self.test_id.name)
-    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    # By default, Django gives each model an auto-incrementing primary key
     test_id = models.ForeignKey(
         Test, on_delete=models.CASCADE)  # reference to the test
     # refernece to the instrument
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
 
-# The inventory of items related to tests
-
-
 class InventoryItem(models.Model):
+    """
+    The inventory of items related to tests
+    """
     def __str__(self):
-        return self.type
+        return str(self.type)
     O = 'Ordered'
     R = 'Received'
     S = 'Shipped'
@@ -110,7 +119,7 @@ class InventoryItem(models.Model):
         (CON, 'Consumable'),
         (GLA, 'Glassware'),
     )
-    # By default, Django gives each model an auto-incrementing primary key with the type specified per app
+    # By default, Django gives each model an auto-incrementing primary key
     # if the item should be reordered automatically
     reorder_automatically = models.BooleanField(default=False)
     catalog_number = models.CharField(
@@ -144,12 +153,15 @@ class InventoryItem(models.Model):
         default=0)  # reorder level of this item
     item_reorder_level = models.IntegerField(
         default=0)  # reorder level of this item
-    # estimated need to have in inventory, example this takes 1 week to arrive, and we use 100 per week so we alway want > 100 of these in stock
+    # estimated need to have in inventory, example this takes 1 week to arrive,
+    # and we use 100 per week so we alway want > 100 of these in stock
     estimated_need = models.IntegerField()
     item_discontinued = models.BooleanField(
         default=False)  # if this item is discontinued
     notes = models.TextField(default="No notes")  # notes about this item
 
-
 class Image(models.Model):
+    """
+    class for images being uploaded (used as part of barcodes)
+    """
     image = models.ImageField(upload_to='uploads/images')
