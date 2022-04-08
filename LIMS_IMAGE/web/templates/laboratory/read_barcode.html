@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+<!-- required to use crispy forms -->
+{% load crispy_forms_tags %}
 <!-- Not having this here makes the interpreter mad -->
 {% block title %}Scan Barcode{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
@@ -9,30 +11,38 @@
     <p>Scan your barcode.</p>
 
     <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-         {{ form.as_p }}
-        <button type="submit">Upload</button>
-      </form>
-      
-      {% if img_obj %}
-        <h3>Succesfully uploaded</h3>
-        <img src="{{ img_obj.image.url }}" alt="connect" style="max-height:300px">\
-        {% if type == 'sample' %}
-            <p><a href="{% url 'laboratory:view_sample' id %}" >Barcode: {{ img_barcode }}</a></p>
-        {% endif %}
-        {% if type == 'lab_sample' %}
-            <p><a href="{% url 'laboratory:view_lab_sample' id %}" >Barcode: {{ img_barcode }}</a></p>
-        {% endif %}
-        {% if type == 'test_sample' %}
-        <p><a href="{% url 'laboratory:view_test_sample' id %}" >Barcode: {{ img_barcode }}</a></p>
-        {% endif %}
-        {% if type == 'error' %}
-        <p>A barcode could not be read in the image you uploaded</p>
-        {% endif %}
-        {% if type == 'invalid' %}
-        <p>The barcode you uploaded is invalid</p>
-    {% endif %}
-      {% endif %}
-  {% endblock %}
+      {% csrf_token %} {{ form|crispy }}
+      <button type="submit" class="btn btn-primary my-2">Upload</button>
+    </form>
+
+    {% if img_obj %}
+    <h3>Succesfully uploaded</h3>
+    <img
+      src="{{ img_obj.image.url }}"
+      alt="connect"
+      style="max-height: 300px"
+    />\ {% if type == 'sample' %}
+    <p>
+      <a href="{% url 'laboratory:view_sample' id %}"
+        >Barcode: {{ img_barcode }}</a
+      >
+    </p>
+    {% endif %} {% if type == 'lab_sample' %}
+    <p>
+      <a href="{% url 'laboratory:view_lab_sample' id %}"
+        >Barcode: {{ img_barcode }}</a
+      >
+    </p>
+    {% endif %} {% if type == 'test_sample' %}
+    <p>
+      <a href="{% url 'laboratory:view_test_sample' id %}"
+        >Barcode: {{ img_barcode }}</a
+      >
+    </p>
+    {% endif %} {% if type == 'error' %}
+    <p>A barcode could not be read in the image you uploaded</p>
+    {% endif %} {% if type == 'invalid' %}
+    <p>The barcode you uploaded is invalid</p>
+    {% endif %} {% endif %} {% endblock %}
   </div>
 </body>
