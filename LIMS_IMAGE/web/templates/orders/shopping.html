@@ -3,59 +3,77 @@
 {% block title %}Client Home{% endblock %}
 <!-- Not having this here makes the interpreter mad -->
 <body>
- 
-    {% block content %}
-    <div class="container my-4 text-center">
-    <h1>Shopping Cart (Order Submission)</h1> 
-    </div>
-    <div class="container p-4 my-5 bg-light border">
-    
-        <p> 
-            <b> Hello, {{user.first_name}} <br>
-            Please complete the sample submission form by selecting your sample type, test type and the quantity for each order. <br>
-            If you are not sure which tests or packages to order please see  <a href="/orders/appendix_b">Appendix B</a>  for the test recommendation. 
-            </b>
-        </p>
-    </div> 
-    <form method = "POST" action =" ">
-        {% for sample_type, tests in tests_by_type.items %}
-            <input type = "checkbox" name = "{{sample_type}}_check" id ="sample-type">
-            <label>{{sample_type}}</label>
-            <label for="quantity"></label>
-            <input type="number" id="quantity" name="quantity_{{sample_type}}" min="1" placeholder = "Number of Test" >
-            <select name = "tests_{{sample_type}}" id= "tests">
-                <option value = "" disabled selected> choose your test</option> 
-                {% for item in tests %}
-                    <option value="{{item}}"> {{item}}</option>
-                {% endfor %}
-            </select>
-            <br>
+  {% block content %}
+  <div class="container my-4 text-center">
+    <h1>Shopping Cart (Order Submission)</h1>
+  </div>
+  <div class="container p-4 my-5 bg-light border">
+    <p>
+      <b>
+        Hello, {{user.first_name}} <br />
+        Please complete the sample submission form by selecting your sample
+        type, test type and the quantity for each order. <br />
+        If you are not sure which tests or packages to order please see
+        <a href="/orders/appendix_b">Appendix B</a> for the test recommendation.
+      </b>
+    </p>
+  </div>
+  <div class="container">
+    <form method="POST" action=" " class="mx-2 w-25">
+      {% for sample_type, tests in tests_by_type.items %}
+      <input
+        type="checkbox"
+        name="{{sample_type}}_check"
+        id="sample-type"
+        class="form-check-input"
+      />
+      <label class="form-check-label">{{sample_type}}</label>
+      <label for="quantity" class="form-check-label"></label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity_{{sample_type}}"
+        min="1"
+        placeholder="Number of Test"
+        class="form-control"
+      />
+      <select name="tests_{{sample_type}}" id="tests" class="form-select">
+        <option value="" disabled selected>choose your test</option>
+        {% for item in tests %}
+        <option value="{{item}}">{{item}}</option>
         {% endfor %}
+      </select>
+      <br />
+      {% endfor %}
 
-        <input type = "checkbox" name= "packages_check" id="packages" >
-        <label for ="packages_check"> Package </label>
-        
-        <label for="quantity"></label>
-        <input type="number" id="quantity" name="quantity_packages" min="1" placeholder = "Number of Package">
-        <select name = "package_name" id= "packages">  
-            <option value = "" disabled selected> choose your package</option>
-            {% for package in packages %}
-            <option value="{{package}}"> {{package}}</option>
-            {% endfor %}
+      <input type="checkbox" name="packages_check" id="packages" />
+      <label for="packages_check"> Package </label>
 
-        </select>
-        <p>Note: Packages require multiple samples</p>
+      <label for="quantity"></label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity_packages"
+        min="1"
+        placeholder="Number of Package"
+        class="form-control"
+      />
+      <select name="package_name" id="packages" class="form-select">
+        <option value="" disabled selected>choose your package</option>
+        {% for package in packages %}
+        <option value="{{package}}">{{package}}</option>
+        {% endfor %}
+      </select>
+      <p>Note: Packages require multiple samples</p>
 
-        <div class="container p-4 mt-3">
-            {% csrf_token %} 
-        <br>
-        <br>
+      <div class="container p-4 mt-3">
+        {% csrf_token %}
 
-        <input type="reset">
-        <input type="submit" value="Order" />
-
-        </div>
+        <input type="reset" class="btn btn-secondary" />
+        <input type="submit" value="Order" class="btn btn-primary" />
+      </div>
     </form>
-    {% endblock %}   
-    <br>
+  </div>
+  {% endblock %}
+  <br />
 </body>
