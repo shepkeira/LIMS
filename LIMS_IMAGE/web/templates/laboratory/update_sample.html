@@ -9,7 +9,7 @@
   <div class="container">
     <h1>Update Sample</h1>
 
-    <p>ID: {{ sample.user_side_id }}</p>
+    <p class="badge bg-secondary">ID: {{ sample.user_side_id }}</p>
 
     <form method="post" enctype="multipart/form-data" class="w-50">
       {% csrf_token %} {{ form|crispy }}
