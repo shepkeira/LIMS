@@ -7,15 +7,16 @@
   <div class="container">
     <h1>Test Sample Page</h1>
     <p>Welcome to the test sample page!</p>
-    <p>Test Sample ID: {{ lab_sample.user_side_id }}</p>
+    <p>Test Sample ID: {{ test_sample.user_side_id }}</p>
     <p>Type: {{ sample.sample_type }}</p>
     <p>Form: {{ sample.sample_form }}</p>
     <p>SOP Number: {{ sample.sop_number }}</p>
     <p>Lab Personal In Change of Sample: {{ sample.lab_personel }}</p>
-    <p>Location: {{ lab_sample.lab_location }}</p>
+    <p>Location: {{ lab_sample.location }}</p>
     <p>Test: {{ test_sample.test }}</p>
     <img src="{{ barcode_file_path }}" alt="connect" style="max-height:300px"><br>
-    <a href="{% url 'laboratory:view_sample' sample.id %}">Sample Page</a> 
+    <a href="{% url 'laboratory:view_sample' sample.id %}">Sample Page</a> <br>
+    <a href="{% url 'laboratory:sample_analysis' test_sample.id %}">Test Sample Analysis</a>
 
   {% endblock %}
   </div>

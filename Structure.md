@@ -43,6 +43,12 @@ Dockerfile is used for the creation of our database docker container
 #### data
 This folder contains our database backup (lims_db_init.bak) which is used to initialize our database data for vizualization purposes. Instructions to create a new backup can be found in the README.md
 
+### db-postgres
+This folder has all the files related to the postgres database container.
+
+#### data
+This folder contains your locally database storeage. To clear you database and reload the backup, delete all the conents of this folder
+
 ### web
 This folder has all the files related to our web application container.
 Dockerfile and requirements.txt are used for the creation of our web application container.

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+<!-- required to use crispy forms -->
+{% load crispy_forms_tags %}
+<!-- required to use boostrap tags -->
+{% load bootstrap5 %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Sign Up{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+{% block content %}
+<div class="container">
+  <form method="POST" action="" class="w-50">
+    {% csrf_token %}
+    <h3>Register Profile</h3>
+    {{ form|crispy }} {{ profile_form|crispy }}
+    <button type="submit" class="btn btn-primary my-2">Register</button>
+    <br />
+    <p><i>Already have an account?</i> <a href="{% url 'login' %}">Login</a></p>
+  </form>
+</div>
+{% endblock %}

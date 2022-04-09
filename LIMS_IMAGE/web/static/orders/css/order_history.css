@@ -1,0 +1,13 @@
+h1{
+    padding: 1em 1em 1em 1em;
+}
+
+td {
+    padding:0.4rem;
+}
+
+th {
+    padding: 0.5rem 0.75rem;
+    line-height: 1.25;
+    border-radius: 0.25rem;
+}

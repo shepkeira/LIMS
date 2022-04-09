@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'orders',
     'training',
     'laboratoryOrders',
+    'crispy_forms'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -149,3 +150,14 @@ MEDIA_URL = '/uploads/'
 # Path where media is stored
 MEDIA_ROOT = (BASE_DIR)
 
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'lims0.system@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'lims0.system@gmail.com'
+
+# Crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

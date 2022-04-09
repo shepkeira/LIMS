@@ -19,6 +19,7 @@
     <main>
       <!-- TODO: Navbar content could be dynamic and pulled from database -->
       <nav
+        id="navbar"
         class="navbar navbar-expand-lg navbar-light"
         style="background-color: #f3f2f1"
       >
@@ -51,6 +52,11 @@
                 >
               </li>
               <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:analysis' %}"
+                  >Analysis</a
+                >
+              </li>
+              <li class="nav-link">
                 <a class="nav-link" href="{% url 'laboratory:order_list' %}"
                   >Order List</a
                 >
@@ -58,6 +64,11 @@
               <li class="nav-link">
                 <a class="nav-link" href="{% url 'laboratory:read_barcode' %}"
                   >Scan Barcode</a
+                >
+              </li>
+              <li class="nav-link">
+                <a class="nav-link" href="{% url 'laboratory:inventory' %}"
+                  >Inventory Management</a
                 >
               </li>
               {% endif %} {% if user.is_superuser %}
@@ -89,6 +100,16 @@
                 >
               </li>
               {% endif %}
+              <!-- Register new workers + admins -->
+              {%if request.user|has_group:"Lab admins" or request.user.is_superuser%}
+              <li class="nav-link">
+                <a
+                  class="nav-link"
+                  href="{% url 'laboratory:admin_home_page' %}"
+                  >Admin Page</a
+                >
+              </li>
+              {% endif %}
             </ul>
             {% if user.is_authenticated %}
             <div>Hi <i>{{ user.first_name }}</i>!</div>
@@ -96,10 +117,10 @@
               Log Out</a
             >
             {% else %}
-            <a href="{% url 'accounts:signup' %}" class="btn btn-primary"
+            <a href="{% url 'accounts:registration' %}" class="btn btn-primary"
               >Sign Up</a
             >
-            <a href="{% url 'login' %}" class="btn btn-outline-primary ms-2"
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary ms-2"
               >Log In</a
             >
             {% endif %}

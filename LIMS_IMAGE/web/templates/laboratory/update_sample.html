@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+<!-- required to use crispy forms -->
+{% load crispy_forms_tags %}
+<!-- Not having this here makes the interpreter mad -->
+{% block title %}Update Sample{% endblock %}
+<!-- Not having this here makes the interpreter mad -->
+<body>
+  {% block content%}
+  <div class="container">
+    <h1>Update Sample</h1>
+
+    <p class="badge bg-secondary">ID: {{ sample.user_side_id }}</p>
+
+    <form method="post" enctype="multipart/form-data" class="w-50">
+      {% csrf_token %} {{ form|crispy }}
+      <button type="submit" class="btn btn-primary my-2">Update</button>
+    </form>
+
+    {% if complete and message %}
+    <h3>{{ message }}</h3>
+    {% endif %} {% if complete and not message %}
+    <h3>Succesfully Updated</h3>
+    {% endif %} {% endblock %}
+  </div>
+</body>
